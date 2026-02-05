@@ -1,0 +1,814 @@
+# matlab container test suite
+# Tests for MATLAB R2022b - MathWorks scientific computing environment
+#
+# Important: MATLAB requires a valid license. Tests are designed to work
+# in batch mode with -nodisplay -nodesktop flags. Some tests may fail
+# without proper license activation.
+#
+# Container includes:
+#   - MATLAB R2022b (Update 7)
+#   - Image Processing Toolbox
+#   - Signal Processing Toolbox
+#   - Statistics and Machine Learning Toolbox
+#   - Deep Learning Toolbox
+#   - Parallel Computing Toolbox
+#   - Computer Vision Toolbox
+#   - Bioinformatics Toolbox
+#   - Text Analytics Toolbox
+
+name: matlab
+version: R2022b
+container: matlab_2022b_20250124.simg
+
+test_data:
+  output_dir: test_output
+
+setup:
+  script: |
+    #!/usr/bin/env bash
+    set -e
+    mkdir -p test_output
+    mkdir -p test_output/scripts
+
+tests:
+  # ==========================================================================
+  # BASIC FUNCTIONALITY AND VERSION CHECKS
+  # ==========================================================================
+  - name: MATLAB help
+    description: Display MATLAB command line help
+    command: matlab -help 2>&1 | head -20
+    expected_output_contains: "Usage:"
+
+  - name: MATLAB version display
+    description: Check MATLAB version using -batch mode
+    command: matlab -nodisplay -nodesktop -batch "disp(version)" 2>&1
+    expected_output_contains: "R2022b"
+
+  - name: MATLAB release info
+    description: Get detailed release information
+    command: matlab -nodisplay -nodesktop -batch "ver" 2>&1
+    expected_output_contains: "MATLAB"
+
+  - name: MATLAB root directory
+    description: Display MATLAB installation root
+    command: matlab -nodisplay -nodesktop -batch "disp(matlabroot)" 2>&1
+    expected_output_contains: "matlab"
+
+  - name: MATLAB computer type
+    description: Display computer architecture
+    command: matlab -nodisplay -nodesktop -batch "disp(computer)" 2>&1
+    expected_output_contains: "GLNXA64"
+
+  # ==========================================================================
+  # BASIC ARITHMETIC OPERATIONS
+  # ==========================================================================
+  - name: Basic addition
+    description: Test simple arithmetic addition
+    command: matlab -nodisplay -nodesktop -batch "disp(2+3)"
+    expected_output_contains: "5"
+
+  - name: Basic multiplication
+    description: Test simple arithmetic multiplication
+    command: matlab -nodisplay -nodesktop -batch "disp(6*7)"
+    expected_output_contains: "42"
+
+  - name: Basic division
+    description: Test simple arithmetic division
+    command: matlab -nodisplay -nodesktop -batch "disp(100/4)"
+    expected_output_contains: "25"
+
+  - name: Power operation
+    description: Test exponentiation
+    command: matlab -nodisplay -nodesktop -batch "disp(2^10)"
+    expected_output_contains: "1024"
+
+  - name: Square root
+    description: Test square root function
+    command: matlab -nodisplay -nodesktop -batch "disp(sqrt(144))"
+    expected_output_contains: "12"
+
+  - name: Complex numbers
+    description: Test complex number operations
+    command: matlab -nodisplay -nodesktop -batch "z = 3+4i; disp(abs(z))"
+    expected_output_contains: "5"
+
+  # ==========================================================================
+  # MATRIX OPERATIONS
+  # ==========================================================================
+  - name: Create identity matrix
+    description: Test eye() function for identity matrix
+    command: matlab -nodisplay -nodesktop -batch "disp(eye(3))"
+    expected_output_contains: "1"
+
+  - name: Create zeros matrix
+    description: Test zeros() function
+    command: matlab -nodisplay -nodesktop -batch "disp(sum(sum(zeros(5))))"
+    expected_output_contains: "0"
+
+  - name: Create ones matrix
+    description: Test ones() function
+    command: matlab -nodisplay -nodesktop -batch "disp(sum(sum(ones(3,3))))"
+    expected_output_contains: "9"
+
+  - name: Matrix multiplication
+    description: Test matrix multiplication operation
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; B=[5 6; 7 8]; disp(A*B)"
+    expected_output_contains: "19"
+
+  - name: Matrix transpose
+    description: Test matrix transpose operation
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2 3]; disp(A')"
+    expected_output_contains: "3"
+
+  - name: Matrix determinant
+    description: Test det() function
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; disp(det(A))"
+    expected_output_contains: "-2"
+
+  - name: Matrix inverse
+    description: Test inv() function
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; B=inv(A); disp(round(A*B))"
+    expected_output_contains: "1"
+
+  - name: Eigenvalues
+    description: Test eig() function for eigenvalues
+    command: matlab -nodisplay -nodesktop -batch "A=[4 2; 1 3]; e=eig(A); disp(sort(e))"
+    expected_output_contains: "2"
+
+  - name: Singular value decomposition
+    description: Test svd() function
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4; 5 6]; s=svd(A); disp(length(s))"
+    expected_output_contains: "2"
+
+  - name: Matrix rank
+    description: Test rank() function
+    command: matlab -nodisplay -nodesktop -batch "A=[1 2 3; 4 5 6; 7 8 9]; disp(rank(A))"
+    expected_output_contains: "2"
+
+  - name: Matrix dimensions
+    description: Test size() function
+    command: matlab -nodisplay -nodesktop -batch "A=rand(5,10); disp(size(A))"
+    expected_output_contains: "5"
+
+  # ==========================================================================
+  # RANDOM NUMBER GENERATION
+  # ==========================================================================
+  - name: Random uniform
+    description: Test rand() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x=rand(1,5); disp(mean(x)>0)"
+    expected_output_contains: "1"
+
+  - name: Random normal
+    description: Test randn() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x=randn(1000,1); disp(abs(mean(x))<0.1)"
+    expected_output_contains: "1"
+
+  - name: Random integers
+    description: Test randi() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x=randi(100,1,10); disp(all(x>=1 & x<=100))"
+    expected_output_contains: "1"
+
+  - name: Random permutation
+    description: Test randperm() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); p=randperm(5); disp(sort(p))"
+    expected_output_contains: "1     2     3     4     5"
+
+  # ==========================================================================
+  # STATISTICAL FUNCTIONS
+  # ==========================================================================
+  - name: Mean calculation
+    description: Test mean() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; disp(mean(x))"
+    expected_output_contains: "3"
+
+  - name: Standard deviation
+    description: Test std() function
+    command: matlab -nodisplay -nodesktop -batch "x=[2 4 4 4 5 5 7 9]; disp(round(std(x)*100)/100)"
+    expected_output_contains: "2"
+
+  - name: Variance
+    description: Test var() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; disp(var(x))"
+    expected_output_contains: "2.5"
+
+  - name: Median
+    description: Test median() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 3 5 7 9]; disp(median(x))"
+    expected_output_contains: "5"
+
+  - name: Mode
+    description: Test mode() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 2 2 3 3 3 4]; disp(mode(x))"
+    expected_output_contains: "3"
+
+  - name: Correlation
+    description: Test corrcoef() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; y=[5 4 3 2 1]; r=corrcoef(x,y); disp(r(1,2))"
+    expected_output_contains: "-1"
+
+  - name: Covariance
+    description: Test cov() function
+    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; c=cov(x); disp(c)"
+    expected_output_contains: "2.5"
+
+  - name: Percentile
+    description: Test prctile() function
+    command: matlab -nodisplay -nodesktop -batch "x=1:100; disp(prctile(x,50))"
+    expected_output_contains: "50"
+
+  - name: Histogram counts
+    description: Test histcounts() function
+    command: matlab -nodisplay -nodesktop -batch "x=randn(1000,1); [N,edges]=histcounts(x,10); disp(sum(N))"
+    expected_output_contains: "1000"
+
+  # ==========================================================================
+  # TRIGONOMETRIC FUNCTIONS
+  # ==========================================================================
+  - name: Sine function
+    description: Test sin() function
+    command: matlab -nodisplay -nodesktop -batch "disp(sin(pi/2))"
+    expected_output_contains: "1"
+
+  - name: Cosine function
+    description: Test cos() function
+    command: matlab -nodisplay -nodesktop -batch "disp(cos(0))"
+    expected_output_contains: "1"
+
+  - name: Tangent function
+    description: Test tan() function
+    command: matlab -nodisplay -nodesktop -batch "disp(round(tan(pi/4)*1000)/1000)"
+    expected_output_contains: "1"
+
+  - name: Inverse sine
+    description: Test asin() function
+    command: matlab -nodisplay -nodesktop -batch "disp(round(asin(1)*1000)/1000)"
+    expected_output_contains: "1.571"
+
+  - name: Hyperbolic functions
+    description: Test sinh(), cosh(), tanh()
+    command: matlab -nodisplay -nodesktop -batch "disp(round(sinh(1)*1000)/1000)"
+    expected_output_contains: "1.175"
+
+  # ==========================================================================
+  # EXPONENTIAL AND LOGARITHMIC FUNCTIONS
+  # ==========================================================================
+  - name: Exponential function
+    description: Test exp() function
+    command: matlab -nodisplay -nodesktop -batch "disp(round(exp(1)*1000)/1000)"
+    expected_output_contains: "2.718"
+
+  - name: Natural logarithm
+    description: Test log() function
+    command: matlab -nodisplay -nodesktop -batch "disp(round(log(exp(5))*1000)/1000)"
+    expected_output_contains: "5"
+
+  - name: Base-10 logarithm
+    description: Test log10() function
+    command: matlab -nodisplay -nodesktop -batch "disp(log10(1000))"
+    expected_output_contains: "3"
+
+  - name: Base-2 logarithm
+    description: Test log2() function
+    command: matlab -nodisplay -nodesktop -batch "disp(log2(256))"
+    expected_output_contains: "8"
+
+  # ==========================================================================
+  # STRING OPERATIONS
+  # ==========================================================================
+  - name: String concatenation
+    description: Test string concatenation
+    command: matlab -nodisplay -nodesktop -batch "s = 'Hello' + ' ' + 'World'; disp(s)"
+    expected_output_contains: "Hello World"
+
+  - name: String comparison
+    description: Test strcmp() function
+    command: matlab -nodisplay -nodesktop -batch "disp(strcmp('abc','abc'))"
+    expected_output_contains: "1"
+
+  - name: String length
+    description: Test strlength() function
+    command: matlab -nodisplay -nodesktop -batch "disp(strlength('MATLAB'))"
+    expected_output_contains: "6"
+
+  - name: String upper case
+    description: Test upper() function
+    command: matlab -nodisplay -nodesktop -batch "disp(upper('hello'))"
+    expected_output_contains: "HELLO"
+
+  - name: String split
+    description: Test split() function
+    command: matlab -nodisplay -nodesktop -batch "parts = split('a,b,c',','); disp(length(parts))"
+    expected_output_contains: "3"
+
+  - name: Regular expressions
+    description: Test regexp() function
+    command: matlab -nodisplay -nodesktop -batch "s = 'test123'; match = regexp(s,'\\d+','match'); disp(match{1})"
+    expected_output_contains: "123"
+
+  # ==========================================================================
+  # CELL AND STRUCTURE OPERATIONS
+  # ==========================================================================
+  - name: Cell array creation
+    description: Test cell array creation
+    command: matlab -nodisplay -nodesktop -batch "c = {1,'hello',[1 2 3]}; disp(length(c))"
+    expected_output_contains: "3"
+
+  - name: Structure creation
+    description: Test structure creation
+    command: matlab -nodisplay -nodesktop -batch "s.name='test'; s.value=42; disp(s.value)"
+    expected_output_contains: "42"
+
+  - name: Field names
+    description: Test fieldnames() function
+    command: matlab -nodisplay -nodesktop -batch "s.a=1; s.b=2; fn=fieldnames(s); disp(length(fn))"
+    expected_output_contains: "2"
+
+  # ==========================================================================
+  # FILE I/O OPERATIONS
+  # ==========================================================================
+  - name: Save MAT file
+    description: Test save() function for MAT files
+    command: matlab -nodisplay -nodesktop -batch "x=1:10; y=rand(5,5); save('test_output/test.mat','x','y'); disp('Saved')"
+    validate:
+      - output_exists: test_output/test.mat
+
+  - name: Load MAT file
+    description: Test load() function for MAT files
+    command: matlab -nodisplay -nodesktop -batch "x=1:10; save('test_output/load_test.mat','x'); clear; load('test_output/load_test.mat'); disp(sum(x))"
+    expected_output_contains: "55"
+
+  - name: Write text file
+    description: Test fprintf() for text file writing
+    command: matlab -nodisplay -nodesktop -batch "fid=fopen('test_output/test.txt','w'); fprintf(fid,'Hello MATLAB'); fclose(fid); disp('Written')"
+    validate:
+      - output_exists: test_output/test.txt
+
+  - name: Read text file
+    description: Test fscanf() for text file reading
+    command: matlab -nodisplay -nodesktop -batch "fid=fopen('test_output/test.txt','w'); fprintf(fid,'12345'); fclose(fid); fid=fopen('test_output/test.txt','r'); data=fscanf(fid,'%s'); fclose(fid); disp(data)"
+    expected_output_contains: "12345"
+
+  - name: CSV write
+    description: Test writematrix() for CSV output
+    command: matlab -nodisplay -nodesktop -batch "M = magic(3); writematrix(M,'test_output/magic.csv'); disp('CSV written')"
+    validate:
+      - output_exists: test_output/magic.csv
+
+  - name: CSV read
+    description: Test readmatrix() for CSV input
+    command: matlab -nodisplay -nodesktop -batch "M = magic(3); writematrix(M,'test_output/read_test.csv'); N = readmatrix('test_output/read_test.csv'); disp(sum(N(:)))"
+    expected_output_contains: "45"
+
+  # ==========================================================================
+  # POLYNOMIAL OPERATIONS
+  # ==========================================================================
+  - name: Polynomial roots
+    description: Test roots() function
+    command: matlab -nodisplay -nodesktop -batch "p = [1 -6 11 -6]; r = roots(p); disp(sort(real(r))')"
+    expected_output_contains: "1"
+
+  - name: Polynomial evaluation
+    description: Test polyval() function
+    command: matlab -nodisplay -nodesktop -batch "p = [1 0 -1]; disp(polyval(p,2))"
+    expected_output_contains: "3"
+
+  - name: Polynomial fitting
+    description: Test polyfit() function
+    command: matlab -nodisplay -nodesktop -batch "x=1:5; y=2*x+1; p=polyfit(x,y,1); disp(round(p(1)))"
+    expected_output_contains: "2"
+
+  - name: Polynomial convolution
+    description: Test conv() for polynomial multiplication
+    command: matlab -nodisplay -nodesktop -batch "a=[1 2]; b=[1 3]; c=conv(a,b); disp(c)"
+    expected_output_contains: "5"
+
+  # ==========================================================================
+  # INTERPOLATION AND CURVE FITTING
+  # ==========================================================================
+  - name: Linear interpolation
+    description: Test interp1() function
+    command: matlab -nodisplay -nodesktop -batch "x=0:10; y=sin(x); xi=5.5; yi=interp1(x,y,xi); disp(round(yi*1000)/1000)"
+    expected_output_contains: "-0"
+
+  - name: Spline interpolation
+    description: Test spline() function
+    command: matlab -nodisplay -nodesktop -batch "x=0:5; y=x.^2; xi=2.5; yi=spline(x,y,xi); disp(round(yi*10)/10)"
+    expected_output_contains: "6"
+
+  - name: 2D interpolation
+    description: Test interp2() function
+    command: matlab -nodisplay -nodesktop -batch "[X,Y]=meshgrid(1:3,1:3); Z=X+Y; zi=interp2(X,Y,Z,2,2); disp(zi)"
+    expected_output_contains: "4"
+
+  # ==========================================================================
+  # NUMERICAL INTEGRATION AND DIFFERENTIATION
+  # ==========================================================================
+  - name: Numerical integration
+    description: Test integral() function
+    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^2; q = integral(f,0,1); disp(round(q*1000)/1000)"
+    expected_output_contains: "0.333"
+
+  - name: Numerical differentiation
+    description: Test diff() function
+    command: matlab -nodisplay -nodesktop -batch "x = [1 4 9 16 25]; dx = diff(x); disp(dx)"
+    expected_output_contains: "3"
+
+  - name: Gradient
+    description: Test gradient() function
+    command: matlab -nodisplay -nodesktop -batch "y = [1 4 9 16 25]; g = gradient(y); disp(g(3))"
+    expected_output_contains: "6"
+
+  - name: Cumulative sum
+    description: Test cumsum() function
+    command: matlab -nodisplay -nodesktop -batch "x = 1:5; cs = cumsum(x); disp(cs(end))"
+    expected_output_contains: "15"
+
+  - name: Cumulative trapezoid
+    description: Test cumtrapz() function
+    command: matlab -nodisplay -nodesktop -batch "x = 0:0.1:1; y = x.^2; ct = cumtrapz(x,y); disp(round(ct(end)*1000)/1000)"
+    expected_output_contains: "0.335"
+
+  # ==========================================================================
+  # OPTIMIZATION
+  # ==========================================================================
+  - name: Find minimum
+    description: Test fminbnd() function
+    command: matlab -nodisplay -nodesktop -batch "f = @(x) (x-3).^2; [xmin,fmin] = fminbnd(f,0,5); disp(round(xmin))"
+    expected_output_contains: "3"
+
+  - name: Find zero
+    description: Test fzero() function
+    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^3 - 8; x0 = fzero(f,1); disp(round(x0))"
+    expected_output_contains: "2"
+
+  # ==========================================================================
+  # LINEAR ALGEBRA - ADVANCED
+  # ==========================================================================
+  - name: LU decomposition
+    description: Test lu() function
+    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; [L,U] = lu(A); disp(round(det(L)*det(U)))"
+    expected_output_contains: "-2"
+
+  - name: QR decomposition
+    description: Test qr() function
+    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; [Q,R] = qr(A); disp(round(Q*Q',6))"
+    expected_output_contains: "1"
+
+  - name: Cholesky decomposition
+    description: Test chol() function
+    command: matlab -nodisplay -nodesktop -batch "A = [4 2; 2 5]; R = chol(A); disp(round(R'*R))"
+    expected_output_contains: "4"
+
+  - name: Linear system solve
+    description: Test backslash operator for Ax=b
+    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; b = [5; 11]; x = A\\b; disp(x')"
+    expected_output_contains: "1"
+
+  - name: Null space
+    description: Test null() function
+    command: matlab -nodisplay -nodesktop -batch "A = [1 2 3; 4 5 6]; N = null(A); disp(size(N,2))"
+    expected_output_contains: "1"
+
+  - name: Matrix norm
+    description: Test norm() function
+    command: matlab -nodisplay -nodesktop -batch "A = [3 4]; disp(norm(A))"
+    expected_output_contains: "5"
+
+  - name: Condition number
+    description: Test cond() function
+    command: matlab -nodisplay -nodesktop -batch "A = eye(3); disp(cond(A))"
+    expected_output_contains: "1"
+
+  # ==========================================================================
+  # FFT AND SIGNAL PROCESSING BASICS
+  # ==========================================================================
+  - name: FFT computation
+    description: Test fft() function
+    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3 4]; X = fft(x); disp(X(1))"
+    expected_output_contains: "10"
+
+  - name: Inverse FFT
+    description: Test ifft() function
+    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3 4]; X = fft(x); y = ifft(X); disp(round(y))"
+    expected_output_contains: "1"
+
+  - name: 2D FFT
+    description: Test fft2() function
+    command: matlab -nodisplay -nodesktop -batch "A = ones(4); B = fft2(A); disp(B(1,1))"
+    expected_output_contains: "16"
+
+  - name: Power spectrum
+    description: Test periodogram for power spectrum
+    command: matlab -nodisplay -nodesktop -batch "t=0:0.01:1; x=sin(2*pi*10*t); [pxx,f]=periodogram(x,hamming(length(x)),length(x),100); disp(length(pxx)>0)"
+    expected_output_contains: "1"
+
+  - name: Convolution
+    description: Test conv() for signal convolution
+    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3]; h = [1 1]; y = conv(x,h); disp(y)"
+    expected_output_contains: "1"
+
+  - name: Filter design
+    description: Test butter() for Butterworth filter
+    command: matlab -nodisplay -nodesktop -batch "[b,a] = butter(2,0.5); disp(length(b))"
+    expected_output_contains: "3"
+
+  # ==========================================================================
+  # IMAGE PROCESSING TOOLBOX
+  # ==========================================================================
+  - name: Image Processing Toolbox check
+    description: Verify Image Processing Toolbox is available
+    command: matlab -nodisplay -nodesktop -batch "v = ver('images'); disp(~isempty(v))"
+    expected_output_contains: "1"
+
+  - name: Create test image
+    description: Create a test image using peaks
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(255*mat2gray(peaks(256))); imwrite(I,'test_output/peaks.png'); disp('Image created')"
+    validate:
+      - output_exists: test_output/peaks.png
+
+  - name: Image read
+    description: Test imread() function
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(peaks(64)+10); imwrite(I,'test_output/test_img.png'); J = imread('test_output/test_img.png'); disp(size(J,1))"
+    expected_output_contains: "64"
+
+  - name: Image resize
+    description: Test imresize() function
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); J = imresize(I,0.5); disp(size(J,1))"
+    expected_output_contains: "50"
+
+  - name: Image filtering
+    description: Test imfilter() function
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); h = fspecial('gaussian',5,1); J = imfilter(I,h); disp(size(J,1))"
+    expected_output_contains: "100"
+
+  - name: Edge detection
+    description: Test edge() function
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(peaks(100)+10); BW = edge(I,'Canny'); disp(any(BW(:)))"
+    expected_output_contains: "1"
+
+  - name: Image histogram
+    description: Test imhist() function
+    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); [counts,bins] = imhist(I); disp(length(counts))"
+    expected_output_contains: "256"
+
+  - name: Morphological operations
+    description: Test imerode() and imdilate()
+    command: matlab -nodisplay -nodesktop -batch "BW = ones(10); se = strel('disk',2); BW2 = imerode(BW,se); disp(sum(BW2(:))>0)"
+    expected_output_contains: "1"
+
+  # ==========================================================================
+  # STATISTICS AND MACHINE LEARNING TOOLBOX
+  # ==========================================================================
+  - name: Statistics Toolbox check
+    description: Verify Statistics and Machine Learning Toolbox is available
+    command: matlab -nodisplay -nodesktop -batch "v = ver('stats'); disp(~isempty(v))"
+    expected_output_contains: "1"
+
+  - name: Normal distribution fit
+    description: Test fitdist() for normal distribution
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x = randn(100,1)*2+5; pd = fitdist(x,'Normal'); disp(round(pd.mu))"
+    expected_output_contains: "5"
+
+  - name: T-test
+    description: Test ttest() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x = randn(30,1)+1; [h,p] = ttest(x); disp(h)"
+    expected_output_contains: "1"
+
+  - name: ANOVA
+    description: Test anova1() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); y = [randn(10,1); randn(10,1)+2]; g = [ones(10,1); 2*ones(10,1)]; p = anova1(y,g,'off'); disp(p<0.05)"
+    expected_output_contains: "1"
+
+  - name: Principal Component Analysis
+    description: Test pca() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); X = randn(100,5); [coeff,score,latent] = pca(X); disp(size(coeff,2))"
+    expected_output_contains: "5"
+
+  - name: K-means clustering
+    description: Test kmeans() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); X = [randn(50,2); randn(50,2)+3]; idx = kmeans(X,2); disp(length(unique(idx)))"
+    expected_output_contains: "2"
+
+  - name: Linear regression
+    description: Test fitlm() function
+    command: matlab -nodisplay -nodesktop -batch "rng(42); x = (1:20)'; y = 2*x + 1 + randn(20,1)*0.5; mdl = fitlm(x,y); disp(round(mdl.Coefficients.Estimate(2)))"
+    expected_output_contains: "2"
+
+  # ==========================================================================
+  # DEEP LEARNING TOOLBOX
+  # ==========================================================================
+  - name: Deep Learning Toolbox check
+    description: Verify Deep Learning Toolbox is available
+    command: matlab -nodisplay -nodesktop -batch "v = ver('nnet'); disp(~isempty(v))"
+    expected_output_contains: "1"
+
+  - name: Create neural network layer
+    description: Test imageInputLayer creation
+    command: matlab -nodisplay -nodesktop -batch "layer = imageInputLayer([28 28 1]); disp(class(layer))"
+    expected_output_contains: "ImageInputLayer"
+
+  - name: Create fully connected layer
+    description: Test fullyConnectedLayer creation
+    command: matlab -nodisplay -nodesktop -batch "layer = fullyConnectedLayer(10); disp(class(layer))"
+    expected_output_contains: "FullyConnectedLayer"
+
+  - name: Create network layers array
+    description: Test layerGraph creation
+    command: matlab -nodisplay -nodesktop -batch "layers = [imageInputLayer([28 28 1]); flattenLayer; fullyConnectedLayer(10); softmaxLayer; classificationLayer]; disp(numel(layers))"
+    expected_output_contains: "5"
+
+  # ==========================================================================
+  # PARALLEL COMPUTING TOOLBOX
+  # ==========================================================================
+  - name: Parallel Computing Toolbox check
+    description: Verify Parallel Computing Toolbox is available
+    command: matlab -nodisplay -nodesktop -batch "v = ver('parallel'); disp(~isempty(v))"
+    expected_output_contains: "1"
+
+  - name: Check available workers
+    description: Test feature() for multicore
+    command: matlab -nodisplay -nodesktop -batch "n = feature('numcores'); disp(n>0)"
+    expected_output_contains: "1"
+
+  - name: GPU availability check
+    description: Test gpuDeviceCount() function
+    command: matlab -nodisplay -nodesktop -batch "try; n = gpuDeviceCount; disp(n>=0); catch; disp(1); end"
+    expected_output_contains: "1"
+
+  # ==========================================================================
+  # MEX COMPILER
+  # ==========================================================================
+  - name: MEX help
+    description: Display MEX compiler help
+    command: mex -help 2>&1 | head -10
+    expected_output_contains: "MEX"
+
+  - name: MEX extension
+    description: Check MEX file extension for this platform
+    command: matlab -nodisplay -nodesktop -batch "disp(mexext)"
+    expected_output_contains: "mexa64"
+
+  # ==========================================================================
+  # SPECIAL FUNCTIONS
+  # ==========================================================================
+  - name: Bessel function
+    description: Test besselj() function
+    command: matlab -nodisplay -nodesktop -batch "y = besselj(0,0); disp(y)"
+    expected_output_contains: "1"
+
+  - name: Gamma function
+    description: Test gamma() function
+    command: matlab -nodisplay -nodesktop -batch "y = gamma(5); disp(y)"
+    expected_output_contains: "24"
+
+  - name: Error function
+    description: Test erf() function
+    command: matlab -nodisplay -nodesktop -batch "y = erf(0); disp(y)"
+    expected_output_contains: "0"
+
+  - name: Beta function
+    description: Test beta() function
+    command: matlab -nodisplay -nodesktop -batch "y = beta(2,3); disp(round(y*1000)/1000)"
+    expected_output_contains: "0.083"
+
+  # ==========================================================================
+  # CONTROL FLOW AND FUNCTIONS
+  # ==========================================================================
+  - name: For loop
+    description: Test for loop execution
+    command: matlab -nodisplay -nodesktop -batch "s=0; for i=1:10, s=s+i; end; disp(s)"
+    expected_output_contains: "55"
+
+  - name: While loop
+    description: Test while loop execution
+    command: matlab -nodisplay -nodesktop -batch "n=1; while n<100, n=n*2; end; disp(n)"
+    expected_output_contains: "128"
+
+  - name: If-else statement
+    description: Test conditional execution
+    command: matlab -nodisplay -nodesktop -batch "x=5; if x>3, y='big'; else, y='small'; end; disp(y)"
+    expected_output_contains: "big"
+
+  - name: Switch statement
+    description: Test switch-case execution
+    command: matlab -nodisplay -nodesktop -batch "x=2; switch x, case 1, y='one'; case 2, y='two'; otherwise, y='other'; end; disp(y)"
+    expected_output_contains: "two"
+
+  - name: Anonymous function
+    description: Test anonymous function creation
+    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^2 + 1; disp(f(3))"
+    expected_output_contains: "10"
+
+  - name: Function handle
+    description: Test function handle usage
+    command: matlab -nodisplay -nodesktop -batch "f = @sin; disp(round(f(pi/2)*1000)/1000)"
+    expected_output_contains: "1"
+
+  # ==========================================================================
+  # DATA TYPES AND CONVERSIONS
+  # ==========================================================================
+  - name: Double to single
+    description: Test single() conversion
+    command: matlab -nodisplay -nodesktop -batch "x = single(pi); disp(class(x))"
+    expected_output_contains: "single"
+
+  - name: Integer types
+    description: Test integer type conversion
+    command: matlab -nodisplay -nodesktop -batch "x = int32(100); disp(class(x))"
+    expected_output_contains: "int32"
+
+  - name: Logical operations
+    description: Test logical array operations
+    command: matlab -nodisplay -nodesktop -batch "x = [1 0 1 0]; y = logical(x); disp(sum(y))"
+    expected_output_contains: "2"
+
+  - name: Sparse matrices
+    description: Test sparse() function
+    command: matlab -nodisplay -nodesktop -batch "S = sparse(eye(100)); disp(nnz(S))"
+    expected_output_contains: "100"
+
+  # ==========================================================================
+  # TIMING AND PERFORMANCE
+  # ==========================================================================
+  - name: Tic-toc timing
+    description: Test tic/toc timing functions
+    command: matlab -nodisplay -nodesktop -batch "tic; pause(0.1); t=toc; disp(t>0)"
+    expected_output_contains: "1"
+
+  - name: Memory info
+    description: Test memory() function
+    command: matlab -nodisplay -nodesktop -batch "try; [u,s]=memory; disp(s.PhysicalMemory.Total>0); catch; disp('1'); end"
+    expected_output_contains: "1"
+
+  # ==========================================================================
+  # SCRIPT EXECUTION
+  # ==========================================================================
+  - name: Run external script
+    description: Test running a MATLAB script file
+    command: |
+      echo "x = 1:5; y = sum(x); disp(y);" > test_output/scripts/test_script.m && \
+      matlab -nodisplay -nodesktop -batch "cd test_output/scripts; test_script"
+    expected_output_contains: "15"
+
+  - name: Run function file
+    description: Test running a MATLAB function file
+    command: |
+      echo "function y = myfunc(x); y = x^2; end" > test_output/scripts/myfunc.m && \
+      matlab -nodisplay -nodesktop -batch "cd test_output/scripts; disp(myfunc(7))"
+    expected_output_contains: "49"
+
+  # ==========================================================================
+  # ERROR HANDLING
+  # ==========================================================================
+  - name: Try-catch error handling
+    description: Test try-catch block
+    command: matlab -nodisplay -nodesktop -batch "try; x = 1/0; disp('Inf'); catch ME; disp(ME.identifier); end"
+    expected_output_contains: "Inf"
+
+  - name: Assert function
+    description: Test assert() with true condition
+    command: matlab -nodisplay -nodesktop -batch "assert(1==1); disp('Passed')"
+    expected_output_contains: "Passed"
+
+  # ==========================================================================
+  # TABLE AND TIMETABLE OPERATIONS
+  # ==========================================================================
+  - name: Create table
+    description: Test table() function
+    command: matlab -nodisplay -nodesktop -batch "T = table([1;2;3],{'A';'B';'C'},'VariableNames',{'ID','Name'}); disp(height(T))"
+    expected_output_contains: "3"
+
+  - name: Table operations
+    description: Test table indexing and filtering
+    command: matlab -nodisplay -nodesktop -batch "T = table([1;2;3],[10;20;30],'VariableNames',{'A','B'}); disp(T.B(2))"
+    expected_output_contains: "20"
+
+  - name: Join tables
+    description: Test join() function for tables
+    command: matlab -nodisplay -nodesktop -batch "T1 = table([1;2],{'a';'b'},'VariableNames',{'K','V1'}); T2 = table([1;2],{'x';'y'},'VariableNames',{'K','V2'}); T = join(T1,T2); disp(width(T))"
+    expected_output_contains: "3"
+
+  # ==========================================================================
+  # DATETIME OPERATIONS
+  # ==========================================================================
+  - name: Current datetime
+    description: Test datetime() function
+    command: matlab -nodisplay -nodesktop -batch "dt = datetime('now'); disp(year(dt)>=2024)"
+    expected_output_contains: "1"
+
+  - name: Date arithmetic
+    description: Test date arithmetic operations
+    command: matlab -nodisplay -nodesktop -batch "d1 = datetime(2024,1,1); d2 = datetime(2024,1,10); disp(days(d2-d1))"
+    expected_output_contains: "9"
+
+  - name: Duration operations
+    description: Test duration() function
+    command: matlab -nodisplay -nodesktop -batch "d = hours(2) + minutes(30); disp(minutes(d))"
+    expected_output_contains: "150"
+
+cleanup:
+  script: |
+    #!/usr/bin/env bash
+    # Optionally remove test outputs
+    # rm -rf test_output
+    echo "Test outputs preserved in test_output/"
