@@ -53,7 +53,7 @@ tests:
     command: LN_FLOAT_ME -input ${t1w} -output test_output/t1w_float.nii.gz
     validate:
       - output_exists: test_output/t1w_float.nii.gz
-      - same_dimensions: [test_output/t1w_float.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_float.nii.gz", "${t1w}"]
 
   - name: LN_SHORT_ME conversion
     description: Convert NIfTI data type to SHORT (int16)
@@ -95,14 +95,14 @@ tests:
     command: LN_TEMPSMOOTH -input ${bold} -box 3 -output test_output/bold_tempsmooth_box.nii.gz
     validate:
       - output_exists: test_output/bold_tempsmooth_box.nii.gz
-      - same_dimensions: [test_output/bold_tempsmooth_box.nii.gz, ${bold}]
+      - same_dimensions: ["test_output/bold_tempsmooth_box.nii.gz", "${bold}"]
 
   - name: LN_TEMPSMOOTH gaussian filter
     description: Temporal smoothing with Gaussian filter
     command: LN_TEMPSMOOTH -input ${bold} -gaus 1.5 -output test_output/bold_tempsmooth_gaus.nii.gz
     validate:
       - output_exists: test_output/bold_tempsmooth_gaus.nii.gz
-      - same_dimensions: [test_output/bold_tempsmooth_gaus.nii.gz, ${bold}]
+      - same_dimensions: ["test_output/bold_tempsmooth_gaus.nii.gz", "${bold}"]
 
   # ==========================================================================
   # TRIAL-BASED ANALYSIS
@@ -121,7 +121,7 @@ tests:
     command: LN_DIRECT_SMOOTH -input ${t1w} -FWHM 2 -direction 1 -output test_output/t1w_smooth_x.nii.gz
     validate:
       - output_exists: test_output/t1w_smooth_x.nii.gz
-      - same_dimensions: [test_output/t1w_smooth_x.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_smooth_x.nii.gz", "${t1w}"]
 
   - name: LN_DIRECT_SMOOTH y-direction
     description: Directional smoothing along Y axis
@@ -164,7 +164,7 @@ tests:
     command: LN_NOISEME -input ${t1w} -std 50 -output test_output/t1w_noised.nii.gz
     validate:
       - output_exists: test_output/t1w_noised.nii.gz
-      - same_dimensions: [test_output/t1w_noised.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_noised.nii.gz", "${t1w}"]
 
   - name: LN_NOISE_KERNEL analyze noise
     description: Analyze thermal noise kernel in BOLD data

@@ -43,7 +43,7 @@ tests:
     command: niimath ${t1w} -abs test_output/t1w_abs.nii.gz
     validate:
       - output_exists: test_output/t1w_abs.nii.gz
-      - same_dimensions: [test_output/t1w_abs.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_abs.nii.gz", "${t1w}"]
 
   - name: Binarize
     description: Test -bin operation (voxels > 0 become 1)
@@ -516,7 +516,7 @@ tests:
     command: niimath ${bold} -demean test_output/bold_demean.nii.gz
     validate:
       - output_exists: test_output/bold_demean.nii.gz
-      - same_dimensions: [test_output/bold_demean.nii.gz, ${bold}]
+      - same_dimensions: ["test_output/bold_demean.nii.gz", "${bold}"]
 
   - name: Detrend
     description: Test -detrend operation (niimath-specific)

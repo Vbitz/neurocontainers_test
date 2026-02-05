@@ -555,7 +555,7 @@ tests:
 
   - name: Count events
     description: Count number of events in events file
-    command: python -c "import pandas as pd; df = pd.read_csv('${events}', sep='\t'); print(f'Events: {len(df)}')" 2>&1
+    command: "python -c \"import pandas as pd; df = pd.read_csv('${events}', sep='\\t'); print(f'Events: {len(df)}')\" 2>&1"
     expected_output_contains: "Events:"
 
   # ==========================================================================

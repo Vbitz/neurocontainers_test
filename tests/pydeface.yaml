@@ -52,7 +52,7 @@ tests:
     timeout: 300
     validate:
       - output_exists: test_output/t1w_defaced_default.nii.gz
-      - same_dimensions: [test_output/t1w_defaced_default.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_defaced_default.nii.gz", "${t1w}"]
 
   - name: Defacing with custom output path
     description: Deface T1w image with explicit output filename
@@ -144,7 +144,7 @@ tests:
     timeout: 300
     validate:
       - output_exists: test_output/t2_defaced.nii.gz
-      - same_dimensions: [test_output/t2_defaced.nii.gz, ${t2}]
+      - same_dimensions: ["test_output/t2_defaced.nii.gz", "${t2}"]
 
   # ==========================================================================
   # FSL TOOLS (bundled with container)

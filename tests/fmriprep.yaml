@@ -69,7 +69,7 @@ tests:
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/ants/t1w_n4.nii.gz -v 0
     validate:
       - output_exists: test_output/ants/t1w_n4.nii.gz
-      - same_dimensions: [test_output/ants/t1w_n4.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/ants/t1w_n4.nii.gz", "${t1w}"]
 
   - name: N4BiasFieldCorrection with bias field output
     description: Run N4 and output the estimated bias field
@@ -136,7 +136,7 @@ tests:
     command: DenoiseImage -d 3 -i ${t1w} -o test_output/ants/t1w_denoised.nii.gz -v 0
     validate:
       - output_exists: test_output/ants/t1w_denoised.nii.gz
-      - same_dimensions: [test_output/ants/t1w_denoised.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/ants/t1w_denoised.nii.gz", "${t1w}"]
 
   # ==========================================================================
   # ANTs TOOLS - IMAGE CONVERSION

@@ -54,7 +54,7 @@ tests:
     command: Slicer --launch ${cli_path}/GaussianBlurImageFilter ${t1w} test_output/t1w_blur_default.nii.gz
     validate:
       - output_exists: test_output/t1w_blur_default.nii.gz
-      - same_dimensions: [test_output/t1w_blur_default.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_blur_default.nii.gz", "${t1w}"]
 
   - name: Gaussian blur with sigma 2mm
     description: Apply Gaussian blur with sigma=2mm

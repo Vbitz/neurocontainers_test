@@ -82,7 +82,7 @@ tests:
     validate:
       - output_exists: test_output/t1w_brain.nii.gz
       - output_exists: test_output/t1w_brain_mask.nii.gz
-      - same_dimensions: [test_output/t1w_brain.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_brain.nii.gz", "${t1w}"]
 
   - name: SynthStrip with distance transform
     description: Run SynthStrip and save signed distance transform

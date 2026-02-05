@@ -117,7 +117,7 @@ tests:
     depends_on: Skull strip T1w - generate mask only
     validate:
       - output_exists: test_output/t1w_defaced.nii.gz
-      - same_dimensions: [test_output/t1w_defaced.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_defaced.nii.gz", "${t1w}"]
 
   - name: Quickshear with default buffer
     description: Deface T1w with explicit default buffer size (10 voxels)

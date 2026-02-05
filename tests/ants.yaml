@@ -104,7 +104,7 @@ tests:
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/t1w_n4.nii.gz -s 4 -c [50x50x50,0.0] -v 0
     validate:
       - output_exists: test_output/t1w_n4.nii.gz
-      - same_dimensions: [test_output/t1w_n4.nii.gz, ${t1w}]
+      - same_dimensions: ["test_output/t1w_n4.nii.gz", "${t1w}"]
 
   - name: N4 with bias field output
     description: Run N4 and output the estimated bias field
