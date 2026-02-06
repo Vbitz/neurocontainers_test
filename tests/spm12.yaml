@@ -71,25 +71,25 @@ tests:
     description: Verify SPM12 reports correct version
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ --version 2>&1
     expected_output_contains: "SPM12"
-    timeout: 120000
+    timeout: 120
 
   - name: SPM12 help output
     description: Verify SPM12 help displays correctly
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ --help 2>&1
     expected_output_contains: "Usage"
-    timeout: 120000
+    timeout: 120
 
   - name: MATLAB version check
     description: Verify MCR reports MATLAB version
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ --version 2>&1
     expected_output_contains: "MATLAB"
-    timeout: 120000
+    timeout: 120
 
   - name: SPM12 revision number
     description: Verify SPM12 revision 7771
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ --version 2>&1
     expected_output_contains: "7771"
-    timeout: 120000
+    timeout: 120
 
   # ==========================================================================
   # SPM12 EVAL COMMAND TESTS
@@ -98,55 +98,55 @@ tests:
     description: Test basic MATLAB eval with disp
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp('SPM12 working')" 2>&1
     expected_output_contains: "SPM12 working"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval spm version
     description: Get SPM version via spm function
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "spm('ver')" 2>&1
     expected_output_contains: "SPM12"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval get defaults
     description: Verify SPM defaults are accessible
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "d=spm_get_defaults; disp(class(d))" 2>&1
     expected_output_contains: "struct"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_vol
     description: Verify spm_vol function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_vol'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_realign
     description: Verify spm_realign function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_realign'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_smooth
     description: Verify spm_smooth function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_smooth'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_coreg
     description: Verify spm_coreg function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_coreg'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_preproc
     description: Verify spm_preproc function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_preproc'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM eval exist spm_spm
     description: Verify spm_spm function (GLM estimation) exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_spm'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   # ==========================================================================
   # SPM12 DIRECTORY STRUCTURE
@@ -415,7 +415,7 @@ tests:
       gunzip -c ${t1w} > test_output/sub-01_T1w.nii && \
       test -f test_output/sub-01_T1w.nii && echo "T1w uncompressed successfully"
     validate:
-      - output_exists: test_output/sub-01_T1w.nii
+      - output_exists: ${output_dir}/sub-01_T1w.nii
     expected_output_contains: "T1w uncompressed successfully"
 
   - name: Prepare uncompressed T2 for SPM12
@@ -424,7 +424,7 @@ tests:
       gunzip -c ${t2} > test_output/sub-01_T2.nii && \
       test -f test_output/sub-01_T2.nii && echo "T2 uncompressed successfully"
     validate:
-      - output_exists: test_output/sub-01_T2.nii
+      - output_exists: ${output_dir}/sub-01_T2.nii
     expected_output_contains: "T2 uncompressed successfully"
 
   - name: Prepare uncompressed BOLD for SPM12
@@ -433,7 +433,7 @@ tests:
       gunzip -c ${bold} > test_output/sub-01_bold.nii && \
       test -f test_output/sub-01_bold.nii && echo "BOLD uncompressed successfully"
     validate:
-      - output_exists: test_output/sub-01_bold.nii
+      - output_exists: ${output_dir}/sub-01_bold.nii
     expected_output_contains: "BOLD uncompressed successfully"
 
   # ==========================================================================
@@ -461,16 +461,16 @@ tests:
       cd test_output && \
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ batch spm_batch/smooth_batch.m 2>&1 | tail -30
     depends_on: Create smoothing batch file
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/s6sub-01_T1w.nii
+      - output_exists: ${output_dir}/s6sub-01_T1w.nii
 
   - name: Verify smoothed output dimensions
     description: Check that smoothed image has same dimensions as input
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/s6sub-01_T1w.nii'); disp(V.dim)" 2>&1 | tail -5
     depends_on: Run SPM12 smoothing
-    timeout: 180000
+    timeout: 180
     expected_exit_code: 0
 
   # ==========================================================================
@@ -504,9 +504,9 @@ tests:
       cd test_output && \
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ batch spm_batch/imcalc_batch.m 2>&1 | tail -30
     depends_on: Create imcalc batch file
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/T1w_doubled.nii
+      - output_exists: ${output_dir}/T1w_doubled.nii
 
   - name: Create imcalc threshold batch
     description: Create batch file for thresholding operation
@@ -536,9 +536,9 @@ tests:
       cd test_output && \
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ batch spm_batch/imcalc_thr_batch.m 2>&1 | tail -30
     depends_on: Create imcalc threshold batch
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/T1w_thresholded.nii
+      - output_exists: ${output_dir}/T1w_thresholded.nii
 
   # ==========================================================================
   # SPM12 EVAL TESTS - READ/WRITE OPERATIONS
@@ -548,7 +548,7 @@ tests:
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/sub-01_T1w.nii'); disp(V.fname)" 2>&1 | tail -10
     depends_on: Prepare uncompressed T1w for SPM12
-    timeout: 180000
+    timeout: 180
     expected_output_contains: "sub-01_T1w.nii"
 
   - name: SPM12 get image dimensions
@@ -556,7 +556,7 @@ tests:
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/sub-01_T1w.nii'); disp(V.dim)" 2>&1 | tail -5
     depends_on: Prepare uncompressed T1w for SPM12
-    timeout: 180000
+    timeout: 180
     expected_exit_code: 0
 
   - name: SPM12 get voxel size
@@ -564,7 +564,7 @@ tests:
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/sub-01_T1w.nii'); disp(sqrt(sum(V.mat(1:3,1:3).^2)))" 2>&1 | tail -5
     depends_on: Prepare uncompressed T1w for SPM12
-    timeout: 180000
+    timeout: 180
     expected_exit_code: 0
 
   - name: SPM12 read image data
@@ -572,7 +572,7 @@ tests:
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/sub-01_T1w.nii'); Y=spm_read_vols(V); disp(['Mean: ' num2str(mean(Y(:)))])" 2>&1 | tail -10
     depends_on: Prepare uncompressed T1w for SPM12
-    timeout: 180000
+    timeout: 180
     expected_output_contains: "Mean:"
 
   # ==========================================================================
@@ -582,44 +582,44 @@ tests:
     description: Verify p-value function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_P'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM12 exist spm_P_FDR function
     description: Verify FDR correction function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_P_FDR'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM12 exist spm_Tcdf function
     description: Verify T distribution CDF function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_Tcdf'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM12 exist spm_Fcdf function
     description: Verify F distribution CDF function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_Fcdf'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM12 exist spm_Ncdf function
     description: Verify Normal distribution CDF function exists
     command: /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "disp(exist('spm_Ncdf'))" 2>&1
     expected_output_contains: "2"
-    timeout: 180000
+    timeout: 180
 
   - name: SPM12 T-statistic calculation
     description: Calculate T-statistic using SPM function
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "p=spm_Tcdf(2.5,20); disp(['p-value: ' num2str(p)])" 2>&1 | tail -5
-    timeout: 180000
+    timeout: 180
     expected_output_contains: "p-value:"
 
   - name: SPM12 F-statistic calculation
     description: Calculate F-statistic using SPM function
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "p=spm_Fcdf(3.5,[1 20]); disp(['p-value: ' num2str(p)])" 2>&1 | tail -5
-    timeout: 180000
+    timeout: 180
     expected_output_contains: "p-value:"
 
   # ==========================================================================
@@ -892,7 +892,7 @@ tests:
     command: |
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "run('$(pwd)/test_output/spm_batch/segment_dryrun.m')" 2>&1 | tail -10
     depends_on: Create segment verification batch
-    timeout: 180000
+    timeout: 180
     expected_output_contains: "Segmentation batch structure created successfully"
 
   # ==========================================================================

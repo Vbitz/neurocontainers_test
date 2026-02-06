@@ -234,147 +234,147 @@ tests:
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Decimation --decimate 0.5 test_output/sample_mesh.vtp test_output/mesh_decimated.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_decimated.vtp
+      - output_exists: ${output_dir}/mesh_decimated.vtp
 
   - name: Mesh decimation with boundary preservation
     description: Decimate mesh while preserving boundary edges
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Decimation --decimate 0.7 --boundary test_output/sample_mesh.vtp test_output/mesh_decimated_boundary.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_decimated_boundary.vtp
+      - output_exists: ${output_dir}/mesh_decimated_boundary.vtp
 
   - name: Laplacian smoothing
     description: Apply Laplacian smoothing to mesh
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Smoothing --type Laplace --iterations 50 --relaxation 0.5 test_output/sample_mesh.vtp test_output/mesh_laplace_smooth.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_laplace_smooth.vtp
+      - output_exists: ${output_dir}/mesh_laplace_smooth.vtp
 
   - name: Taubin smoothing
     description: Apply Taubin (non-shrinking) smoothing to mesh
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Smoothing --type Taubin --iterations 50 --relaxation 0.5 test_output/sample_mesh.vtp test_output/mesh_taubin_smooth.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_taubin_smooth.vtp
+      - output_exists: ${output_dir}/mesh_taubin_smooth.vtp
 
   - name: Smoothing with boundary preservation
     description: Apply smoothing while preserving boundary edges
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Smoothing --type Laplace --iterations 30 --boundary test_output/sample_mesh.vtp test_output/mesh_smooth_boundary.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_smooth_boundary.vtp
+      - output_exists: ${output_dir}/mesh_smooth_boundary.vtp
 
   - name: Extract mesh borders
     description: Extract border edges from mesh using BordersOut
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/BordersOut test_output/sample_mesh.vtp test_output/mesh_borders.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_borders.vtp
+      - output_exists: ${output_dir}/mesh_borders.vtp
 
   - name: Clean mesh
     description: Clean mesh topology using Cleaner module
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Cleaner test_output/sample_mesh.vtp test_output/mesh_cleaned.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_cleaned.vtp
+      - output_exists: ${output_dir}/mesh_cleaned.vtp
 
   - name: Extract largest connected component
     description: Extract largest connected component from mesh
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Connectivity test_output/sample_mesh.vtp test_output/mesh_connected.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_connected.vtp
+      - output_exists: ${output_dir}/mesh_connected.vtp
 
   - name: Fill holes in mesh
     description: Fill holes in mesh surface using FillHoles
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/FillHoles --holes 500 test_output/sample_mesh.vtp test_output/mesh_filled.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_filled.vtp
+      - output_exists: ${output_dir}/mesh_filled.vtp
 
   - name: Move mesh center to origin
     description: Translate mesh so mass center is at origin
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/MC2Origin test_output/sample_mesh.vtp test_output/mesh_centered.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_centered.vtp
+      - output_exists: ${output_dir}/mesh_centered.vtp
 
   - name: Mirror mesh over X axis
     description: Mirror/reflect mesh over X axis
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Mirror --xAxis test_output/sample_mesh.vtp test_output/mesh_mirror_x.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_mirror_x.vtp
+      - output_exists: ${output_dir}/mesh_mirror_x.vtp
 
   - name: Mirror mesh over Y axis
     description: Mirror/reflect mesh over Y axis
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Mirror --yAxis test_output/sample_mesh.vtp test_output/mesh_mirror_y.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_mirror_y.vtp
+      - output_exists: ${output_dir}/mesh_mirror_y.vtp
 
   - name: Mirror mesh over Z axis
     description: Mirror/reflect mesh over Z axis
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Mirror --zAxis test_output/sample_mesh.vtp test_output/mesh_mirror_z.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_mirror_z.vtp
+      - output_exists: ${output_dir}/mesh_mirror_z.vtp
 
   - name: Compute and orient normals
     description: Compute surface normals with consistent orientation
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Normals --orient test_output/sample_mesh.vtp test_output/mesh_normals.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_normals.vtp
+      - output_exists: ${output_dir}/mesh_normals.vtp
 
   - name: Flip mesh normals
     description: Flip all surface normals
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Normals --flip test_output/sample_mesh.vtp test_output/mesh_normals_flipped.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_normals_flipped.vtp
+      - output_exists: ${output_dir}/mesh_normals_flipped.vtp
 
   - name: Split normals by feature angle
     description: Split normals at sharp feature edges
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Normals --splitting --angle 45 test_output/sample_mesh.vtp test_output/mesh_normals_split.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_normals_split.vtp
+      - output_exists: ${output_dir}/mesh_normals_split.vtp
 
   - name: Relax mesh polygons
     description: Relax polygon distribution using relaxPolygons
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/relaxPolygons --iterations 10 test_output/sample_mesh.vtp test_output/mesh_relaxed.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_relaxed.vtp
+      - output_exists: ${output_dir}/mesh_relaxed.vtp
 
   - name: Scale mesh uniformly
     description: Scale mesh uniformly by factor of 2
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/scaleMesh --dimX 2 --dimY 2 --dimZ 2 test_output/sample_mesh.vtp test_output/mesh_scaled_uniform.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_scaled_uniform.vtp
+      - output_exists: ${output_dir}/mesh_scaled_uniform.vtp
 
   - name: Scale mesh non-uniformly
     description: Scale mesh with different factors per axis
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/scaleMesh --dimX 1.5 --dimY 1.0 --dimZ 2.0 test_output/sample_mesh.vtp test_output/mesh_scaled_nonuniform.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_scaled_nonuniform.vtp
+      - output_exists: ${output_dir}/mesh_scaled_nonuniform.vtp
 
   - name: Translate mesh
     description: Translate mesh by specified offset
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/translateMesh --dimX 10 --dimY 20 --dimZ 30 test_output/sample_mesh.vtp test_output/mesh_translated.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_translated.vtp
+      - output_exists: ${output_dir}/mesh_translated.vtp
 
   - name: Merge two models
     description: Merge two mesh models into one
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/MergeModels test_output/sample_mesh.vtp test_output/mesh_translated.vtp test_output/mesh_merged.vtp 2>&1
     depends_on: Translate mesh
     validate:
-      - output_exists: test_output/mesh_merged.vtp
+      - output_exists: ${output_dir}/mesh_merged.vtp
 
   # ==========================================================================
   # DISTANCE AND COMPARISON
@@ -384,28 +384,28 @@ tests:
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/ModelToModelDistance -s test_output/sample_mesh.vtp -t test_output/mesh_scaled_uniform.vtp -o test_output/distance_signed.vtp -d signed_closest_point 2>&1
     depends_on: Scale mesh uniformly
     validate:
-      - output_exists: test_output/distance_signed.vtp
+      - output_exists: ${output_dir}/distance_signed.vtp
 
   - name: Model to model distance - absolute closest point
     description: Compute absolute closest point distance between meshes
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/ModelToModelDistance -s test_output/sample_mesh.vtp -t test_output/mesh_scaled_uniform.vtp -o test_output/distance_absolute.vtp -d absolute_closest_point 2>&1
     depends_on: Scale mesh uniformly
     validate:
-      - output_exists: test_output/distance_absolute.vtp
+      - output_exists: ${output_dir}/distance_absolute.vtp
 
   - name: Model to model distance - point to point
     description: Compute corresponding point-to-point distance between meshes
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/ModelToModelDistance -s test_output/sample_mesh.vtp -t test_output/sample_mesh.vtp -o test_output/distance_p2p.vtp -d corresponding_point_to_point 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/distance_p2p.vtp
+      - output_exists: ${output_dir}/distance_p2p.vtp
 
   - name: Model to model distance with target field names
     description: Compute distance and save target model name in fields
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/ModelToModelDistance -s test_output/sample_mesh.vtp -t test_output/mesh_laplace_smooth.vtp -o test_output/distance_with_fields.vtp -f 2>&1
     depends_on: Laplacian smoothing
     validate:
-      - output_exists: test_output/distance_with_fields.vtp
+      - output_exists: ${output_dir}/distance_with_fields.vtp
 
   # ==========================================================================
   # MESH REGISTRATION
@@ -415,14 +415,14 @@ tests:
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/MeshToMeshRegistration --templateMesh test_output/sample_mesh.vtp --targetMesh test_output/mesh_scaled_uniform.vtp --registeredTemplate test_output/mesh_registered.vtp 2>&1
     depends_on: Scale mesh uniformly
     validate:
-      - output_exists: test_output/mesh_registered.vtp
+      - output_exists: ${output_dir}/mesh_registered.vtp
 
   - name: Diffeomorphic mesh registration
     description: Perform diffeomorphic registration between meshes
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/MeshToMeshDiffeoRegistration --templateMesh test_output/sample_mesh.vtp --targetMesh test_output/mesh_scaled_uniform.vtp --registeredTemplate test_output/mesh_diffeo_registered.vtp 2>&1
     depends_on: Scale mesh uniformly
     validate:
-      - output_exists: test_output/mesh_diffeo_registered.vtp
+      - output_exists: ${output_dir}/mesh_diffeo_registered.vtp
 
   # ==========================================================================
   # CHAINED PROCESSING PIPELINES
@@ -436,7 +436,7 @@ tests:
       /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Normals --orient test_output/pipeline_step3.vtp test_output/mesh_preprocessed.vtp
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_preprocessed.vtp
+      - output_exists: ${output_dir}/mesh_preprocessed.vtp
 
   - name: Mesh simplification pipeline
     description: Decimate and then clean for efficient mesh
@@ -446,14 +446,14 @@ tests:
       /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/Connectivity test_output/simplified_step2.vtp test_output/mesh_simplified.vtp
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_simplified.vtp
+      - output_exists: ${output_dir}/mesh_simplified.vtp
 
   - name: Surface features extraction
     description: Extract surface features from mesh
     command: /opt/SlicerSALT-3.0.0-linux-amd64/lib/SlicerSALT-4.11/cli-modules/surfacefeaturesextractor test_output/sample_mesh.vtp test_output/mesh_features.vtp 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/mesh_features.vtp
+      - output_exists: ${output_dir}/mesh_features.vtp
 
 cleanup:
   script: |

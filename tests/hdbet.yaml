@@ -65,15 +65,15 @@ tests:
     description: Test basic brain extraction using fast mode on CPU
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_fast -device cpu -mode fast -tta 0
     validate:
-      - output_exists: test_output/t1w_brain_fast.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_fast.nii.gz
     timeout: 600
 
   - name: Brain mask generated fast mode
     description: Verify brain mask is generated alongside brain extraction
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_fast_mask_test -device cpu -mode fast -tta 0 -s 1
     validate:
-      - output_exists: test_output/t1w_brain_fast_mask_test.nii.gz
-      - output_exists: test_output/t1w_brain_fast_mask_test_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_fast_mask_test.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_fast_mask_test_mask.nii.gz
     timeout: 600
 
   - name: Verify fast mode brain output dimensions
@@ -95,15 +95,15 @@ tests:
     description: Test brain extraction using accurate mode (ensemble of 5 models)
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_accurate -device cpu -mode accurate -tta 0
     validate:
-      - output_exists: test_output/t1w_brain_accurate.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_accurate.nii.gz
     timeout: 1200
 
   - name: Brain mask generated accurate mode
     description: Verify brain mask is generated in accurate mode
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_accurate_mask_test -device cpu -mode accurate -tta 0 -s 1
     validate:
-      - output_exists: test_output/t1w_brain_accurate_mask_test.nii.gz
-      - output_exists: test_output/t1w_brain_accurate_mask_test_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_accurate_mask_test.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_accurate_mask_test_mask.nii.gz
     timeout: 1200
 
   # ==========================================================================
@@ -113,14 +113,14 @@ tests:
     description: Test brain extraction with test time augmentation disabled
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_no_tta -device cpu -mode fast -tta 0
     validate:
-      - output_exists: test_output/t1w_brain_no_tta.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_no_tta.nii.gz
     timeout: 600
 
   - name: Brain extraction with TTA enabled
     description: Test brain extraction with test time augmentation enabled (slower but potentially more accurate)
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_with_tta -device cpu -mode fast -tta 1
     validate:
-      - output_exists: test_output/t1w_brain_with_tta.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_with_tta.nii.gz
     timeout: 900
 
   # ==========================================================================
@@ -130,14 +130,14 @@ tests:
     description: Test brain extraction with postprocessing (largest connected component)
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_pp_on -device cpu -mode fast -tta 0 -pp 1
     validate:
-      - output_exists: test_output/t1w_brain_pp_on.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_pp_on.nii.gz
     timeout: 600
 
   - name: Brain extraction with postprocessing disabled
     description: Test brain extraction without postprocessing
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_pp_off -device cpu -mode fast -tta 0 -pp 0
     validate:
-      - output_exists: test_output/t1w_brain_pp_off.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_pp_off.nii.gz
     timeout: 600
 
   # ==========================================================================
@@ -147,15 +147,15 @@ tests:
     description: Test saving both skull-stripped brain and binary mask
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_save_mask -device cpu -mode fast -tta 0 -s 1
     validate:
-      - output_exists: test_output/t1w_brain_save_mask.nii.gz
-      - output_exists: test_output/t1w_brain_save_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_save_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_save_mask_mask.nii.gz
     timeout: 600
 
   - name: Do not save mask
     description: Test saving only skull-stripped brain without mask
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_no_mask_save -device cpu -mode fast -tta 0 -s 0
     validate:
-      - output_exists: test_output/t1w_brain_no_mask_save.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_no_mask_save.nii.gz
     timeout: 600
 
   # ==========================================================================
@@ -207,15 +207,15 @@ tests:
     description: Test brain extraction on T2-weighted (inplane) image
     command: hd-bet -i ${t2} -o test_output/t2_brain -device cpu -mode fast -tta 0
     validate:
-      - output_exists: test_output/t2_brain.nii.gz
+      - output_exists: ${output_dir}/t2_brain.nii.gz
     timeout: 600
 
   - name: T2 brain mask generated
     description: Verify brain mask generated for T2 image
     command: hd-bet -i ${t2} -o test_output/t2_brain_with_mask -device cpu -mode fast -tta 0 -s 1
     validate:
-      - output_exists: test_output/t2_brain_with_mask.nii.gz
-      - output_exists: test_output/t2_brain_with_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t2_brain_with_mask.nii.gz
+      - output_exists: ${output_dir}/t2_brain_with_mask_mask.nii.gz
     timeout: 600
 
   # ==========================================================================
@@ -227,7 +227,7 @@ tests:
       hd-bet -i ${t1w} -o test_output/t1w_brain_overwrite -device cpu -mode fast -tta 0 2>&1 && \
       hd-bet -i ${t1w} -o test_output/t1w_brain_overwrite -device cpu -mode fast -tta 0 --overwrite_existing 1 2>&1
     validate:
-      - output_exists: test_output/t1w_brain_overwrite.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_overwrite.nii.gz
     timeout: 1200
 
   - name: Skip existing output
@@ -236,7 +236,7 @@ tests:
       hd-bet -i ${t1w} -o test_output/t1w_brain_skip -device cpu -mode fast -tta 0 2>&1 && \
       hd-bet -i ${t1w} -o test_output/t1w_brain_skip -device cpu -mode fast -tta 0 --overwrite_existing 0 2>&1
     validate:
-      - output_exists: test_output/t1w_brain_skip.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_skip.nii.gz
     timeout: 1200
 
   # ==========================================================================
@@ -267,16 +267,16 @@ tests:
     description: Test all options combined in fast mode
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_full_fast -device cpu -mode fast -tta 0 -pp 1 -s 1 --overwrite_existing 1
     validate:
-      - output_exists: test_output/t1w_brain_full_fast.nii.gz
-      - output_exists: test_output/t1w_brain_full_fast_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_full_fast.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_full_fast_mask.nii.gz
     timeout: 600
 
   - name: Full options accurate mode
     description: Test all options combined in accurate mode
     command: hd-bet -i ${t1w} -o test_output/t1w_brain_full_accurate -device cpu -mode accurate -tta 0 -pp 1 -s 1 --overwrite_existing 1
     validate:
-      - output_exists: test_output/t1w_brain_full_accurate.nii.gz
-      - output_exists: test_output/t1w_brain_full_accurate_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_full_accurate.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_full_accurate_mask.nii.gz
     timeout: 1200
 
   # ==========================================================================

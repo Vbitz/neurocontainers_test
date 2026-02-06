@@ -141,7 +141,7 @@ tests:
       println("SWI saved successfully")
       '
     validate:
-      - output_exists: test_output/clearswi/swi_default.nii
+      - output_exists: ${output_dir}/clearswi/swi_default.nii
 
   # ==========================================================================
   # MINIMUM INTENSITY PROJECTION (MIP)
@@ -164,7 +164,7 @@ tests:
     expected_output_contains:
       - "MIP shape: (51, 51, 35)"
     validate:
-      - output_exists: test_output/clearswi/mip_default.nii
+      - output_exists: ${output_dir}/clearswi/mip_default.nii
 
   - name: Create MIP custom depth
     description: Test createMIP with custom depth parameter
@@ -203,7 +203,7 @@ tests:
     expected_output_contains:
       - "MaxIP shape: (51, 51, 35)"
     validate:
-      - output_exists: test_output/clearswi/maxip.nii
+      - output_exists: ${output_dir}/clearswi/maxip.nii
 
   # ==========================================================================
   # MAGNITUDE COMBINATION OPTIONS
@@ -223,7 +223,7 @@ tests:
       println("mag_combine=:SNR completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_mag_snr.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_mag_snr.nii
 
   - name: Magnitude combine average
     description: Test mag_combine=:average (simple averaging across echoes)
@@ -240,7 +240,7 @@ tests:
       println("mag_combine=:average completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_mag_average.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_mag_average.nii
 
   - name: Magnitude combine last echo
     description: Test mag_combine=:last (use last echo only)
@@ -257,7 +257,7 @@ tests:
       println("mag_combine=:last completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_mag_last.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_mag_last.nii
 
   - name: Magnitude combine specific echo
     description: Test mag_combine=(:echo => 2) (select specific echo)
@@ -274,7 +274,7 @@ tests:
       println("mag_combine=(:echo => 2) completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_mag_echo2.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_mag_echo2.nii
 
   - name: Magnitude combine closest TE
     description: Test mag_combine=(:closest => 8) (select echo closest to TE)
@@ -291,7 +291,7 @@ tests:
       println("mag_combine=(:closest => 8) completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_mag_closest8.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_mag_closest8.nii
 
   # ==========================================================================
   # MAGNITUDE PROCESSING OPTIONS
@@ -311,7 +311,7 @@ tests:
       println("mag_softplus=false completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_no_softplus.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_no_softplus.nii
 
   - name: Custom sensitivity (no correction)
     description: Test mag_sens=[1] (constant sensitivity, no correction)
@@ -328,7 +328,7 @@ tests:
       println("mag_sens=[1] completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_no_sens_corr.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_no_sens_corr.nii
 
   # ==========================================================================
   # PHASE UNWRAPPING OPTIONS
@@ -348,7 +348,7 @@ tests:
       println("phase_unwrap=:laplacian completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_unwrap_laplacian.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_laplacian.nii
 
   - name: Phase unwrap ROMEO
     description: Test phase_unwrap=:romeo (ROMEO algorithm unwrapping)
@@ -365,7 +365,7 @@ tests:
       println("phase_unwrap=:romeo completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_unwrap_romeo.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_romeo.nii
 
   - name: Phase unwrap Laplacian slice
     description: Test phase_unwrap=:laplacianslice (slicewise Laplacian)
@@ -382,7 +382,7 @@ tests:
       println("phase_unwrap=:laplacianslice completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_unwrap_laplacianslice.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_laplacianslice.nii
 
   # ==========================================================================
   # PHASE HIGH-PASS FILTER OPTIONS
@@ -402,7 +402,7 @@ tests:
       println("phase_hp_sigma=[4,4,0] completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_hp_2d_default.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_hp_2d_default.nii
 
   - name: Phase high-pass 3D
     description: Test phase_hp_sigma=[10,10,5] (3D high-pass filter)
@@ -419,7 +419,7 @@ tests:
       println("phase_hp_sigma=[10,10,5] completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_hp_3d.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_hp_3d.nii
 
   - name: Phase high-pass large kernel
     description: Test phase_hp_sigma=[20,20,10] (large kernel 3D filter)
@@ -436,7 +436,7 @@ tests:
       println("phase_hp_sigma=[20,20,10] completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_hp_large.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_hp_large.nii
 
   # ==========================================================================
   # PHASE SCALING OPTIONS
@@ -456,7 +456,7 @@ tests:
       println("phase_scaling_type=:tanh completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_scale_tanh.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_scale_tanh.nii
 
   - name: Phase scaling positive
     description: Test phase_scaling_type=:positive (traditional SWI positive)
@@ -473,7 +473,7 @@ tests:
       println("phase_scaling_type=:positive completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_scale_positive.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_scale_positive.nii
 
   - name: Phase scaling negative
     description: Test phase_scaling_type=:negative (traditional SWI negative)
@@ -490,7 +490,7 @@ tests:
       println("phase_scaling_type=:negative completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_scale_negative.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_scale_negative.nii
 
   - name: Phase scaling triangular
     description: Test phase_scaling_type=:triangular (traditional SWI triangular)
@@ -507,7 +507,7 @@ tests:
       println("phase_scaling_type=:triangular completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_scale_triangular.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_scale_triangular.nii
 
   # ==========================================================================
   # PHASE SCALING STRENGTH OPTIONS
@@ -527,7 +527,7 @@ tests:
       println("phase_scaling_strength=2 completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_strength_2.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_strength_2.nii
 
   - name: Phase scaling strength 4
     description: Test phase_scaling_strength=4 (default phase mask strength)
@@ -544,7 +544,7 @@ tests:
       println("phase_scaling_strength=4 completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_strength_4.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_strength_4.nii
 
   - name: Phase scaling strength 8
     description: Test phase_scaling_strength=8 (strong phase mask)
@@ -561,7 +561,7 @@ tests:
       println("phase_scaling_strength=8 completed")
       '
     validate:
-      - output_exists: test_output/clearswi/options/swi_strength_8.nii
+      - output_exists: ${output_dir}/clearswi/options/swi_strength_8.nii
 
   # ==========================================================================
   # INTERMEDIATE STEPS OUTPUT
@@ -581,15 +581,15 @@ tests:
       println("Intermediate steps saved")
       '
     validate:
-      - output_exists: test_output/clearswi/steps/intermediate/combined_mag.nii
-      - output_exists: test_output/clearswi/steps/intermediate/combinedphase.nii
-      - output_exists: test_output/clearswi/steps/intermediate/filteredphase.nii
-      - output_exists: test_output/clearswi/steps/intermediate/unwrappedphase.nii
-      - output_exists: test_output/clearswi/steps/intermediate/sensitivity.nii
-      - output_exists: test_output/clearswi/steps/intermediate/sensitivity_corrected_mag.nii
-      - output_exists: test_output/clearswi/steps/intermediate/swimag.nii
-      - output_exists: test_output/clearswi/steps/intermediate/swiphase.nii
-      - output_exists: test_output/clearswi/steps/intermediate/maskforphase.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/combined_mag.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/combinedphase.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/filteredphase.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/unwrappedphase.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/sensitivity.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/sensitivity_corrected_mag.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/swimag.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/swiphase.nii
+      - output_exists: ${output_dir}/clearswi/steps/intermediate/maskforphase.nii
 
   # ==========================================================================
   # SINGLE-ECHO SWI
@@ -618,7 +618,7 @@ tests:
     expected_output_contains:
       - "Single-echo SWI shape: (51, 51, 41)"
     validate:
-      - output_exists: test_output/clearswi/swi_single_echo.nii
+      - output_exists: ${output_dir}/clearswi/swi_single_echo.nii
 
   # ==========================================================================
   # DUAL-ECHO SWI
@@ -647,7 +647,7 @@ tests:
     expected_output_contains:
       - "Dual-echo SWI shape: (51, 51, 41)"
     validate:
-      - output_exists: test_output/clearswi/swi_dual_echo.nii
+      - output_exists: ${output_dir}/clearswi/swi_dual_echo.nii
 
   # ==========================================================================
   # INVERTED PHASE
@@ -671,7 +671,7 @@ tests:
       println("Inverted phase SWI completed")
       '
     validate:
-      - output_exists: test_output/clearswi/swi_inverted_phase.nii
+      - output_exists: ${output_dir}/clearswi/swi_inverted_phase.nii
 
   # ==========================================================================
   # COMBINED OPTIONS
@@ -700,7 +700,7 @@ tests:
       println("High quality SWI completed")
       '
     validate:
-      - output_exists: test_output/clearswi/swi_high_quality.nii
+      - output_exists: ${output_dir}/clearswi/swi_high_quality.nii
 
   - name: Combined options - traditional SWI
     description: Test options for traditional SWI appearance
@@ -725,7 +725,7 @@ tests:
       println("Traditional SWI completed")
       '
     validate:
-      - output_exists: test_output/clearswi/swi_traditional.nii
+      - output_exists: ${output_dir}/clearswi/swi_traditional.nii
 
   - name: Combined options - 7T optimized
     description: Test options optimized for 7T ultra-high field
@@ -751,7 +751,7 @@ tests:
       println("7T optimized SWI completed")
       '
     validate:
-      - output_exists: test_output/clearswi/swi_7t_optimized.nii
+      - output_exists: ${output_dir}/clearswi/swi_7t_optimized.nii
 
   # ==========================================================================
   # FULL PIPELINE TEST
@@ -795,9 +795,9 @@ tests:
     expected_output_contains:
       - "Full pipeline completed successfully"
     validate:
-      - output_exists: test_output/clearswi/full_pipeline/swi.nii
-      - output_exists: test_output/clearswi/full_pipeline/mip.nii
-      - output_exists: test_output/clearswi/full_pipeline/maxip.nii
+      - output_exists: ${output_dir}/clearswi/full_pipeline/swi.nii
+      - output_exists: ${output_dir}/clearswi/full_pipeline/mip.nii
+      - output_exists: ${output_dir}/clearswi/full_pipeline/maxip.nii
 
   # ==========================================================================
   # OPTIONS DEFAULTS VERIFICATION

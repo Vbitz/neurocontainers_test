@@ -191,7 +191,7 @@ tests:
     description: Filter by length and save filtered tracks
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -l 10 500 -o test_output/tracks_length_filtered.trk -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/tracks_length_filtered.trk
+      - output_exists: ${output_dir}/tracks_length_filtered.trk
 
   # ==========================================================================
   # SLICE FILTERING
@@ -290,19 +290,19 @@ tests:
     description: Save filtered tracks to new file
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -l 5 1000 -o test_output/tracks_filtered.trk -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/tracks_filtered.trk
+      - output_exists: ${output_dir}/tracks_filtered.trk
 
   - name: Output track volume
     description: Convert tracks to volume image (NIfTI)
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -ov test_output/tracks_volume.nii.gz -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/tracks_volume.nii.gz
+      - output_exists: ${output_dir}/tracks_volume.nii.gz
 
   - name: Output endpoint volume
     description: Convert track endpoints only to volume
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -ov test_output/tracks_endpoints.nii.gz 1 -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/tracks_endpoints.nii.gz
+      - output_exists: ${output_dir}/tracks_endpoints.nii.gz
 
   # ==========================================================================
   # CAMERA OPERATIONS (for screen capture/batch processing)
@@ -311,7 +311,7 @@ tests:
     description: Save camera position to file
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -save_cam test_output/camera.cam -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/camera.cam
+      - output_exists: ${output_dir}/camera.cam
 
   - name: Camera azimuth rotation
     description: Apply camera rotation (no display)
@@ -471,7 +471,7 @@ tests:
     description: Output ROI region to volume
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -roi_pt 80 96 96 10 0 -o_roi test_output/roi_output.nii.gz -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/roi_output.nii.gz
+      - output_exists: ${output_dir}/roi_output.nii.gz
 
   - name: ROI display with tracks
     description: Display ROI overlays
@@ -554,7 +554,7 @@ tests:
     description: Combine multiple filtering options
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -l 10 500 -nx 70 100 -u -0.8 0.8 -o test_output/tracks_complex.trk -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/tracks_complex.trk
+      - output_exists: ${output_dir}/tracks_complex.trk
 
   - name: Filter with brain overlay
     description: Filter tracks with brain image display
@@ -565,7 +565,7 @@ tests:
     description: Filter by ROI pointer and save volume
     command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -roi_pt 80 96 96 15 1 -ov test_output/roi_filtered_vol.nii.gz -nr -disable_log 2>&1
     validate:
-      - output_exists: test_output/roi_filtered_vol.nii.gz
+      - output_exists: ${output_dir}/roi_filtered_vol.nii.gz
 
   - name: Full display pipeline
     description: Combine display options (no render)

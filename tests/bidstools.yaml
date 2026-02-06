@@ -1022,31 +1022,31 @@ tests:
     description: Convert NIfTI to Analyze format
     command: medcon -f ${t2} -c anlz -o test_output/bidstools/medcon/t2_anlz 2>&1 && ls test_output/bidstools/medcon/m*.hdr
     validate:
-      - output_exists: test_output/bidstools/medcon/m000-sub-01_inplaneT2.hdr
+      - output_exists: ${output_dir}/bidstools/medcon/m000-sub-01_inplaneT2.hdr
 
   - name: medcon NIfTI to InterFile
     description: Convert NIfTI to InterFile format
     command: medcon -f ${t2} -c intf -o test_output/bidstools/medcon/t2_intf 2>&1 && ls test_output/bidstools/medcon/m*.h33
     validate:
-      - output_exists: test_output/bidstools/medcon/m000-sub-01_inplaneT2.h33
+      - output_exists: ${output_dir}/bidstools/medcon/m000-sub-01_inplaneT2.h33
 
   - name: medcon NIfTI to raw binary
     description: Convert NIfTI to raw binary format
     command: medcon -f ${t2} -c bin -o test_output/bidstools/medcon/t2_bin 2>&1 && ls test_output/bidstools/medcon/m*.bin
     validate:
-      - output_exists: test_output/bidstools/medcon/m000-sub-01_inplaneT2.bin
+      - output_exists: ${output_dir}/bidstools/medcon/m000-sub-01_inplaneT2.bin
 
   - name: medcon NIfTI to ASCII
     description: Convert NIfTI to ASCII format
     command: medcon -f ${t2} -c ascii -o test_output/bidstools/medcon/t2_ascii 2>&1 && ls test_output/bidstools/medcon/m*.asc
     validate:
-      - output_exists: test_output/bidstools/medcon/m000-sub-01_inplaneT2.asc
+      - output_exists: ${output_dir}/bidstools/medcon/m000-sub-01_inplaneT2.asc
 
   - name: medcon NIfTI to NIfTI copy
     description: Convert NIfTI to NIfTI (format verification)
     command: medcon -f ${t2} -c nifti -o test_output/bidstools/medcon/t2_nii 2>&1 && ls test_output/bidstools/medcon/m*.nii
     validate:
-      - output_exists: test_output/bidstools/medcon/m000-sub-01_inplaneT2.nii
+      - output_exists: ${output_dir}/bidstools/medcon/m000-sub-01_inplaneT2.nii
 
   - name: medcon NIfTI to PNG
     description: Convert NIfTI to PNG image

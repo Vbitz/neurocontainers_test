@@ -80,109 +80,109 @@ tests:
     description: Copy image using image calculator (i1)
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_copy.nii --expression "i1" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_copy.nii
+      - output_exists: ${output_dir}/imcalc/t1w_copy.nii
 
   - name: ImCalc scalar multiplication
     description: Multiply image by scalar value
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_mul2.nii --expression "i1*2" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_mul2.nii
+      - output_exists: ${output_dir}/imcalc/t1w_mul2.nii
 
   - name: ImCalc scalar addition
     description: Add scalar to image
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_add100.nii --expression "i1+100" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_add100.nii
+      - output_exists: ${output_dir}/imcalc/t1w_add100.nii
 
   - name: ImCalc division
     description: Divide image by scalar
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_div2.nii --expression "i1/2" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_div2.nii
+      - output_exists: ${output_dir}/imcalc/t1w_div2.nii
 
   - name: ImCalc square root
     description: Calculate square root of image
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_sqrt.nii --expression "sqrt(i1)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_sqrt.nii
+      - output_exists: ${output_dir}/imcalc/t1w_sqrt.nii
 
   - name: ImCalc log transform
     description: Calculate natural log (with threshold)
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_log.nii --expression "log(i1+1)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_log.nii
+      - output_exists: ${output_dir}/imcalc/t1w_log.nii
 
   - name: ImCalc exponential
     description: Calculate exponential (scaled)
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_exp.nii --expression "exp(i1/1000)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_exp.nii
+      - output_exists: ${output_dir}/imcalc/t1w_exp.nii
 
   - name: ImCalc absolute value
     description: Calculate absolute value
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_abs.nii --expression "abs(i1)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_abs.nii
+      - output_exists: ${output_dir}/imcalc/t1w_abs.nii
 
   - name: ImCalc thresholding
     description: Apply threshold to image
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_thr.nii --expression "i1.*(i1>100)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_thr.nii
+      - output_exists: ${output_dir}/imcalc/t1w_thr.nii
 
   - name: ImCalc binarize
     description: Binarize image at threshold
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_bin.nii --expression "i1>100" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_bin.nii
+      - output_exists: ${output_dir}/imcalc/t1w_bin.nii
 
   - name: ImCalc power function
     description: Raise image to power
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_pow2.nii --expression "i1.^2" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_pow2.nii
+      - output_exists: ${output_dir}/imcalc/t1w_pow2.nii
 
   - name: ImCalc trigonometric sin
     description: Calculate sine of image
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_sin.nii --expression "sin(i1)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_sin.nii
+      - output_exists: ${output_dir}/imcalc/t1w_sin.nii
 
   - name: ImCalc trigonometric cos
     description: Calculate cosine of image
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_cos.nii --expression "cos(i1)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_cos.nii
+      - output_exists: ${output_dir}/imcalc/t1w_cos.nii
 
   - name: ImCalc min clamp
     description: Clamp minimum values
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_minclamp.nii --expression "max(i1,50)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_minclamp.nii
+      - output_exists: ${output_dir}/imcalc/t1w_minclamp.nii
 
   - name: ImCalc max clamp
     description: Clamp maximum values
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_maxclamp.nii --expression "min(i1,500)" 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_maxclamp.nii
+      - output_exists: ${output_dir}/imcalc/t1w_maxclamp.nii
 
   - name: ImCalc NaN replacement
     description: Replace NaN values with zero
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_nantozero.nii --expression "i1" --options --mask 0 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_nantozero.nii
+      - output_exists: ${output_dir}/imcalc/t1w_nantozero.nii
 
   - name: ImCalc output dtype float
     description: Output as single precision float
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_float.nii --expression "i1" --dtype 16 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_float.nii
+      - output_exists: ${output_dir}/imcalc/t1w_float.nii
 
   - name: ImCalc output dtype int16
     description: Output as int16
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_int16.nii --expression "i1" --dtype 4 2>&1
     validate:
-      - output_exists: test_output/imcalc/t1w_int16.nii
+      - output_exists: ${output_dir}/imcalc/t1w_int16.nii
 
   # ==========================================================================
   # UTILITY FUNCTIONS - GENERAL

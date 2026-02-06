@@ -534,13 +534,13 @@ tests:
     description: Test mrcalc basic arithmetic
     command: mrcalc ${t1w} 2 -mult test_output/t1w_mult2.nii.gz -force 2>&1 && ls test_output/t1w_mult2.nii.gz
     validate:
-      - output_exists: test_output/t1w_mult2.nii.gz
+      - output_exists: ${output_dir}/t1w_mult2.nii.gz
 
   - name: FSL fslmaths basic math
     description: Test fslmaths basic arithmetic
     command: fslmaths ${t1w} -mul 2 test_output/t1w_fslmul2.nii.gz && ls test_output/t1w_fslmul2.nii.gz
     validate:
-      - output_exists: test_output/t1w_fslmul2.nii.gz
+      - output_exists: ${output_dir}/t1w_fslmul2.nii.gz
 
   - name: MRtrix3 mrstats
     description: Test mrstats to compute image statistics
@@ -559,14 +559,14 @@ tests:
     description: Convert NIfTI to MRtrix MIF format
     command: mrconvert ${t1w} test_output/t1w.mif -force 2>&1 && ls test_output/t1w.mif
     validate:
-      - output_exists: test_output/t1w.mif
+      - output_exists: ${output_dir}/t1w.mif
 
   - name: MRtrix3 mrconvert MIF to NIfTI
     description: Convert MRtrix MIF back to NIfTI
     command: mrconvert test_output/t1w.mif test_output/t1w_from_mif.nii.gz -force 2>&1 && ls test_output/t1w_from_mif.nii.gz
     depends_on: MRtrix3 mrconvert NIfTI to MIF
     validate:
-      - output_exists: test_output/t1w_from_mif.nii.gz
+      - output_exists: ${output_dir}/t1w_from_mif.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Brain Extraction
@@ -575,14 +575,14 @@ tests:
     description: Test FSL bet brain extraction
     command: bet ${t1w} test_output/t1w_brain -m 2>&1 && ls test_output/t1w_brain.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
 
   - name: FSL bet mask generation
     description: Verify brain mask was generated
     command: ls test_output/t1w_brain_mask.nii.gz
     depends_on: FSL bet brain extraction
     validate:
-      - output_exists: test_output/t1w_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Image Resampling
@@ -591,13 +591,13 @@ tests:
     description: Test mrgrid resampling to different resolution
     command: mrgrid ${t1w} regrid test_output/t1w_2mm.nii.gz -voxel 2 -force 2>&1 && ls test_output/t1w_2mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_2mm.nii.gz
 
   - name: DIPY reslice
     description: Test DIPY reslicing
     command: dipy_reslice ${t1w} --out_dir test_output --out_resliced t1w_dipy_resliced.nii.gz --new_vox_size 2 2 2 --force 2>&1 && ls test_output/t1w_dipy_resliced.nii.gz
     validate:
-      - output_exists: test_output/t1w_dipy_resliced.nii.gz
+      - output_exists: ${output_dir}/t1w_dipy_resliced.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Smoothing
@@ -606,13 +606,13 @@ tests:
     description: Test fslmaths Gaussian smoothing
     command: fslmaths ${t1w} -s 2 test_output/t1w_smooth.nii.gz && ls test_output/t1w_smooth.nii.gz
     validate:
-      - output_exists: test_output/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth.nii.gz
 
   - name: MRtrix3 mrfilter smooth
     description: Test mrfilter Gaussian smoothing
     command: mrfilter ${t1w} smooth test_output/t1w_mrsmooth.nii.gz -stdev 2 -force 2>&1 && ls test_output/t1w_mrsmooth.nii.gz
     validate:
-      - output_exists: test_output/t1w_mrsmooth.nii.gz
+      - output_exists: ${output_dir}/t1w_mrsmooth.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Thresholding and Masking
@@ -621,19 +621,19 @@ tests:
     description: Test fslmaths thresholding
     command: fslmaths ${t1w} -thr 100 test_output/t1w_thr100.nii.gz && ls test_output/t1w_thr100.nii.gz
     validate:
-      - output_exists: test_output/t1w_thr100.nii.gz
+      - output_exists: ${output_dir}/t1w_thr100.nii.gz
 
   - name: FSL fslmaths binarize
     description: Test fslmaths binarization
     command: fslmaths ${t1w} -bin test_output/t1w_bin.nii.gz && ls test_output/t1w_bin.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin.nii.gz
+      - output_exists: ${output_dir}/t1w_bin.nii.gz
 
   - name: MRtrix3 mrthreshold
     description: Test mrthreshold automatic thresholding
     command: mrthreshold ${t1w} test_output/t1w_mrthreshold.nii.gz -force 2>&1 && ls test_output/t1w_mrthreshold.nii.gz
     validate:
-      - output_exists: test_output/t1w_mrthreshold.nii.gz
+      - output_exists: ${output_dir}/t1w_mrthreshold.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - 4D Data Operations
@@ -642,19 +642,19 @@ tests:
     description: Test fslmaths temporal mean on 4D data
     command: fslmaths ${bold} -Tmean test_output/bold_Tmean.nii.gz && ls test_output/bold_Tmean.nii.gz
     validate:
-      - output_exists: test_output/bold_Tmean.nii.gz
+      - output_exists: ${output_dir}/bold_Tmean.nii.gz
 
   - name: FSL fslmaths temporal std
     description: Test fslmaths temporal standard deviation
     command: fslmaths ${bold} -Tstd test_output/bold_Tstd.nii.gz && ls test_output/bold_Tstd.nii.gz
     validate:
-      - output_exists: test_output/bold_Tstd.nii.gz
+      - output_exists: ${output_dir}/bold_Tstd.nii.gz
 
   - name: MRtrix3 mrmath mean
     description: Test mrmath mean along axis
     command: mrmath ${bold} mean test_output/bold_mrmean.nii.gz -axis 3 -force 2>&1 && ls test_output/bold_mrmean.nii.gz
     validate:
-      - output_exists: test_output/bold_mrmean.nii.gz
+      - output_exists: ${output_dir}/bold_mrmean.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Morphological Operations
@@ -664,21 +664,21 @@ tests:
     command: fslmaths test_output/t1w_brain_mask.nii.gz -ero test_output/mask_ero.nii.gz && ls test_output/mask_ero.nii.gz
     depends_on: FSL bet brain extraction
     validate:
-      - output_exists: test_output/mask_ero.nii.gz
+      - output_exists: ${output_dir}/mask_ero.nii.gz
 
   - name: FSL fslmaths dilation
     description: Test fslmaths dilation
     command: fslmaths test_output/t1w_brain_mask.nii.gz -dilM test_output/mask_dil.nii.gz && ls test_output/mask_dil.nii.gz
     depends_on: FSL bet brain extraction
     validate:
-      - output_exists: test_output/mask_dil.nii.gz
+      - output_exists: ${output_dir}/mask_dil.nii.gz
 
   - name: FSL fslmaths fill holes
     description: Test fslmaths fill holes
     command: fslmaths test_output/t1w_brain_mask.nii.gz -fillh test_output/mask_fillh.nii.gz && ls test_output/mask_fillh.nii.gz
     depends_on: FSL bet brain extraction
     validate:
-      - output_exists: test_output/mask_fillh.nii.gz
+      - output_exists: ${output_dir}/mask_fillh.nii.gz
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Python API Tests

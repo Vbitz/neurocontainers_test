@@ -483,7 +483,7 @@ tests:
     description: Test creating NIfTI files for vessel data
     command: python -c "import nibabel as nib; import numpy as np; data = np.random.randint(0, 2, (10,10,10), dtype=np.uint8); img = nib.Nifti1Image(data, np.eye(4)); nib.save(img, 'test_output/test_vessel.nii.gz'); print('NIfTI file created successfully')"
     validate:
-      - output_exists: test_output/test_vessel.nii.gz
+      - output_exists: ${output_dir}/test_vessel.nii.gz
 
   - name: NiBabel NIfTI reading
     description: Test reading NIfTI files
@@ -495,7 +495,7 @@ tests:
     description: Test creating TIFF files for vessel images
     command: python -c "import tifffile; import numpy as np; data = np.random.randint(0, 255, (50,50,50), dtype=np.uint8); tifffile.imwrite('test_output/test_vessel.tif', data); print('TIFF file created successfully')"
     validate:
-      - output_exists: test_output/test_vessel.tif
+      - output_exists: ${output_dir}/test_vessel.tif
 
   - name: TIFF file reading
     description: Test reading TIFF files
@@ -507,13 +507,13 @@ tests:
     description: Test exporting vessel metrics to CSV
     command: "python -c \"import pandas as pd; df = pd.DataFrame({'segment_id': [1,2,3], 'length': [10.5, 15.2, 8.7], 'radius': [1.2, 1.5, 0.9]}); df.to_csv('test_output/vessel_metrics.csv', index=False); print('CSV exported successfully')\""
     validate:
-      - output_exists: test_output/vessel_metrics.csv
+      - output_exists: ${output_dir}/vessel_metrics.csv
 
   - name: Excel export with openpyxl
     description: Test exporting vessel data to Excel
     command: "python -c \"import pandas as pd; df = pd.DataFrame({'vessel': [1,2], 'volume': [100, 200]}); df.to_excel('test_output/vessel_data.xlsx', index=False); print('Excel file created successfully')\""
     validate:
-      - output_exists: test_output/vessel_data.xlsx
+      - output_exists: ${output_dir}/vessel_data.xlsx
 
   # ==========================================================================
   # SYNTHETIC VESSEL DATA GENERATION
@@ -542,7 +542,7 @@ tests:
       print('Volume sum:', vol.sum())
       "
     validate:
-      - output_exists: test_output/synthetic_vessel.nii.gz
+      - output_exists: ${output_dir}/synthetic_vessel.nii.gz
 
   - name: Skeletonize synthetic vessel
     description: Test skeletonization on synthetic vessel data

@@ -410,7 +410,7 @@ tests:
       pigz_mricron test_output/t1w_for_pigz.nii && \
       ls -la test_output/t1w_for_pigz.nii.gz
     validate:
-      - output_exists: test_output/t1w_for_pigz.nii.gz
+      - output_exists: ${output_dir}/t1w_for_pigz.nii.gz
 
   - name: pigz decompress file
     description: Test pigz decompression
@@ -419,7 +419,7 @@ tests:
       ls -la test_output/t1w_for_pigz.nii
     depends_on: pigz compress file
     validate:
-      - output_exists: test_output/t1w_for_pigz.nii
+      - output_exists: ${output_dir}/t1w_for_pigz.nii
 
   - name: pigz compression level 1
     description: Test pigz fastest compression level
@@ -429,7 +429,7 @@ tests:
       pigz_mricron -1 test_output/t1w_pigz_fast.nii && \
       ls -la test_output/t1w_pigz_fast.nii.gz
     validate:
-      - output_exists: test_output/t1w_pigz_fast.nii.gz
+      - output_exists: ${output_dir}/t1w_pigz_fast.nii.gz
 
   - name: pigz compression level 9
     description: Test pigz best compression level
@@ -439,7 +439,7 @@ tests:
       pigz_mricron -9 test_output/t1w_pigz_best.nii && \
       ls -la test_output/t1w_pigz_best.nii.gz
     validate:
-      - output_exists: test_output/t1w_pigz_best.nii.gz
+      - output_exists: ${output_dir}/t1w_pigz_best.nii.gz
 
   - name: pigz keep original
     description: Test pigz with keep original option
@@ -449,8 +449,8 @@ tests:
       pigz_mricron -k test_output/t2_for_pigz.nii && \
       ls test_output/t2_for_pigz.nii test_output/t2_for_pigz.nii.gz
     validate:
-      - output_exists: test_output/t2_for_pigz.nii.gz
-      - output_exists: test_output/t2_for_pigz.nii
+      - output_exists: ${output_dir}/t2_for_pigz.nii.gz
+      - output_exists: ${output_dir}/t2_for_pigz.nii
 
   - name: pigz stdout mode
     description: Test pigz writing to stdout
@@ -460,7 +460,7 @@ tests:
       pigz_mricron -c test_output/t2_stdout.nii > test_output/t2_piped.nii.gz && \
       ls -la test_output/t2_piped.nii.gz
     validate:
-      - output_exists: test_output/t2_piped.nii.gz
+      - output_exists: ${output_dir}/t2_piped.nii.gz
 
   - name: pigz test integrity
     description: Test pigz integrity check
@@ -482,7 +482,7 @@ tests:
       pigz_mricron -z test_output/t2_zlib.nii && \
       ls -la test_output/t2_zlib.nii.zz
     validate:
-      - output_exists: test_output/t2_zlib.nii.zz
+      - output_exists: ${output_dir}/t2_zlib.nii.zz
 
   # ==========================================================================
   # TEMPLATE AND RESOURCE VALIDATION

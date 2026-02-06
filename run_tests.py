@@ -25,6 +25,7 @@ Test files are loaded from tests/ directory. Tests run in work/ directory.
 import argparse
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -80,6 +81,19 @@ class TestSuiteResult:
     skipped: int = 0
     duration: float = 0.0
     results: list[TestResult] = field(default_factory=list)
+
+
+@dataclass
+class PreparedTest:
+    """A test prepared for execution with all context."""
+    suite_name: str
+    container_name: str
+    container_path: Path
+    test: dict
+    variables: dict[str, str]
+    work_dir: Path
+    global_env_setup: str | None
+    default_timeout: int
 
 
 def find_container(container_pattern: str, containers_dir: Path) -> Path | None:
@@ -506,6 +520,109 @@ def run_test_suite_wrapper(args: tuple) -> TestSuiteResult:
     )
 
 
+def prepare_tests_from_yaml(
+    yaml_path: Path,
+    containers_dir: Path,
+    work_dir: Path,
+    test_filter: str | None = None,
+) -> tuple[list[PreparedTest], str | None]:
+    """
+    Prepare all tests from a YAML file for execution.
+    Returns (list of prepared tests, error message if any).
+    """
+    with open(yaml_path) as f:
+        config = yaml.safe_load(f)
+
+    suite_name = config.get("name", yaml_path.stem)
+    container_name = config.get("container", "")
+    default_timeout = config.get("default_timeout", 120)
+
+    # Find container
+    container_path = find_container(container_name, containers_dir)
+    if not container_path:
+        return [], f"Container not found: {container_name}"
+
+    # Build variables dict
+    variables = {}
+    test_data = config.get("test_data", {})
+    for key, value in test_data.items():
+        if key == "output_dir":
+            variables[key] = str(work_dir / value)
+        else:
+            path = Path(value)
+            if not path.is_absolute():
+                path = work_dir / value
+            variables[key] = str(path)
+
+    # Get global env setup
+    global_env_setup = config.get("env_setup")
+
+    # Run setup script
+    setup = config.get("setup", {})
+    setup_script = setup.get("script", "")
+    if setup_script:
+        setup_script = substitute_variables(setup_script, variables)
+        try:
+            subprocess.run(
+                setup_script,
+                shell=True,
+                check=True,
+                cwd=work_dir,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as e:
+            return [], f"Setup failed: {e.stderr.decode() if e.stderr else str(e)}"
+
+    # Get and filter tests
+    tests = config.get("tests", [])
+    if test_filter:
+        pattern = re.compile(test_filter, re.IGNORECASE)
+        tests = [t for t in tests if pattern.search(t.get("name", ""))]
+
+    # Create prepared tests
+    prepared = []
+    for test in tests:
+        prepared.append(PreparedTest(
+            suite_name=suite_name,
+            container_name=container_name,
+            container_path=container_path,
+            test=test,
+            variables=variables,
+            work_dir=work_dir,
+            global_env_setup=global_env_setup,
+            default_timeout=default_timeout,
+        ))
+
+    return prepared, None
+
+
+def run_prepared_test_wrapper(args: tuple) -> tuple[str, str, TestResult]:
+    """Wrapper for running a single prepared test in parallel."""
+    prepared, running_tests = args
+
+    test_name = prepared.test.get("name", "Unnamed test")
+    test_key = f"{prepared.suite_name}: {test_name}"
+
+    # Track running test
+    if running_tests is not None:
+        running_tests[test_key] = True
+
+    result = run_single_test(
+        test=prepared.test,
+        container_path=prepared.container_path,
+        variables=prepared.variables,
+        work_dir=prepared.work_dir,
+        global_env_setup=prepared.global_env_setup,
+        default_timeout=prepared.default_timeout,
+    )
+
+    # Remove from running tests
+    if running_tests is not None:
+        running_tests.pop(test_key, None)
+
+    return prepared.suite_name, prepared.container_name, result
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Run neurocontainer tests",
@@ -654,24 +771,45 @@ def main():
         })
 
     if args.jobs > 1:
-        # Parallel execution with queue-based streaming
+        # Prepare all tests from all YAML files
+        console.print("[dim]Preparing tests...[/]")
+        all_prepared_tests: list[PreparedTest] = []
+        suite_errors: dict[str, str] = {}
+
+        for yaml_path in yaml_files:
+            try:
+                prepared, error = prepare_tests_from_yaml(
+                    yaml_path, containers_dir, work_dir, args.filter
+                )
+                if error:
+                    suite_errors[yaml_path.stem] = error
+                else:
+                    all_prepared_tests.extend(prepared)
+            except Exception as e:
+                suite_errors[yaml_path.stem] = str(e)
+
+        # Shuffle tests to spread load across containers
+        random.shuffle(all_prepared_tests)
+        total_tests = len(all_prepared_tests)
+
+        console.print(f"[dim]Prepared {total_tests} tests from {len(yaml_files)} suites (shuffled)[/]")
+
+        # Report any suite errors
+        for suite_name, error in suite_errors.items():
+            console.print(f"[red]✗[/] {suite_name}: {error}")
+
+        # Parallel execution
         manager = Manager()
-        result_queue = manager.Queue()
         running_tests = manager.dict()
+        test_counts = manager.dict()
+        test_counts["passed"] = 0
+        test_counts["failed"] = 0
+        test_counts["completed"] = 0
 
-        # Background thread to read from queue and write to JSONL
-        queue_stop_event = threading.Event()
-
-        def queue_writer():
-            while not queue_stop_event.is_set() or not result_queue.empty():
-                try:
-                    record = result_queue.get(timeout=0.1)
-                    write_jsonl_record(record)
-                except Exception:
-                    continue
-
-        writer_thread = threading.Thread(target=queue_writer, daemon=True)
-        writer_thread.start()
+        # Collect results by suite for aggregation
+        suite_results: dict[str, list[TestResult]] = {}
+        suite_containers: dict[str, str] = {}
+        results_lock = threading.Lock()
 
         # Background thread to update progress with running tests
         progress_stop_event = threading.Event()
@@ -680,17 +818,23 @@ def main():
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
-            MofNCompleteColumn(),
+            TextColumn("[green]{task.fields[passed]}[/] passed | [red]{task.fields[failed]}[/] failed | {task.completed}/{task.total}"),
             TimeElapsedColumn(),
             console=console,
             refresh_per_second=4,
         ) as progress:
-            task = progress.add_task("Running tests...", total=len(yaml_files))
+            task = progress.add_task("Running tests...", total=total_tests, passed=0, failed=0)
 
             def update_running_description():
                 """Update progress description with currently running tests."""
                 while not progress_stop_event.is_set():
                     try:
+                        # Update counts from shared dict
+                        passed = test_counts["passed"]
+                        failed = test_counts["failed"]
+                        completed = test_counts["completed"]
+                        progress.update(task, completed=completed, passed=passed, failed=failed)
+
                         running = list(running_tests.keys())
                         if running:
                             # Show up to 3 running tests
@@ -712,39 +856,83 @@ def main():
             with ProcessPoolExecutor(max_workers=args.jobs) as executor:
                 futures = {
                     executor.submit(
-                        run_test_suite_wrapper,
-                        (yaml_path, containers_dir, work_dir, args.filter, False, result_queue, running_tests),
-                    ): yaml_path
-                    for yaml_path in yaml_files
+                        run_prepared_test_wrapper,
+                        (prepared, running_tests),
+                    ): prepared
+                    for prepared in all_prepared_tests
                 }
 
                 for future in as_completed(futures):
-                    result = future.result()
-                    all_results.append(result)
-                    progress.advance(task)
+                    suite_name, container_name, result = future.result()
 
-                    # Show brief status
-                    status = "[green]PASS[/]" if result.failed == 0 else "[red]FAIL[/]"
-                    progress.console.print(
-                        f"  {status} {result.name}: {result.passed}/{result.total} "
-                        f"({result.duration:.1f}s)"
-                    )
+                    # Update counts
+                    test_counts["completed"] = test_counts["completed"] + 1
+                    if result.passed:
+                        test_counts["passed"] = test_counts["passed"] + 1
+                    else:
+                        test_counts["failed"] = test_counts["failed"] + 1
 
-                    # Show individual test results if not quiet
+                    # Store result for suite aggregation
+                    with results_lock:
+                        if suite_name not in suite_results:
+                            suite_results[suite_name] = []
+                            suite_containers[suite_name] = container_name
+                        suite_results[suite_name].append(result)
+
+                    # Write to JSONL
+                    write_jsonl_record({
+                        "suite": suite_name,
+                        "container": container_name,
+                        "test": result.name,
+                        "passed": result.passed,
+                        "start_time": result.start_time,
+                        "duration": result.duration,
+                        "message": result.message,
+                        "exit_code": result.exit_code,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                    })
+
+                    # Show individual test result if not quiet
                     if not args.quiet:
-                        for test in result.results:
-                            test_status = "[green]PASS[/]" if test.passed else "[red]FAIL[/]"
-                            progress.console.print(f"    {test_status} {test.name} ({test.duration:.2f}s)")
-                            if not test.passed:
-                                progress.console.print(f"      [dim]{test.message}[/]")
+                        test_status = "[green]PASS[/]" if result.passed else "[red]FAIL[/]"
+                        progress.console.print(f"  {test_status} {suite_name}: {result.name} ({result.duration:.2f}s)")
+                        if not result.passed:
+                            progress.console.print(f"    [dim]{result.message}[/]")
 
             # Stop background threads
             progress_stop_event.set()
             desc_thread.join(timeout=1.0)
 
-        # Stop the queue writer thread
-        queue_stop_event.set()
-        writer_thread.join(timeout=5.0)
+        # Aggregate results into TestSuiteResult objects
+        for suite_name, results in suite_results.items():
+            passed = sum(1 for r in results if r.passed)
+            failed = sum(1 for r in results if not r.passed)
+            duration = sum(r.duration for r in results)
+            all_results.append(TestSuiteResult(
+                name=suite_name,
+                container=suite_containers[suite_name],
+                total=len(results),
+                passed=passed,
+                failed=failed,
+                duration=duration,
+                results=results,
+            ))
+
+        # Add error results for suites that failed to prepare
+        for suite_name, error in suite_errors.items():
+            all_results.append(TestSuiteResult(
+                name=suite_name,
+                container="",
+                total=0,
+                failed=1,
+                results=[TestResult(
+                    name="Suite preparation",
+                    passed=False,
+                    duration=0,
+                    message=error,
+                )],
+            ))
     else:
         # Sequential execution
         for yaml_path in yaml_files:

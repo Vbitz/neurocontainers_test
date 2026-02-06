@@ -602,7 +602,7 @@ tests:
         disp(['Output file: test_output/qmrlab_test_results.mat']);
       " 2>&1 | grep -E "^(MAT file|Output)"
     validate:
-      - output_exists: test_output/qmrlab_test_results.mat
+      - output_exists: ${output_dir}/qmrlab_test_results.mat
 
   - name: Save results to NIfTI
     description: Test FitResultsSave_nii function

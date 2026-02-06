@@ -86,22 +86,22 @@ tests:
     description: Test basic skull-stripping on T1w image (CPU mode)
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_stripped.nii.gz
     validate:
-      - output_exists: test_output/t1w_stripped.nii.gz
+      - output_exists: ${output_dir}/t1w_stripped.nii.gz
     timeout: 600
 
   - name: Brain extraction T1w with mask
     description: Test skull-stripping with brain mask output
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_stripped_with_mask.nii.gz -m test_output/t1w_brain_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_stripped_with_mask.nii.gz
-      - output_exists: test_output/t1w_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_stripped_with_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
     timeout: 600
 
   - name: Brain extraction mask only
     description: Test generating only the brain mask without stripped image
     command: mri_synthstrip -i ${t1w} -m test_output/t1w_mask_only.nii.gz
     validate:
-      - output_exists: test_output/t1w_mask_only.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_only.nii.gz
     timeout: 600
 
   - name: Verify output dimensions match input
@@ -123,32 +123,32 @@ tests:
     description: Test skull-stripping with default border threshold (1mm)
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_border_default.nii.gz -m test_output/t1w_border_default_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_border_default.nii.gz
-      - output_exists: test_output/t1w_border_default_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_border_default.nii.gz
+      - output_exists: ${output_dir}/t1w_border_default_mask.nii.gz
     timeout: 600
 
   - name: Brain extraction tight border
     description: Test skull-stripping with tight border (0mm)
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_border_tight.nii.gz -m test_output/t1w_border_tight_mask.nii.gz -b 0
     validate:
-      - output_exists: test_output/t1w_border_tight.nii.gz
-      - output_exists: test_output/t1w_border_tight_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_border_tight.nii.gz
+      - output_exists: ${output_dir}/t1w_border_tight_mask.nii.gz
     timeout: 600
 
   - name: Brain extraction wide border
     description: Test skull-stripping with wide border (3mm)
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_border_wide.nii.gz -m test_output/t1w_border_wide_mask.nii.gz -b 3
     validate:
-      - output_exists: test_output/t1w_border_wide.nii.gz
-      - output_exists: test_output/t1w_border_wide_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_border_wide.nii.gz
+      - output_exists: ${output_dir}/t1w_border_wide_mask.nii.gz
     timeout: 600
 
   - name: Brain extraction negative border
     description: Test skull-stripping with negative border to erode mask
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_border_negative.nii.gz -m test_output/t1w_border_negative_mask.nii.gz -b -1
     validate:
-      - output_exists: test_output/t1w_border_negative.nii.gz
-      - output_exists: test_output/t1w_border_negative_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_border_negative.nii.gz
+      - output_exists: ${output_dir}/t1w_border_negative_mask.nii.gz
     timeout: 600
 
   - name: Compare border effects on mask size
@@ -173,16 +173,16 @@ tests:
     description: Test skull-stripping including CSF in brain border (default)
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_with_csf.nii.gz -m test_output/t1w_with_csf_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_with_csf.nii.gz
-      - output_exists: test_output/t1w_with_csf_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_with_csf.nii.gz
+      - output_exists: ${output_dir}/t1w_with_csf_mask.nii.gz
     timeout: 600
 
   - name: Brain extraction without CSF
     description: Test skull-stripping excluding CSF from brain border
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_no_csf.nii.gz -m test_output/t1w_no_csf_mask.nii.gz --no-csf
     validate:
-      - output_exists: test_output/t1w_no_csf.nii.gz
-      - output_exists: test_output/t1w_no_csf_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_no_csf.nii.gz
+      - output_exists: ${output_dir}/t1w_no_csf_mask.nii.gz
     timeout: 600
 
   - name: Compare CSF exclusion effect
@@ -207,8 +207,8 @@ tests:
     description: Test skull-stripping on T2-weighted image
     command: mri_synthstrip -i ${t2} -o test_output/t2_stripped.nii.gz -m test_output/t2_mask.nii.gz
     validate:
-      - output_exists: test_output/t2_stripped.nii.gz
-      - output_exists: test_output/t2_mask.nii.gz
+      - output_exists: ${output_dir}/t2_stripped.nii.gz
+      - output_exists: ${output_dir}/t2_mask.nii.gz
     timeout: 600
 
   - name: T2 output dimensions match input
@@ -464,25 +464,25 @@ tests:
     description: Test conforming image to default FreeSurfer space
     command: nib-conform ${t1w} test_output/t1w_conformed.nii.gz -f
     validate:
-      - output_exists: test_output/t1w_conformed.nii.gz
+      - output_exists: ${output_dir}/t1w_conformed.nii.gz
 
   - name: nib-conform custom shape
     description: Test conforming image to custom shape
     command: nib-conform ${t1w} test_output/t1w_conformed_shape.nii.gz --out-shape 128 128 128 -f
     validate:
-      - output_exists: test_output/t1w_conformed_shape.nii.gz
+      - output_exists: ${output_dir}/t1w_conformed_shape.nii.gz
 
   - name: nib-conform custom voxel size
     description: Test conforming image to custom voxel size
     command: nib-conform ${t1w} test_output/t1w_conformed_voxel.nii.gz --voxel-size 2 2 2 -f
     validate:
-      - output_exists: test_output/t1w_conformed_voxel.nii.gz
+      - output_exists: ${output_dir}/t1w_conformed_voxel.nii.gz
 
   - name: nib-conform custom orientation
     description: Test conforming image to LAS orientation
     command: nib-conform ${t1w} test_output/t1w_conformed_las.nii.gz --orientation LAS -f
     validate:
-      - output_exists: test_output/t1w_conformed_las.nii.gz
+      - output_exists: ${output_dir}/t1w_conformed_las.nii.gz
 
   - name: Verify conformed shape
     description: Verify nib-conform produces expected output shape
@@ -506,13 +506,13 @@ tests:
     description: Test converting image to different data type
     command: nib-convert ${t1w} test_output/t1w_converted_float32.nii.gz --out-dtype float32 -f
     validate:
-      - output_exists: test_output/t1w_converted_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_converted_float32.nii.gz
 
   - name: nib-convert to int16
     description: Test converting image to int16 data type
     command: nib-convert ${t1w} test_output/t1w_converted_int16.nii.gz --out-dtype int16 -f
     validate:
-      - output_exists: test_output/t1w_converted_int16.nii.gz
+      - output_exists: ${output_dir}/t1w_converted_int16.nii.gz
 
   - name: Verify converted dtype
     description: Verify nib-convert produces expected data type
@@ -536,13 +536,13 @@ tests:
     description: Test cropping image to region of interest
     command: nib-roi ${t1w} test_output/t1w_cropped.nii.gz -i 20:140 -j 30:160 -k 30:160
     validate:
-      - output_exists: test_output/t1w_cropped.nii.gz
+      - output_exists: ${output_dir}/t1w_cropped.nii.gz
 
   - name: nib-roi crop first axis only
     description: Test cropping along first axis
     command: nib-roi ${t1w} test_output/t1w_cropped_i.nii.gz -i 40:120
     validate:
-      - output_exists: test_output/t1w_cropped_i.nii.gz
+      - output_exists: ${output_dir}/t1w_cropped_i.nii.gz
 
   - name: Verify cropped dimensions
     description: Verify nib-roi produces expected cropped dimensions
@@ -583,8 +583,8 @@ tests:
     description: Complete skull-stripping pipeline with all outputs
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_full_pipeline.nii.gz -m test_output/t1w_full_pipeline_mask.nii.gz -b 1
     validate:
-      - output_exists: test_output/t1w_full_pipeline.nii.gz
-      - output_exists: test_output/t1w_full_pipeline_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_full_pipeline.nii.gz
+      - output_exists: ${output_dir}/t1w_full_pipeline_mask.nii.gz
     timeout: 600
 
   - name: Conform then strip
@@ -593,9 +593,9 @@ tests:
       nib-conform ${t1w} test_output/t1w_preconform.nii.gz --out-shape 256 256 256 --voxel-size 1 1 1 -f && \
       mri_synthstrip -i test_output/t1w_preconform.nii.gz -o test_output/t1w_preconform_stripped.nii.gz -m test_output/t1w_preconform_mask.nii.gz 2>&1
     validate:
-      - output_exists: test_output/t1w_preconform.nii.gz
-      - output_exists: test_output/t1w_preconform_stripped.nii.gz
-      - output_exists: test_output/t1w_preconform_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_preconform.nii.gz
+      - output_exists: ${output_dir}/t1w_preconform_stripped.nii.gz
+      - output_exists: ${output_dir}/t1w_preconform_mask.nii.gz
     timeout: 900
 
   - name: Strip then analyze

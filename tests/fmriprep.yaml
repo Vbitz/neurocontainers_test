@@ -68,16 +68,16 @@ tests:
     description: Run N4 bias field correction on T1w image
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/ants/t1w_n4.nii.gz -v 0
     validate:
-      - output_exists: test_output/ants/t1w_n4.nii.gz
-      - same_dimensions: ["test_output/ants/t1w_n4.nii.gz", "${t1w}"]
+      - output_exists: ${output_dir}/ants/t1w_n4.nii.gz
+      - same_dimensions: ["${output_dir}/ants/t1w_n4.nii.gz", "${t1w}"]
 
   - name: N4BiasFieldCorrection with bias field output
     description: Run N4 and output the estimated bias field
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o [test_output/ants/t1w_n4_v2.nii.gz,test_output/ants/t1w_biasfield.nii.gz] -v 0
     depends_on: N4BiasFieldCorrection on T1w
     validate:
-      - output_exists: test_output/ants/t1w_n4_v2.nii.gz
-      - output_exists: test_output/ants/t1w_biasfield.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_n4_v2.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_biasfield.nii.gz
 
   # ==========================================================================
   # ANTs TOOLS - IMAGE OPERATIONS
@@ -91,37 +91,37 @@ tests:
     description: Normalize image intensity using ImageMath
     command: ImageMath 3 test_output/ants/t1w_normalized.nii.gz Normalize ${t1w}
     validate:
-      - output_exists: test_output/ants/t1w_normalized.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_normalized.nii.gz
 
   - name: ImageMath threshold
     description: Threshold image using ImageMath
     command: ImageMath 3 test_output/ants/t1w_thresh.nii.gz ThresholdAtMean ${t1w} 1
     validate:
-      - output_exists: test_output/ants/t1w_thresh.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_thresh.nii.gz
 
   - name: ImageMath Laplacian
     description: Apply Laplacian filter using ImageMath
     command: ImageMath 3 test_output/ants/t1w_laplacian.nii.gz Laplacian ${t1w} 1
     validate:
-      - output_exists: test_output/ants/t1w_laplacian.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_laplacian.nii.gz
 
   - name: ImageMath gradient magnitude
     description: Compute gradient magnitude
     command: ImageMath 3 test_output/ants/t1w_grad.nii.gz Grad ${t1w} 1
     validate:
-      - output_exists: test_output/ants/t1w_grad.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_grad.nii.gz
 
   - name: ImageMath morphological operations - dilate
     description: Morphological dilation
     command: ImageMath 3 test_output/ants/t1w_dilate.nii.gz MD ${t1w} 2
     validate:
-      - output_exists: test_output/ants/t1w_dilate.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_dilate.nii.gz
 
   - name: ImageMath morphological operations - erode
     description: Morphological erosion
     command: ImageMath 3 test_output/ants/t1w_erode.nii.gz ME ${t1w} 2
     validate:
-      - output_exists: test_output/ants/t1w_erode.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_erode.nii.gz
 
   # ==========================================================================
   # ANTs TOOLS - DENOISING
@@ -135,8 +135,8 @@ tests:
     description: Apply non-local means denoising to T1w
     command: DenoiseImage -d 3 -i ${t1w} -o test_output/ants/t1w_denoised.nii.gz -v 0
     validate:
-      - output_exists: test_output/ants/t1w_denoised.nii.gz
-      - same_dimensions: ["test_output/ants/t1w_denoised.nii.gz", "${t1w}"]
+      - output_exists: ${output_dir}/ants/t1w_denoised.nii.gz
+      - same_dimensions: ["${output_dir}/ants/t1w_denoised.nii.gz", "${t1w}"]
 
   # ==========================================================================
   # ANTs TOOLS - IMAGE CONVERSION
@@ -150,7 +150,7 @@ tests:
     description: Convert image pixel type
     command: ConvertImagePixelType ${t1w} test_output/ants/t1w_float.nii.gz 1
     validate:
-      - output_exists: test_output/ants/t1w_float.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_float.nii.gz
 
   # ==========================================================================
   # ANTs TOOLS - REGISTRATION UTILITIES
@@ -200,7 +200,7 @@ tests:
     description: Average T1w with itself (identity test)
     command: AverageImages 3 test_output/ants/t1w_avg.nii.gz 0 ${t1w} ${t1w}
     validate:
-      - output_exists: test_output/ants/t1w_avg.nii.gz
+      - output_exists: ${output_dir}/ants/t1w_avg.nii.gz
 
   - name: MeasureImageSimilarity help
     description: Verify MeasureImageSimilarity is available
@@ -227,30 +227,30 @@ tests:
     description: Run basic brain extraction on T1w
     command: bet ${t1w} test_output/fsl/t1w_brain -f 0.5 -g 0
     validate:
-      - output_exists: test_output/fsl/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain.nii.gz
 
   - name: FSL bet with mask output
     description: Run brain extraction with binary mask output
     command: bet ${t1w} test_output/fsl/t1w_brain_m -m -f 0.5
     depends_on: FSL bet basic extraction
     validate:
-      - output_exists: test_output/fsl/t1w_brain_m.nii.gz
-      - output_exists: test_output/fsl/t1w_brain_m_mask.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain_m.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain_m_mask.nii.gz
 
   - name: FSL bet with skull output
     description: Run brain extraction with skull estimation
     command: bet ${t1w} test_output/fsl/t1w_brain_s -s -f 0.5
     depends_on: FSL bet basic extraction
     validate:
-      - output_exists: test_output/fsl/t1w_brain_s.nii.gz
-      - output_exists: test_output/fsl/t1w_brain_s_skull.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain_s.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain_s_skull.nii.gz
 
   - name: FSL bet robust mode
     description: Run robust brain extraction
     command: bet ${t1w} test_output/fsl/t1w_brain_robust -R -f 0.5
     depends_on: FSL bet basic extraction
     validate:
-      - output_exists: test_output/fsl/t1w_brain_robust.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_brain_robust.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FAST SEGMENTATION
@@ -265,18 +265,18 @@ tests:
     command: fast -t 1 -n 3 -o test_output/fsl/t1w_fast test_output/fsl/t1w_brain.nii.gz
     depends_on: FSL bet basic extraction
     validate:
-      - output_exists: test_output/fsl/t1w_fast_seg.nii.gz
-      - output_exists: test_output/fsl/t1w_fast_pve_0.nii.gz
-      - output_exists: test_output/fsl/t1w_fast_pve_1.nii.gz
-      - output_exists: test_output/fsl/t1w_fast_pve_2.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_seg.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_pve_0.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_pve_1.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_pve_2.nii.gz
 
   - name: FSL fast with bias correction
     description: Run FAST with bias field correction output
     command: fast -t 1 -n 3 -B -b -o test_output/fsl/t1w_fast_bias test_output/fsl/t1w_brain.nii.gz
     depends_on: FSL bet basic extraction
     validate:
-      - output_exists: test_output/fsl/t1w_fast_bias_restore.nii.gz
-      - output_exists: test_output/fsl/t1w_fast_bias_bias.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_bias_restore.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_fast_bias_bias.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FLIRT REGISTRATION
@@ -290,29 +290,29 @@ tests:
     description: Run rigid body (6 DOF) registration
     command: flirt -in ${t2} -ref ${t1w} -out test_output/fsl/t2_to_t1w_rigid.nii.gz -omat test_output/fsl/t2_to_t1w_rigid.mat -dof 6
     validate:
-      - output_exists: test_output/fsl/t2_to_t1w_rigid.nii.gz
-      - output_exists: test_output/fsl/t2_to_t1w_rigid.mat
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_rigid.nii.gz
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_rigid.mat
 
   - name: FSL flirt affine registration
     description: Run affine (12 DOF) registration
     command: flirt -in ${t2} -ref ${t1w} -out test_output/fsl/t2_to_t1w_affine.nii.gz -omat test_output/fsl/t2_to_t1w_affine.mat -dof 12
     validate:
-      - output_exists: test_output/fsl/t2_to_t1w_affine.nii.gz
-      - output_exists: test_output/fsl/t2_to_t1w_affine.mat
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_affine.nii.gz
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_affine.mat
 
   - name: FSL flirt apply transform
     description: Apply existing transform to image
     command: flirt -in ${t2} -ref ${t1w} -out test_output/fsl/t2_to_t1w_applied.nii.gz -init test_output/fsl/t2_to_t1w_rigid.mat -applyxfm
     depends_on: FSL flirt rigid registration
     validate:
-      - output_exists: test_output/fsl/t2_to_t1w_applied.nii.gz
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_applied.nii.gz
 
   - name: FSL flirt mutual information cost
     description: Run registration with mutual information cost function
     command: flirt -in ${t2} -ref ${t1w} -out test_output/fsl/t2_to_t1w_mi.nii.gz -omat test_output/fsl/t2_to_t1w_mi.mat -cost mutualinfo -dof 6
     validate:
-      - output_exists: test_output/fsl/t2_to_t1w_mi.nii.gz
-      - output_exists: test_output/fsl/t2_to_t1w_mi.mat
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_mi.nii.gz
+      - output_exists: ${output_dir}/fsl/t2_to_t1w_mi.mat
 
   # ==========================================================================
   # FSL TOOLS - MCFLIRT MOTION CORRECTION
@@ -326,22 +326,22 @@ tests:
     description: Run basic motion correction on BOLD data
     command: mcflirt -in ${bold} -out test_output/fsl/bold_mcf -plots
     validate:
-      - output_exists: test_output/fsl/bold_mcf.nii.gz
-      - output_exists: test_output/fsl/bold_mcf.par
+      - output_exists: ${output_dir}/fsl/bold_mcf.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_mcf.par
 
   - name: FSL mcflirt with mean volume reference
     description: Run motion correction registering to mean volume
     command: mcflirt -in ${bold} -out test_output/fsl/bold_mcf_mean -meanvol -plots
     validate:
-      - output_exists: test_output/fsl/bold_mcf_mean.nii.gz
-      - output_exists: test_output/fsl/bold_mcf_mean.par
+      - output_exists: ${output_dir}/fsl/bold_mcf_mean.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_mcf_mean.par
 
   - name: FSL mcflirt with matrices output
     description: Run motion correction with transformation matrices
     command: mcflirt -in ${bold} -out test_output/fsl/bold_mcf_mats -mats -plots
     validate:
-      - output_exists: test_output/fsl/bold_mcf_mats.nii.gz
-      - output_exists: test_output/fsl/bold_mcf_mats.mat
+      - output_exists: ${output_dir}/fsl/bold_mcf_mats.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_mcf_mats.mat
 
   # ==========================================================================
   # FSL TOOLS - STATISTICS AND INFO
@@ -409,65 +409,65 @@ tests:
     description: Apply intensity threshold
     command: fslmaths ${t1w} -thr 100 test_output/fsl/t1w_thr100.nii.gz
     validate:
-      - output_exists: test_output/fsl/t1w_thr100.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_thr100.nii.gz
 
   - name: FSL fslmaths binarize
     description: Binarize image
     command: fslmaths ${t1w} -bin test_output/fsl/t1w_bin.nii.gz
     validate:
-      - output_exists: test_output/fsl/t1w_bin.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_bin.nii.gz
 
   - name: FSL fslmaths smooth
     description: Apply Gaussian smoothing
     command: fslmaths ${t1w} -s 2 test_output/fsl/t1w_smooth.nii.gz
     validate:
-      - output_exists: test_output/fsl/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_smooth.nii.gz
 
   - name: FSL fslmaths temporal mean
     description: Calculate temporal mean of BOLD
     command: fslmaths ${bold} -Tmean test_output/fsl/bold_tmean.nii.gz
     validate:
-      - output_exists: test_output/fsl/bold_tmean.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_tmean.nii.gz
 
   - name: FSL fslmaths temporal std
     description: Calculate temporal standard deviation of BOLD
     command: fslmaths ${bold} -Tstd test_output/fsl/bold_tstd.nii.gz
     validate:
-      - output_exists: test_output/fsl/bold_tstd.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_tstd.nii.gz
 
   - name: FSL fslmaths masking
     description: Apply mask to image
     command: fslmaths ${t1w} -mas test_output/fsl/t1w_brain_m_mask.nii.gz test_output/fsl/t1w_masked.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/fsl/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_masked.nii.gz
 
   - name: FSL fslmaths erosion
     description: Morphological erosion
     command: fslmaths test_output/fsl/t1w_brain_m_mask.nii.gz -ero test_output/fsl/mask_eroded.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/fsl/mask_eroded.nii.gz
+      - output_exists: ${output_dir}/fsl/mask_eroded.nii.gz
 
   - name: FSL fslmaths dilation
     description: Morphological dilation
     command: fslmaths test_output/fsl/t1w_brain_m_mask.nii.gz -dilM test_output/fsl/mask_dilated.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/fsl/mask_dilated.nii.gz
+      - output_exists: ${output_dir}/fsl/mask_dilated.nii.gz
 
   - name: FSL fslmaths add
     description: Add constant to image
     command: fslmaths ${t1w} -add 100 test_output/fsl/t1w_add100.nii.gz
     validate:
-      - output_exists: test_output/fsl/t1w_add100.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_add100.nii.gz
 
   - name: FSL fslmaths multiply
     description: Multiply images
     command: fslmaths ${t1w} -mul test_output/fsl/t1w_brain_m_mask.nii.gz test_output/fsl/t1w_mul_mask.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/fsl/t1w_mul_mask.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_mul_mask.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLHD HEADER OPERATIONS
@@ -489,15 +489,15 @@ tests:
     description: Split 4D BOLD into individual volumes
     command: mkdir -p test_output/fsl/bold_split && fslsplit ${bold} test_output/fsl/bold_split/vol -t
     validate:
-      - output_exists: test_output/fsl/bold_split/vol0000.nii.gz
-      - output_exists: test_output/fsl/bold_split/vol0001.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_split/vol0000.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_split/vol0001.nii.gz
 
   - name: FSL fslmerge temporal
     description: Merge volumes back into 4D
     command: fslmerge -t test_output/fsl/bold_merged.nii.gz test_output/fsl/bold_split/vol0000.nii.gz test_output/fsl/bold_split/vol0001.nii.gz test_output/fsl/bold_split/vol0002.nii.gz
     depends_on: FSL fslsplit temporal
     validate:
-      - output_exists: test_output/fsl/bold_merged.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_merged.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLROI
@@ -506,13 +506,13 @@ tests:
     description: Extract temporal subset from BOLD
     command: fslroi ${bold} test_output/fsl/bold_roi_t.nii.gz 0 10
     validate:
-      - output_exists: test_output/fsl/bold_roi_t.nii.gz
+      - output_exists: ${output_dir}/fsl/bold_roi_t.nii.gz
 
   - name: FSL fslroi spatial crop
     description: Extract spatial ROI from T1w
     command: fslroi ${t1w} test_output/fsl/t1w_roi.nii.gz 40 80 40 80 40 80
     validate:
-      - output_exists: test_output/fsl/t1w_roi.nii.gz
+      - output_exists: ${output_dir}/fsl/t1w_roi.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FNIRT NONLINEAR REGISTRATION
@@ -575,8 +575,8 @@ tests:
       bet ${t1w} test_output/fsl/pipe_brain -m -f 0.5 && \
       fslstats ${t1w} -k test_output/fsl/pipe_brain_mask.nii.gz -M -S -V
     validate:
-      - output_exists: test_output/fsl/pipe_brain.nii.gz
-      - output_exists: test_output/fsl/pipe_brain_mask.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_brain.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_brain_mask.nii.gz
 
   - name: Pipeline T1w preprocessing
     description: N4 bias correction followed by brain extraction
@@ -584,9 +584,9 @@ tests:
       N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/ants/pipe_t1w_n4.nii.gz -v 0 && \
       bet test_output/ants/pipe_t1w_n4.nii.gz test_output/fsl/pipe_t1w_n4_brain -m -f 0.5
     validate:
-      - output_exists: test_output/ants/pipe_t1w_n4.nii.gz
-      - output_exists: test_output/fsl/pipe_t1w_n4_brain.nii.gz
-      - output_exists: test_output/fsl/pipe_t1w_n4_brain_mask.nii.gz
+      - output_exists: ${output_dir}/ants/pipe_t1w_n4.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_t1w_n4_brain.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_t1w_n4_brain_mask.nii.gz
 
   - name: Pipeline tSNR calculation
     description: Calculate temporal SNR from BOLD
@@ -595,9 +595,9 @@ tests:
       fslmaths ${bold} -Tstd test_output/fsl/pipe_bold_std.nii.gz && \
       fslmaths test_output/fsl/pipe_bold_mean.nii.gz -div test_output/fsl/pipe_bold_std.nii.gz test_output/fsl/pipe_bold_tsnr.nii.gz
     validate:
-      - output_exists: test_output/fsl/pipe_bold_mean.nii.gz
-      - output_exists: test_output/fsl/pipe_bold_std.nii.gz
-      - output_exists: test_output/fsl/pipe_bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_bold_mean.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_bold_std.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_bold_tsnr.nii.gz
 
   - name: Pipeline motion correction with QC
     description: Motion correct BOLD and generate QC metrics
@@ -605,9 +605,9 @@ tests:
       mcflirt -in ${bold} -out test_output/fsl/pipe_bold_mcf -plots -stats && \
       fslmaths test_output/fsl/pipe_bold_mcf.nii.gz -Tmean test_output/fsl/pipe_bold_mcf_mean.nii.gz
     validate:
-      - output_exists: test_output/fsl/pipe_bold_mcf.nii.gz
-      - output_exists: test_output/fsl/pipe_bold_mcf.par
-      - output_exists: test_output/fsl/pipe_bold_mcf_mean.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_bold_mcf.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_bold_mcf.par
+      - output_exists: ${output_dir}/fsl/pipe_bold_mcf_mean.nii.gz
 
   - name: Pipeline coregistration
     description: Register T2 to T1w space
@@ -615,8 +615,8 @@ tests:
       flirt -in ${t2} -ref ${t1w} -out test_output/fsl/pipe_t2_to_t1w.nii.gz -omat test_output/fsl/pipe_t2_to_t1w.mat -dof 6 -cost mutualinfo && \
       fslstats test_output/fsl/pipe_t2_to_t1w.nii.gz -R -m
     validate:
-      - output_exists: test_output/fsl/pipe_t2_to_t1w.nii.gz
-      - output_exists: test_output/fsl/pipe_t2_to_t1w.mat
+      - output_exists: ${output_dir}/fsl/pipe_t2_to_t1w.nii.gz
+      - output_exists: ${output_dir}/fsl/pipe_t2_to_t1w.mat
 
   # ==========================================================================
   # VALIDATION TESTS - IMAGE INTEGRITY

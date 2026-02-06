@@ -98,28 +98,28 @@ tests:
     command: |
       gimp -i -b '(let* ((image (car (gimp-image-new 100 100 RGB))) (layer (car (gimp-layer-new image 100 100 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 255 0 0)) (gimp-drawable-fill layer FILL-FOREGROUND) (file-png-save RUN-NONINTERACTIVE image layer "test_output/red_square.png" "red_square.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     validate:
-      - output_exists: test_output/red_square.png
+      - output_exists: ${output_dir}/red_square.png
 
   - name: Create and save JPEG image
     description: Create an image and export to JPEG format
     command: |
       gimp -i -b '(let* ((image (car (gimp-image-new 200 200 RGB))) (layer (car (gimp-layer-new image 200 200 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 0 255 0)) (gimp-drawable-fill layer FILL-FOREGROUND) (file-jpeg-save RUN-NONINTERACTIVE image layer "test_output/green_square.jpg" "green_square.jpg" 0.9 0 1 1 "" 0 1 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     validate:
-      - output_exists: test_output/green_square.jpg
+      - output_exists: ${output_dir}/green_square.jpg
 
   - name: Create and save BMP image
     description: Create an image and export to BMP format
     command: |
       gimp -i -b '(let* ((image (car (gimp-image-new 150 150 RGB))) (layer (car (gimp-layer-new image 150 150 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 0 0 255)) (gimp-drawable-fill layer FILL-FOREGROUND) (file-bmp-save RUN-NONINTERACTIVE image layer "test_output/blue_square.bmp" "blue_square.bmp" 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     validate:
-      - output_exists: test_output/blue_square.bmp
+      - output_exists: ${output_dir}/blue_square.bmp
 
   - name: Create and save TIFF image
     description: Create an image and export to TIFF format
     command: |
       gimp -i -b '(let* ((image (car (gimp-image-new 100 100 RGB))) (layer (car (gimp-layer-new image 100 100 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 255 255 0)) (gimp-drawable-fill layer FILL-FOREGROUND) (file-tiff-save RUN-NONINTERACTIVE image layer "test_output/yellow_square.tiff" "yellow_square.tiff" 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     validate:
-      - output_exists: test_output/yellow_square.tiff
+      - output_exists: ${output_dir}/yellow_square.tiff
 
   # ==========================================================================
   # IMAGE LOADING AND PROCESSING
@@ -147,7 +147,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-scale image 128 128) (file-png-save RUN-NONINTERACTIVE image layer "test_output/scaled_image.png" "scaled_image.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/scaled_image.png
+      - output_exists: ${output_dir}/scaled_image.png
 
   - name: Rotate image 90 degrees
     description: Rotate an image 90 degrees clockwise
@@ -155,7 +155,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-rotate image ROTATE-90) (file-png-save RUN-NONINTERACTIVE image layer "test_output/rotated_90.png" "rotated_90.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/rotated_90.png
+      - output_exists: ${output_dir}/rotated_90.png
 
   - name: Flip image horizontally
     description: Flip an image horizontally
@@ -163,7 +163,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-flip image ORIENTATION-HORIZONTAL) (file-png-save RUN-NONINTERACTIVE image layer "test_output/flipped_h.png" "flipped_h.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/flipped_h.png
+      - output_exists: ${output_dir}/flipped_h.png
 
   - name: Flip image vertically
     description: Flip an image vertically
@@ -171,7 +171,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-flip image ORIENTATION-VERTICAL) (file-png-save RUN-NONINTERACTIVE image layer "test_output/flipped_v.png" "flipped_v.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/flipped_v.png
+      - output_exists: ${output_dir}/flipped_v.png
 
   # ==========================================================================
   # COLOR OPERATIONS
@@ -182,7 +182,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-convert-grayscale image) (file-png-save RUN-NONINTERACTIVE image layer "test_output/grayscale.png" "grayscale.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/grayscale.png
+      - output_exists: ${output_dir}/grayscale.png
 
   - name: Invert colors
     description: Invert the colors of an image
@@ -190,7 +190,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-drawable-invert layer FALSE) (file-png-save RUN-NONINTERACTIVE image layer "test_output/inverted.png" "inverted.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/inverted.png
+      - output_exists: ${output_dir}/inverted.png
 
   - name: Desaturate image
     description: Desaturate an image using lightness mode
@@ -198,7 +198,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-drawable-desaturate layer DESATURATE-LIGHTNESS) (file-png-save RUN-NONINTERACTIVE image layer "test_output/desaturated.png" "desaturated.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/desaturated.png
+      - output_exists: ${output_dir}/desaturated.png
 
   - name: Adjust brightness-contrast
     description: Adjust brightness and contrast of an image
@@ -206,7 +206,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-drawable-brightness-contrast layer 0.2 0.1) (file-png-save RUN-NONINTERACTIVE image layer "test_output/brightness_contrast.png" "brightness_contrast.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/brightness_contrast.png
+      - output_exists: ${output_dir}/brightness_contrast.png
 
   # ==========================================================================
   # FILTERS AND EFFECTS
@@ -217,7 +217,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (plug-in-gauss RUN-NONINTERACTIVE image layer 5.0 5.0 0) (file-png-save RUN-NONINTERACTIVE image layer "test_output/blur_gaussian.png" "blur_gaussian.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/blur_gaussian.png
+      - output_exists: ${output_dir}/blur_gaussian.png
 
   - name: Sharpen image
     description: Apply sharpen filter to an image
@@ -225,7 +225,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (plug-in-sharpen RUN-NONINTERACTIVE image layer 50) (file-png-save RUN-NONINTERACTIVE image layer "test_output/sharpened.png" "sharpened.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/sharpened.png
+      - output_exists: ${output_dir}/sharpened.png
 
   # ==========================================================================
   # LAYER OPERATIONS
@@ -236,7 +236,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (file-png-save RUN-NONINTERACTIVE image layer "test_output/flattened.png" "flattened.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/flattened.png
+      - output_exists: ${output_dir}/flattened.png
 
   # ==========================================================================
   # CROP AND RESIZE OPERATIONS
@@ -247,7 +247,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-crop image 100 100 50 50) (file-png-save RUN-NONINTERACTIVE image layer "test_output/cropped.png" "cropped.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/cropped.png
+      - output_exists: ${output_dir}/cropped.png
 
   - name: Resize canvas
     description: Resize canvas with offset
@@ -255,7 +255,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-get-active-layer image)))) (gimp-image-resize image 300 300 20 20) (gimp-layer-resize-to-image-size layer) (file-png-save RUN-NONINTERACTIVE image layer "test_output/canvas_resized.png" "canvas_resized.png" 0 9 1 1 1 1 1) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/canvas_resized.png
+      - output_exists: ${output_dir}/canvas_resized.png
 
   # ==========================================================================
   # FORMAT CONVERSION TESTS
@@ -266,7 +266,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (file-jpeg-save RUN-NONINTERACTIVE image layer "test_output/converted.jpg" "converted.jpg" 0.85 0 1 1 "" 0 1 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/converted.jpg
+      - output_exists: ${output_dir}/converted.jpg
 
   - name: Convert PNG to GIF
     description: Load PNG and save as GIF
@@ -274,7 +274,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (gimp-image-convert-indexed image CONVERT-DITHER-NONE CONVERT-PALETTE-GENERATE 256 FALSE FALSE "") (file-gif-save RUN-NONINTERACTIVE image layer "test_output/converted.gif" "converted.gif" 0 0 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/converted.gif
+      - output_exists: ${output_dir}/converted.gif
 
   - name: Convert PNG to WebP
     description: Load PNG and save as WebP
@@ -282,7 +282,7 @@ tests:
       gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (file-webp-save RUN-NONINTERACTIVE image layer "test_output/converted.webp" "converted.webp" 0 90 0 0 0 0 0 0 0 0 0 0 1 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
-      - output_exists: test_output/converted.webp
+      - output_exists: ${output_dir}/converted.webp
 
   # ==========================================================================
   # BATCH INTERPRETER AND ADVANCED OPTIONS

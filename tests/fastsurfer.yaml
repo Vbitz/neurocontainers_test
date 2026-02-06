@@ -144,7 +144,7 @@ tests:
     description: Convert NIfTI T1w to FreeSurfer MGZ format
     command: mri_convert ${t1w} test_output/fastsurfer/t1w.mgz 2>&1
     validate:
-      - output_exists: test_output/fastsurfer/t1w.mgz
+      - output_exists: ${output_dir}/fastsurfer/t1w.mgz
 
   - name: mri_convert check dimensions
     description: Verify converted MGZ has expected properties
@@ -157,13 +157,13 @@ tests:
     command: mri_convert test_output/fastsurfer/t1w.mgz test_output/fastsurfer/t1w_converted.nii.gz 2>&1
     depends_on: mri_convert NIfTI to MGZ
     validate:
-      - output_exists: test_output/fastsurfer/t1w_converted.nii.gz
+      - output_exists: ${output_dir}/fastsurfer/t1w_converted.nii.gz
 
   - name: mri_convert with conforming
     description: Conform T1w to 1mm isotropic (256x256x256)
     command: mri_convert --conform ${t1w} test_output/fastsurfer/t1w_conformed.mgz 2>&1
     validate:
-      - output_exists: test_output/fastsurfer/t1w_conformed.mgz
+      - output_exists: ${output_dir}/fastsurfer/t1w_conformed.mgz
 
   - name: Verify conformed dimensions
     description: Check that conformed image is 256x256x256
@@ -175,13 +175,13 @@ tests:
     description: Resample T1w to 2mm isotropic
     command: mri_convert -vs 2 2 2 ${t1w} test_output/fastsurfer/t1w_2mm.mgz 2>&1
     validate:
-      - output_exists: test_output/fastsurfer/t1w_2mm.mgz
+      - output_exists: ${output_dir}/fastsurfer/t1w_2mm.mgz
 
   - name: mri_convert extract single slice
     description: Extract a single axial slice from T1w
     command: mri_convert --cropsize 256 256 1 ${t1w} test_output/fastsurfer/t1w_slice.mgz 2>&1
     validate:
-      - output_exists: test_output/fastsurfer/t1w_slice.mgz
+      - output_exists: ${output_dir}/fastsurfer/t1w_slice.mgz
 
   # ==========================================================================
   # CHECKPOINT AND MODEL VERIFICATION

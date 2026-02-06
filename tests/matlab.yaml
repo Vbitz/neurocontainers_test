@@ -330,7 +330,7 @@ tests:
     description: Test save() function for MAT files
     command: matlab -nodisplay -nodesktop -batch "x=1:10; y=rand(5,5); save('test_output/test.mat','x','y'); disp('Saved')"
     validate:
-      - output_exists: test_output/test.mat
+      - output_exists: ${output_dir}/test.mat
 
   - name: Load MAT file
     description: Test load() function for MAT files
@@ -341,7 +341,7 @@ tests:
     description: Test fprintf() for text file writing
     command: matlab -nodisplay -nodesktop -batch "fid=fopen('test_output/test.txt','w'); fprintf(fid,'Hello MATLAB'); fclose(fid); disp('Written')"
     validate:
-      - output_exists: test_output/test.txt
+      - output_exists: ${output_dir}/test.txt
 
   - name: Read text file
     description: Test fscanf() for text file reading
@@ -352,7 +352,7 @@ tests:
     description: Test writematrix() for CSV output
     command: matlab -nodisplay -nodesktop -batch "M = magic(3); writematrix(M,'test_output/magic.csv'); disp('CSV written')"
     validate:
-      - output_exists: test_output/magic.csv
+      - output_exists: ${output_dir}/magic.csv
 
   - name: CSV read
     description: Test readmatrix() for CSV input
@@ -524,7 +524,7 @@ tests:
     description: Create a test image using peaks
     command: matlab -nodisplay -nodesktop -batch "I = uint8(255*mat2gray(peaks(256))); imwrite(I,'test_output/peaks.png'); disp('Image created')"
     validate:
-      - output_exists: test_output/peaks.png
+      - output_exists: ${output_dir}/peaks.png
 
   - name: Image read
     description: Test imread() function

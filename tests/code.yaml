@@ -233,7 +233,7 @@ tests:
       "
     expected_output_contains: "Saved mask"
     validate:
-      - output_exists: test_output/t2_mask_nibabel.nii.gz
+      - output_exists: ${output_dir}/t2_mask_nibabel.nii.gz
 
   - name: Verify saved NIfTI
     description: Load and verify the saved mask image
@@ -270,7 +270,7 @@ tests:
       "
     expected_output_contains: "Smoothed shape: (128, 128, 33)"
     validate:
-      - output_exists: test_output/t2_smoothed_scipy.nii.gz
+      - output_exists: ${output_dir}/t2_smoothed_scipy.nii.gz
 
   - name: Binary erosion with scipy
     description: Apply binary erosion to mask
@@ -289,7 +289,7 @@ tests:
     depends_on: Save NIfTI with nibabel
     expected_exit_code: 0
     validate:
-      - output_exists: test_output/t2_mask_eroded.nii.gz
+      - output_exists: ${output_dir}/t2_mask_eroded.nii.gz
 
   # ==========================================================================
   # MATPLOTLIB PLOTTING (headless)
@@ -319,7 +319,7 @@ tests:
       "
     expected_output_contains: "Saved plot"
     validate:
-      - output_exists: test_output/t2_slice.png
+      - output_exists: ${output_dir}/t2_slice.png
 
   - name: Create BOLD timeseries plot
     description: Generate a PNG plot of BOLD timeseries
@@ -346,7 +346,7 @@ tests:
       "
     expected_output_contains: "Saved plot"
     validate:
-      - output_exists: test_output/bold_timeseries.png
+      - output_exists: ${output_dir}/bold_timeseries.png
 
   # ==========================================================================
   # PANDAS DATA HANDLING
@@ -388,7 +388,7 @@ tests:
       "
     expected_output_contains: "Saved CSV"
     validate:
-      - output_exists: test_output/t2_stats.csv
+      - output_exists: ${output_dir}/t2_stats.csv
 
   # ==========================================================================
   # JULIA FUNCTIONALITY
@@ -430,7 +430,7 @@ tests:
       '
     expected_output_contains: "Hello from Julia"
     validate:
-      - output_exists: test_output/julia_test.txt
+      - output_exists: ${output_dir}/julia_test.txt
 
   # ==========================================================================
   # JUPYTER FUNCTIONALITY
@@ -552,7 +552,7 @@ tests:
       "
     expected_exit_code: 0
     validate:
-      - output_exists: test_output/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/bold_tsnr.nii.gz
 
   - name: Extract ROI timeseries
     description: Extract mean timeseries from central ROI
@@ -574,7 +574,7 @@ tests:
       "
     expected_output_contains: "Timeseries length: 300"
     validate:
-      - output_exists: test_output/roi_timeseries.csv
+      - output_exists: ${output_dir}/roi_timeseries.csv
 
   - name: Motion proxy from BOLD
     description: Calculate DVARS-like metric
@@ -594,7 +594,7 @@ tests:
       "
     expected_exit_code: 0
     validate:
-      - output_exists: test_output/dvars.csv
+      - output_exists: ${output_dir}/dvars.csv
 
   # ==========================================================================
   # HDF5 OPERATIONS
@@ -616,7 +616,7 @@ tests:
       "
     expected_output_contains: "HDF5 file created"
     validate:
-      - output_exists: test_output/t2_data.h5
+      - output_exists: ${output_dir}/t2_data.h5
 
   - name: Read HDF5 file
     description: Verify HDF5 file contents
@@ -753,7 +753,7 @@ tests:
       "
     expected_output_contains: "Mosaic saved"
     validate:
-      - output_exists: test_output/t2_mosaic.png
+      - output_exists: ${output_dir}/t2_mosaic.png
 
   # ==========================================================================
   # COMPREHENSIVE WORKFLOW TEST
@@ -823,11 +823,11 @@ tests:
       "
     expected_output_contains: "Pipeline complete"
     validate:
-      - output_exists: test_output/pipeline_tmean.nii.gz
-      - output_exists: test_output/pipeline_mask.nii.gz
-      - output_exists: test_output/pipeline_tsnr.nii.gz
-      - output_exists: test_output/pipeline_global_signal.csv
-      - output_exists: test_output/pipeline_summary.png
+      - output_exists: ${output_dir}/pipeline_tmean.nii.gz
+      - output_exists: ${output_dir}/pipeline_mask.nii.gz
+      - output_exists: ${output_dir}/pipeline_tsnr.nii.gz
+      - output_exists: ${output_dir}/pipeline_global_signal.csv
+      - output_exists: ${output_dir}/pipeline_summary.png
 
 cleanup:
   script: |

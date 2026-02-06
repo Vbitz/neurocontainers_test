@@ -177,7 +177,7 @@ tests:
     description: Copy the bundled example T1 to test output directory
     command: cp /opt/brainageR/chris_t1.nii.gz test_output/
     validate:
-      - output_exists: test_output/chris_t1.nii.gz
+      - output_exists: ${output_dir}/chris_t1.nii.gz
 
   # ==========================================================================
   # FULL PIPELINE TEST (Long-running - SPM segmentation + prediction)
@@ -187,9 +187,9 @@ tests:
     command: |
       cd test_output && \
       brainager_segment.py chris_t1.nii.gz ./brainager_workdir 2>&1
-    timeout: 1800000
+    timeout: 1800
     validate:
-      - output_exists: test_output/brainager_workdir/chris_t1/brainage_prediction.csv
+      - output_exists: ${output_dir}/brainager_workdir/chris_t1/brainage_prediction.csv
     expected_output_contains: "Prediction written to"
 
   - name: Verify segmentation outputs
@@ -241,9 +241,9 @@ tests:
     command: |
       mkdir -p test_output/ds000001_results && \
       brainager_segment.py ${t1w} test_output/ds000001_results 2>&1
-    timeout: 1800000
+    timeout: 1800
     validate:
-      - output_exists: test_output/ds000001_results/sub-01_T1w/brainage_prediction.csv
+      - output_exists: ${output_dir}/ds000001_results/sub-01_T1w/brainage_prediction.csv
 
   - name: Verify ds000001 segmentation
     description: Check segmentation outputs for test data

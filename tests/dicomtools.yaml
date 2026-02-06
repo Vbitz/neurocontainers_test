@@ -705,31 +705,31 @@ tests:
     description: Convert NIfTI to Analyze format
     command: medcon -f ${t1w} -c anlz -o test_output/dicomtools/medcon/t1w_anlz 2>&1 && ls test_output/dicomtools/medcon/m*.hdr
     validate:
-      - output_exists: test_output/dicomtools/medcon/m000-sub-01_T1w.hdr
+      - output_exists: ${output_dir}/dicomtools/medcon/m000-sub-01_T1w.hdr
 
   - name: medcon NIfTI to InterFile
     description: Convert NIfTI to InterFile format
     command: medcon -f ${t1w} -c intf -o test_output/dicomtools/medcon/t1w_intf 2>&1 && ls test_output/dicomtools/medcon/m*.h33
     validate:
-      - output_exists: test_output/dicomtools/medcon/m000-sub-01_T1w.h33
+      - output_exists: ${output_dir}/dicomtools/medcon/m000-sub-01_T1w.h33
 
   - name: medcon NIfTI to raw binary
     description: Convert NIfTI to raw binary format
     command: medcon -f ${t1w} -c bin -o test_output/dicomtools/medcon/t1w_bin 2>&1 && ls test_output/dicomtools/medcon/m*.bin
     validate:
-      - output_exists: test_output/dicomtools/medcon/m000-sub-01_T1w.bin
+      - output_exists: ${output_dir}/dicomtools/medcon/m000-sub-01_T1w.bin
 
   - name: medcon NIfTI to ASCII
     description: Convert NIfTI to ASCII format
     command: medcon -f ${t1w} -c ascii -o test_output/dicomtools/medcon/t1w_ascii 2>&1 && ls test_output/dicomtools/medcon/m*.asc
     validate:
-      - output_exists: test_output/dicomtools/medcon/m000-sub-01_T1w.asc
+      - output_exists: ${output_dir}/dicomtools/medcon/m000-sub-01_T1w.asc
 
   - name: medcon NIfTI to NIfTI (copy)
     description: Convert NIfTI to NIfTI (format verification)
     command: medcon -f ${t1w} -c nifti -o test_output/dicomtools/medcon/t1w_nii 2>&1 && ls test_output/dicomtools/medcon/m*.nii
     validate:
-      - output_exists: test_output/dicomtools/medcon/m000-sub-01_T1w.nii
+      - output_exists: ${output_dir}/dicomtools/medcon/m000-sub-01_T1w.nii
 
   - name: medcon NIfTI to PNG single slice
     description: Convert NIfTI to PNG image

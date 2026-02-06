@@ -159,7 +159,7 @@ tests:
       "
     expected_output_contains: "Image written successfully"
     validate:
-      - output_exists: test_output/lesymap/t1w_copy.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_copy.nii.gz
 
   # ==========================================================================
   # ANTSR IMAGE OPERATIONS
@@ -176,7 +176,7 @@ tests:
       "
     expected_output_contains: "Multiplication successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_scaled.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_scaled.nii.gz
 
   - name: Image arithmetic - threshold
     description: Test image thresholding with ANTsR
@@ -190,7 +190,7 @@ tests:
       "
     expected_output_contains: "Thresholding successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_threshold.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_threshold.nii.gz
 
   - name: Image smoothing
     description: Test Gaussian smoothing with ANTsR
@@ -204,7 +204,7 @@ tests:
       "
     expected_output_contains: "Smoothing successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_smooth.nii.gz
 
   - name: Image resampling
     description: Test image resampling with ANTsR
@@ -218,7 +218,7 @@ tests:
       "
     expected_output_contains: "Resampling successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_resampled.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_resampled.nii.gz
 
   # ==========================================================================
   # MASK OPERATIONS
@@ -235,7 +235,7 @@ tests:
       "
     expected_output_contains: "Mask created"
     validate:
-      - output_exists: test_output/lesymap/t1w_mask.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_mask.nii.gz
 
   - name: Apply mask to image
     description: Apply mask to image using ANTsR
@@ -251,7 +251,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Masking successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_masked.nii.gz
 
   # ==========================================================================
   # SYNTHETIC LESION GENERATION
@@ -284,7 +284,7 @@ tests:
       "
     expected_output_contains: "Synthetic lesion 1 created"
     validate:
-      - output_exists: test_output/lesymap/lesion_01.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_01.nii.gz
 
   - name: Create synthetic lesion mask 2
     description: Create second synthetic lesion mask for testing
@@ -313,7 +313,7 @@ tests:
       "
     expected_output_contains: "Synthetic lesion 2 created"
     validate:
-      - output_exists: test_output/lesymap/lesion_02.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_02.nii.gz
 
   - name: Create synthetic lesion mask 3
     description: Create third synthetic lesion mask for testing
@@ -342,7 +342,7 @@ tests:
       "
     expected_output_contains: "Synthetic lesion 3 created"
     validate:
-      - output_exists: test_output/lesymap/lesion_03.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_03.nii.gz
 
   # ==========================================================================
   # LESYMAP UTILITY FUNCTIONS
@@ -397,7 +397,7 @@ tests:
       "
     depends_on: Create synthetic lesion mask 3
     expected_output_contains: "Patch info computed"
-    timeout: 120000
+    timeout: 120
 
   # ==========================================================================
   # BRUNNER-MUNZEL STATISTICAL TESTS
@@ -655,7 +655,7 @@ tests:
       "
     depends_on: Create synthetic lesion mask 3
     expected_output_contains: "Lesymap ttest analysis completed"
-    timeout: 300000
+    timeout: 300
 
   - name: lesymap with BMfast method
     description: Run lesymap with fast Brunner-Munzel method
@@ -685,7 +685,7 @@ tests:
       "
     depends_on: Create synthetic lesion mask 3
     expected_output_contains: "Lesymap BMfast analysis completed"
-    timeout: 300000
+    timeout: 300
 
   # ==========================================================================
   # MORPHOLOGICAL OPERATIONS
@@ -703,7 +703,7 @@ tests:
     depends_on: Create synthetic lesion mask 1
     expected_output_contains: "Erosion successful"
     validate:
-      - output_exists: test_output/lesymap/lesion_eroded.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_eroded.nii.gz
 
   - name: Morphological dilation
     description: Test morphological dilation on lesion mask
@@ -718,7 +718,7 @@ tests:
     depends_on: Create synthetic lesion mask 1
     expected_output_contains: "Dilation successful"
     validate:
-      - output_exists: test_output/lesymap/lesion_dilated.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_dilated.nii.gz
 
   - name: Morphological closing
     description: Test morphological closing on lesion mask
@@ -733,7 +733,7 @@ tests:
     depends_on: Create synthetic lesion mask 1
     expected_output_contains: "Closing successful"
     validate:
-      - output_exists: test_output/lesymap/lesion_closed.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_closed.nii.gz
 
   # ==========================================================================
   # LABEL OPERATIONS
@@ -751,7 +751,7 @@ tests:
     depends_on: Create synthetic lesion mask 1
     expected_output_contains: "Clustering successful"
     validate:
-      - output_exists: test_output/lesymap/lesion_labeled.nii.gz
+      - output_exists: ${output_dir}/lesymap/lesion_labeled.nii.gz
 
   - name: Label statistics
     description: Compute statistics for labeled regions
@@ -781,9 +781,9 @@ tests:
         cat('N4 correction successful\n')
       "
     expected_output_contains: "N4 correction successful"
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/lesymap/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_n4.nii.gz
 
   # ==========================================================================
   # IMAGE STATISTICS
@@ -836,9 +836,9 @@ tests:
         cat('Affine registration successful\n')
       "
     expected_output_contains: "Affine registration successful"
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/lesymap/t1w_affine_reg.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_affine_reg.nii.gz
 
   # ==========================================================================
   # SEGMENTATION TESTS
@@ -855,9 +855,9 @@ tests:
         cat('K-means segmentation successful, classes:', max(seg\$segmentation), '\n')
       "
     expected_output_contains: "K-means segmentation successful"
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/lesymap/t1w_kmeans_seg.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_kmeans_seg.nii.gz
 
   # ==========================================================================
   # HELPER FUNCTION TESTS
@@ -945,7 +945,7 @@ tests:
       "
     expected_output_contains: "Reflection successful"
     validate:
-      - output_exists: test_output/lesymap/t1w_reflected.nii.gz
+      - output_exists: ${output_dir}/lesymap/t1w_reflected.nii.gz
 
   - name: Center of mass computation
     description: Test center of mass calculation

@@ -247,7 +247,7 @@ tests:
       print('Saved test image successfully')
       "
     validate:
-      - output_exists: test_output/test_nibabel.nii.gz
+      - output_exists: ${output_dir}/test_nibabel.nii.gz
 
   # ==========================================================================
   # NILEARN OPERATIONS (used by nighres for visualization/analysis)
@@ -273,7 +273,7 @@ tests:
       resampled.to_filename('test_output/t1w_resampled_nilearn.nii.gz')
       "
     validate:
-      - output_exists: test_output/t1w_resampled_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_resampled_nilearn.nii.gz
 
   - name: Nilearn image smoothing
     description: Smooth image using nilearn
@@ -286,7 +286,7 @@ tests:
       print('Smoothed image saved')
       "
     validate:
-      - output_exists: test_output/t1w_smoothed_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_smoothed_nilearn.nii.gz
 
   - name: Nilearn mean image
     description: Calculate mean of 4D image
@@ -299,7 +299,7 @@ tests:
       print('Mean image shape:', mean_img.shape)
       "
     validate:
-      - output_exists: test_output/bold_mean_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_mean_nilearn.nii.gz
 
   - name: Nilearn index image
     description: Extract single volume from 4D
@@ -312,7 +312,7 @@ tests:
       print('Extracted volume shape:', vol0.shape)
       "
     validate:
-      - output_exists: test_output/bold_vol0_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_vol0_nilearn.nii.gz
 
   - name: Nilearn concat images
     description: Concatenate multiple 3D images into 4D
@@ -325,7 +325,7 @@ tests:
       print('Concatenated shape:', concat.shape)
       "
     validate:
-      - output_exists: test_output/t1w_concat_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_concat_nilearn.nii.gz
 
   - name: Nilearn math operations
     description: Perform math operations on images
@@ -338,7 +338,7 @@ tests:
       print('Math operation completed')
       "
     validate:
-      - output_exists: test_output/t1w_squared_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_squared_nilearn.nii.gz
 
   - name: Nilearn threshold image
     description: Threshold image using nilearn
@@ -351,7 +351,7 @@ tests:
       print('Thresholded image saved')
       "
     validate:
-      - output_exists: test_output/t1w_thresholded_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_thresholded_nilearn.nii.gz
 
   - name: Nilearn binarize image
     description: Binarize image above threshold
@@ -364,7 +364,7 @@ tests:
       print('Binary mask saved')
       "
     validate:
-      - output_exists: test_output/t1w_binary_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_binary_nilearn.nii.gz
 
   # ==========================================================================
   # SCIPY OPERATIONS (used by nighres for numerical computations)
@@ -385,7 +385,7 @@ tests:
       print('SciPy gaussian filter applied')
       "
     validate:
-      - output_exists: test_output/t1w_scipy_gauss.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_gauss.nii.gz
 
   - name: SciPy distance transform
     description: Test scipy distance transform (used in layering)
@@ -404,7 +404,7 @@ tests:
       print('Distance transform computed')
       "
     validate:
-      - output_exists: test_output/t1w_scipy_dist.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_dist.nii.gz
 
   - name: SciPy binary morphology
     description: Test scipy morphological operations
@@ -425,7 +425,7 @@ tests:
       print('Morphological operations completed')
       "
     validate:
-      - output_exists: test_output/t1w_scipy_morph.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_morph.nii.gz
 
   - name: SciPy connected components
     description: Test scipy connected component labeling
@@ -443,7 +443,7 @@ tests:
       nib.save(result, 'test_output/t1w_scipy_labels.nii.gz')
       "
     validate:
-      - output_exists: test_output/t1w_scipy_labels.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_labels.nii.gz
 
   - name: SciPy gradient computation
     description: Test scipy gradient computation (used in cortical analysis)
@@ -464,7 +464,7 @@ tests:
       print('Gradient magnitude computed')
       "
     validate:
-      - output_exists: test_output/t1w_scipy_gradient.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_gradient.nii.gz
 
   # ==========================================================================
   # ANTs COMMAND-LINE OPERATIONS
@@ -473,7 +473,7 @@ tests:
     description: Apply N4 bias field correction to T1w
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/t1w_n4.nii.gz -v 0
     validate:
-      - output_exists: test_output/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/t1w_n4.nii.gz
 
   - name: ANTs image information
     description: Get image information using PrintHeader
@@ -484,31 +484,31 @@ tests:
     description: Create a simple mask using ThresholdImage
     command: ThresholdImage 3 ${t1w} test_output/t1w_mask_ants.nii.gz 100 Inf
     validate:
-      - output_exists: test_output/t1w_mask_ants.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_ants.nii.gz
 
   - name: ANTs smooth image
     description: Smooth image using SmoothImage
     command: SmoothImage 3 ${t1w} 2 test_output/t1w_smooth_ants.nii.gz 0 0
     validate:
-      - output_exists: test_output/t1w_smooth_ants.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth_ants.nii.gz
 
   - name: ANTs resample image
     description: Resample image to different resolution
     command: ResampleImage 3 ${t1w} test_output/t1w_resample_ants.nii.gz 2x2x2 0 0
     validate:
-      - output_exists: test_output/t1w_resample_ants.nii.gz
+      - output_exists: ${output_dir}/t1w_resample_ants.nii.gz
 
   - name: ANTs pad image
     description: Pad image with zeros
     command: ImageMath 3 test_output/t1w_padded_ants.nii.gz PadImage ${t1w} 5
     validate:
-      - output_exists: test_output/t1w_padded_ants.nii.gz
+      - output_exists: ${output_dir}/t1w_padded_ants.nii.gz
 
   - name: ANTs extract slice
     description: Extract 2D slice from 3D volume
     command: ExtractSliceFromImage 3 ${t1w} test_output/t1w_slice_ants.nii.gz 2 80
     validate:
-      - output_exists: test_output/t1w_slice_ants.nii.gz
+      - output_exists: ${output_dir}/t1w_slice_ants.nii.gz
 
   # ==========================================================================
   # NUMPY ARRAY OPERATIONS (fundamental to nighres)
@@ -654,8 +654,8 @@ tests:
       print('Skull stripping simulation completed')
       "
     validate:
-      - output_exists: test_output/t1w_brain_mask_sim.nii.gz
-      - output_exists: test_output/t1w_brain_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_sim.nii.gz
 
   - name: Tissue segmentation simulation
     description: K-means based tissue segmentation (GM/WM/CSF)
@@ -688,7 +688,7 @@ tests:
       print('Unique labels:', np.unique(seg))
       "
     validate:
-      - output_exists: test_output/t1w_tissue_seg_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_tissue_seg_sim.nii.gz
 
   - name: Distance-based layering simulation
     description: Compute cortical layers using distance transforms
@@ -736,8 +736,8 @@ tests:
       print('Number of layers:', n_layers)
       "
     validate:
-      - output_exists: test_output/t1w_depth_sim.nii.gz
-      - output_exists: test_output/t1w_layers_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_depth_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_layers_sim.nii.gz
 
   - name: Level set surface extraction simulation
     description: Extract isosurface using marching cubes
@@ -768,7 +768,7 @@ tests:
       print('Level set extraction simulation completed')
       "
     validate:
-      - output_exists: test_output/t1w_levelset_sim.nii.gz
+      - output_exists: ${output_dir}/t1w_levelset_sim.nii.gz
 
   - name: Profile sampling simulation
     description: Sample intensity profiles along cortical depth
@@ -802,7 +802,7 @@ tests:
       "
     depends_on: Distance-based layering simulation
     validate:
-      - output_exists: test_output/t1w_profile_sim.csv
+      - output_exists: ${output_dir}/t1w_profile_sim.csv
 
   - name: Spectral embedding simulation
     description: Compute spectral embedding of brain volume
@@ -859,7 +859,7 @@ tests:
       print('Temporal mean computed, shape:', mean_data.shape)
       "
     validate:
-      - output_exists: test_output/bold_tmean.nii.gz
+      - output_exists: ${output_dir}/bold_tmean.nii.gz
 
   - name: BOLD temporal SNR
     description: Compute temporal SNR of BOLD data
@@ -884,7 +884,7 @@ tests:
       print('tSNR computed, mean tSNR:', np.nanmean(tsnr[tsnr > 0]))
       "
     validate:
-      - output_exists: test_output/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/bold_tsnr.nii.gz
 
   - name: BOLD detrending
     description: Linear detrend BOLD time series
@@ -905,7 +905,7 @@ tests:
       print('Detrending completed')
       "
     validate:
-      - output_exists: test_output/bold_detrended.nii.gz
+      - output_exists: ${output_dir}/bold_detrended.nii.gz
 
   - name: BOLD bandpass filtering
     description: Apply bandpass filter to BOLD data
@@ -944,7 +944,7 @@ tests:
       print('Bandpass filtering completed')
       "
     validate:
-      - output_exists: test_output/bold_bandpass.nii.gz
+      - output_exists: ${output_dir}/bold_bandpass.nii.gz
 
   # ==========================================================================
   # DOCUMENTATION AND README

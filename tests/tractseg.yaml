@@ -149,26 +149,26 @@ tests:
     description: Convert NIfTI to MRtrix format
     command: mrconvert ${t1w} test_output/t1w.mif -force
     validate:
-      - output_exists: test_output/t1w.mif
+      - output_exists: ${output_dir}/t1w.mif
 
   - name: mrconvert MIF to NIfTI
     description: Convert MRtrix format back to NIfTI
     command: mrconvert test_output/t1w.mif test_output/t1w_roundtrip.nii.gz -force
     depends_on: mrconvert NIfTI to MIF
     validate:
-      - output_exists: test_output/t1w_roundtrip.nii.gz
+      - output_exists: ${output_dir}/t1w_roundtrip.nii.gz
 
   - name: mrconvert datatype change
     description: Convert with datatype specification
     command: mrconvert ${t1w} -datatype float32 test_output/t1w_float32.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: mrconvert axes permutation
     description: Permute image axes
     command: mrconvert ${t1w} -axes 2,1,0 test_output/t1w_permuted.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_permuted.nii.gz
+      - output_exists: ${output_dir}/t1w_permuted.nii.gz
 
   # ==========================================================================
   # MRTRIX3 TOOLS - IMAGE MANIPULATION
@@ -177,61 +177,61 @@ tests:
     description: Regrid image to different resolution
     command: mrgrid ${t1w} regrid -voxel 2 test_output/t1w_2mm.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_2mm.nii.gz
 
   - name: mrgrid pad
     description: Pad image with zeros
     command: mrgrid ${t1w} pad -axis 0 5,5 test_output/t1w_padded.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_padded.nii.gz
+      - output_exists: ${output_dir}/t1w_padded.nii.gz
 
   - name: mrgrid crop
     description: Crop image to smaller dimensions
     command: mrgrid ${t1w} crop -axis 0 10,10 test_output/t1w_cropped.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_cropped.nii.gz
+      - output_exists: ${output_dir}/t1w_cropped.nii.gz
 
   - name: mrcalc addition
     description: Add constant to image
     command: mrcalc ${t1w} 100 -add test_output/t1w_add100.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_add100.nii.gz
+      - output_exists: ${output_dir}/t1w_add100.nii.gz
 
   - name: mrcalc multiplication
     description: Multiply image by constant
     command: mrcalc ${t1w} 2 -mult test_output/t1w_mult2.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mult2.nii.gz
+      - output_exists: ${output_dir}/t1w_mult2.nii.gz
 
   - name: mrcalc threshold
     description: Threshold image
     command: mrcalc ${t1w} 100 -gt test_output/t1w_thresh.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_thresh.nii.gz
+      - output_exists: ${output_dir}/t1w_thresh.nii.gz
 
   - name: mrcalc division
     description: Divide image by constant
     command: mrcalc ${t1w} 2 -div test_output/t1w_div2.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_div2.nii.gz
+      - output_exists: ${output_dir}/t1w_div2.nii.gz
 
   - name: mrcalc sqrt
     description: Square root of image
     command: mrcalc ${t1w} -sqrt test_output/t1w_sqrt.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_sqrt.nii.gz
+      - output_exists: ${output_dir}/t1w_sqrt.nii.gz
 
   - name: mrcalc abs
     description: Absolute value of image
     command: mrcalc ${t1w} -abs test_output/t1w_abs.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_abs.nii.gz
+      - output_exists: ${output_dir}/t1w_abs.nii.gz
 
   - name: mrcalc negation
     description: Negate image values
     command: mrcalc ${t1w} -neg test_output/t1w_neg.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_neg.nii.gz
+      - output_exists: ${output_dir}/t1w_neg.nii.gz
 
   # ==========================================================================
   # MRTRIX3 TOOLS - STATISTICS
@@ -268,25 +268,25 @@ tests:
     description: Gaussian smoothing with MRtrix
     command: mrfilter ${t1w} smooth -stdev 2 test_output/t1w_smooth_mrtrix.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_smooth_mrtrix.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth_mrtrix.nii.gz
 
   - name: mrfilter median
     description: Median filtering
     command: mrfilter ${t1w} median test_output/t1w_median_mrtrix.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_median_mrtrix.nii.gz
+      - output_exists: ${output_dir}/t1w_median_mrtrix.nii.gz
 
   - name: mrfilter gradient
     description: Gradient magnitude
     command: mrfilter ${t1w} gradient test_output/t1w_gradient.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_gradient.nii.gz
+      - output_exists: ${output_dir}/t1w_gradient.nii.gz
 
   - name: mrfilter normalise
     description: Intensity normalisation
     command: mrfilter ${t1w} normalise test_output/t1w_normalise.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_normalise.nii.gz
+      - output_exists: ${output_dir}/t1w_normalise.nii.gz
 
   # ==========================================================================
   # MRTRIX3 TOOLS - MASK OPERATIONS
@@ -295,31 +295,31 @@ tests:
     description: Otsu threshold for mask creation
     command: mrthreshold ${t1w} -abs 50 test_output/t1w_mask_abs.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mask_abs.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_abs.nii.gz
 
   - name: maskfilter dilate
     description: Dilate binary mask
     command: mrthreshold ${t1w} -abs 100 - | maskfilter - dilate test_output/t1w_mask_dilated.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mask_dilated.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_dilated.nii.gz
 
   - name: maskfilter erode
     description: Erode binary mask
     command: mrthreshold ${t1w} -abs 100 - | maskfilter - erode test_output/t1w_mask_eroded.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mask_eroded.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_eroded.nii.gz
 
   - name: maskfilter clean
     description: Clean small disconnected regions from mask
     command: mrthreshold ${t1w} -abs 100 - | maskfilter - clean test_output/t1w_mask_cleaned.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mask_cleaned.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_cleaned.nii.gz
 
   - name: maskfilter fill
     description: Fill holes in mask
     command: mrthreshold ${t1w} -abs 100 - | maskfilter - fill test_output/t1w_mask_filled.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_mask_filled.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_filled.nii.gz
 
   # ==========================================================================
   # MRTRIX3 TOOLS - HISTOGRAM AND TRANSFORMS
@@ -328,13 +328,13 @@ tests:
     description: Generate histogram of image intensities
     command: mrhistogram ${t1w} test_output/t1w_histogram.txt -force
     validate:
-      - output_exists: test_output/t1w_histogram.txt
+      - output_exists: ${output_dir}/t1w_histogram.txt
 
   - name: mrhistmatch
     description: Match histogram to reference
     command: mrhistmatch scale ${t1w} ${t2} test_output/t1w_histmatched.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_histmatched.nii.gz
+      - output_exists: ${output_dir}/t1w_histmatched.nii.gz
 
   # ==========================================================================
   # MRTRIX3 TOOLS - REGISTRATION UTILITIES
@@ -343,13 +343,13 @@ tests:
     description: Apply identity transform (copy)
     command: mrtransform ${t1w} test_output/t1w_identity.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_identity.nii.gz
+      - output_exists: ${output_dir}/t1w_identity.nii.gz
 
   - name: mrtransform flip
     description: Flip image along axis
     command: mrtransform ${t1w} -flip 0 test_output/t1w_flipped.nii.gz -force
     validate:
-      - output_exists: test_output/t1w_flipped.nii.gz
+      - output_exists: ${output_dir}/t1w_flipped.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - BRAIN EXTRACTION (BET)
@@ -363,38 +363,38 @@ tests:
     description: Extract brain from T1w using bet
     command: bet ${t1w} test_output/t1w_brain -f 0.5
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
 
   - name: FSL bet with mask output
     description: Generate brain mask with bet
     command: bet ${t1w} test_output/t1w_brain_masked -m -f 0.5
     validate:
-      - output_exists: test_output/t1w_brain_masked.nii.gz
-      - output_exists: test_output/t1w_brain_masked_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_masked_mask.nii.gz
 
   - name: FSL bet robust mode
     description: Brain extraction with robust center estimation
     command: bet ${t1w} test_output/t1w_brain_robust -R -f 0.5
     validate:
-      - output_exists: test_output/t1w_brain_robust.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_robust.nii.gz
 
   - name: FSL bet with skull output
     description: Generate skull estimate
     command: bet ${t1w} test_output/t1w_brain_skull -s -f 0.5
     validate:
-      - output_exists: test_output/t1w_brain_skull.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_skull.nii.gz
 
   - name: FSL bet fractional threshold variation
     description: Test different fractional intensity threshold
     command: bet ${t1w} test_output/t1w_brain_f03 -f 0.3
     validate:
-      - output_exists: test_output/t1w_brain_f03.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_f03.nii.gz
 
   - name: FSL bet gradient threshold
     description: Test vertical gradient in threshold
     command: bet ${t1w} test_output/t1w_brain_grad -f 0.5 -g 0.1
     validate:
-      - output_exists: test_output/t1w_brain_grad.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_grad.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLMATHS
@@ -408,71 +408,71 @@ tests:
     description: Threshold image with fslmaths
     command: fslmaths ${t1w} -thr 100 test_output/t1w_fsl_thr.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_thr.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_thr.nii.gz
 
   - name: FSL fslmaths binarize
     description: Binarize image
     command: fslmaths ${t1w} -thr 100 -bin test_output/t1w_fsl_bin.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_bin.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_bin.nii.gz
 
   - name: FSL fslmaths smoothing
     description: Gaussian smoothing with fslmaths
     command: fslmaths ${t1w} -s 2 test_output/t1w_fsl_smooth.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_smooth.nii.gz
 
   - name: FSL fslmaths multiplication
     description: Multiply by constant
     command: fslmaths ${t1w} -mul 2 test_output/t1w_fsl_mul.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_mul.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_mul.nii.gz
 
   - name: FSL fslmaths division
     description: Divide by constant
     command: fslmaths ${t1w} -div 2 test_output/t1w_fsl_div.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_div.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_div.nii.gz
 
   - name: FSL fslmaths addition
     description: Add constant to image
     command: fslmaths ${t1w} -add 100 test_output/t1w_fsl_add.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_add.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_add.nii.gz
 
   - name: FSL fslmaths subtraction
     description: Subtract constant from image
     command: fslmaths ${t1w} -sub 50 test_output/t1w_fsl_sub.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_sub.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_sub.nii.gz
 
   - name: FSL fslmaths masking
     description: Apply mask to image
     command: fslmaths ${t1w} -mas test_output/t1w_brain_masked_mask.nii.gz test_output/t1w_fsl_masked.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/t1w_fsl_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_masked.nii.gz
 
   - name: FSL fslmaths erosion
     description: Erode binary mask
     command: fslmaths test_output/t1w_brain_masked_mask.nii.gz -ero test_output/mask_fsl_ero.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/mask_fsl_ero.nii.gz
+      - output_exists: ${output_dir}/mask_fsl_ero.nii.gz
 
   - name: FSL fslmaths dilation
     description: Dilate binary mask
     command: fslmaths test_output/t1w_brain_masked_mask.nii.gz -dilM test_output/mask_fsl_dil.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/mask_fsl_dil.nii.gz
+      - output_exists: ${output_dir}/mask_fsl_dil.nii.gz
 
   - name: FSL fslmaths fill holes
     description: Fill holes in binary mask
     command: fslmaths test_output/t1w_brain_masked_mask.nii.gz -fillh test_output/mask_fsl_fillh.nii.gz
     depends_on: FSL bet with mask output
     validate:
-      - output_exists: test_output/mask_fsl_fillh.nii.gz
+      - output_exists: ${output_dir}/mask_fsl_fillh.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLSTATS
@@ -532,15 +532,15 @@ tests:
     description: Rigid registration between T1w and T2
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_to_t1w_rigid.nii.gz -omat test_output/t2_to_t1w.mat -dof 6
     validate:
-      - output_exists: test_output/t2_to_t1w_rigid.nii.gz
-      - output_exists: test_output/t2_to_t1w.mat
+      - output_exists: ${output_dir}/t2_to_t1w_rigid.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1w.mat
 
   - name: FSL flirt apply transform
     description: Apply existing transformation matrix
     command: flirt -in ${t2} -ref ${t1w} -applyxfm -init test_output/t2_to_t1w.mat -out test_output/t2_applied.nii.gz
     depends_on: FSL flirt rigid registration
     validate:
-      - output_exists: test_output/t2_applied.nii.gz
+      - output_exists: ${output_dir}/t2_applied.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - ROI OPERATIONS
@@ -549,13 +549,13 @@ tests:
     description: Extract region of interest
     command: fslroi ${t1w} test_output/t1w_roi.nii.gz 40 80 40 80 40 80
     validate:
-      - output_exists: test_output/t1w_roi.nii.gz
+      - output_exists: ${output_dir}/t1w_roi.nii.gz
 
   - name: FSL fslroi extract 4D volumes
     description: Extract subset of volumes from 4D
     command: fslroi ${bold} test_output/bold_subset.nii.gz 0 10
     validate:
-      - output_exists: test_output/bold_subset.nii.gz
+      - output_exists: ${output_dir}/bold_subset.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - IMAGE MERGE/SPLIT
@@ -564,14 +564,14 @@ tests:
     description: Split 4D image into 3D volumes
     command: fslsplit ${bold} test_output/bold_vol_ -t && ls test_output/bold_vol_*.nii.gz | head -5
     validate:
-      - output_exists: test_output/bold_vol_0000.nii.gz
+      - output_exists: ${output_dir}/bold_vol_0000.nii.gz
 
   - name: FSL fslmerge 3D to 4D
     description: Merge 3D images into 4D
     command: fslmerge -t test_output/merged_4d.nii.gz test_output/bold_vol_0000.nii.gz test_output/bold_vol_0001.nii.gz test_output/bold_vol_0002.nii.gz
     depends_on: FSL fslsplit 4D to 3D
     validate:
-      - output_exists: test_output/merged_4d.nii.gz
+      - output_exists: ${output_dir}/merged_4d.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - TEMPORAL OPERATIONS (4D)
@@ -580,25 +580,25 @@ tests:
     description: Calculate mean across time (4D)
     command: fslmaths ${bold} -Tmean test_output/bold_fsl_Tmean.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmean.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmean.nii.gz
 
   - name: FSL fslmaths temporal std
     description: Calculate std across time (4D)
     command: fslmaths ${bold} -Tstd test_output/bold_fsl_Tstd.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tstd.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tstd.nii.gz
 
   - name: FSL fslmaths temporal max
     description: Calculate max across time (4D)
     command: fslmaths ${bold} -Tmax test_output/bold_fsl_Tmax.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmax.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmax.nii.gz
 
   - name: FSL fslmaths temporal min
     description: Calculate min across time (4D)
     command: fslmaths ${bold} -Tmin test_output/bold_fsl_Tmin.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmin.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmin.nii.gz
 
   # ==========================================================================
   # MRTRIX3 DIFFUSION TOOLS - INTERFACE VERIFICATION
@@ -742,7 +742,7 @@ tests:
       fslmaths test_output/pipeline_brain_mask.nii.gz -fillh -dilM -ero test_output/pipeline_mask_refined.nii.gz && \
       fslmaths ${t1w} -mas test_output/pipeline_mask_refined.nii.gz test_output/pipeline_brain_refined.nii.gz
     validate:
-      - output_exists: test_output/pipeline_brain_refined.nii.gz
+      - output_exists: ${output_dir}/pipeline_brain_refined.nii.gz
 
   - name: Preprocessing pipeline T1w
     description: Standard T1w preprocessing chain
@@ -750,7 +750,7 @@ tests:
       bet ${t1w} test_output/preproc_brain -m -f 0.4 && \
       mrfilter test_output/preproc_brain.nii.gz normalise test_output/preproc_brain_norm.nii.gz -force
     validate:
-      - output_exists: test_output/preproc_brain_norm.nii.gz
+      - output_exists: ${output_dir}/preproc_brain_norm.nii.gz
 
   - name: Quality metrics calculation
     description: Calculate SNR-like metrics
@@ -759,7 +759,7 @@ tests:
       fslmaths ${bold} -Tstd test_output/qc_std.nii.gz && \
       fslmaths test_output/qc_mean.nii.gz -div test_output/qc_std.nii.gz test_output/qc_tsnr.nii.gz
     validate:
-      - output_exists: test_output/qc_tsnr.nii.gz
+      - output_exists: ${output_dir}/qc_tsnr.nii.gz
 
   # ==========================================================================
   # ERROR HANDLING

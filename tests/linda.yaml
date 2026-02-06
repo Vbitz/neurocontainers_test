@@ -191,7 +191,7 @@ tests:
       "
     expected_output_contains: "Image written successfully"
     validate:
-      - output_exists: test_output/linda/t1w_copy.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_copy.nii.gz
 
   # ==========================================================================
   # ANTSR IMAGE OPERATIONS
@@ -208,7 +208,7 @@ tests:
       "
     expected_output_contains: "Multiplication successful"
     validate:
-      - output_exists: test_output/linda/t1w_scaled.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_scaled.nii.gz
 
   - name: Image arithmetic - threshold
     description: Test image thresholding with ANTsR
@@ -222,7 +222,7 @@ tests:
       "
     expected_output_contains: "Thresholding successful"
     validate:
-      - output_exists: test_output/linda/t1w_threshold.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_threshold.nii.gz
 
   - name: Image smoothing
     description: Test Gaussian smoothing with ANTsR
@@ -236,7 +236,7 @@ tests:
       "
     expected_output_contains: "Smoothing successful"
     validate:
-      - output_exists: test_output/linda/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_smooth.nii.gz
 
   - name: Image resampling
     description: Test image resampling with ANTsR
@@ -250,7 +250,7 @@ tests:
       "
     expected_output_contains: "Resampling successful"
     validate:
-      - output_exists: test_output/linda/t1w_resampled.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_resampled.nii.gz
 
   # ==========================================================================
   # N4 BIAS FIELD CORRECTION
@@ -266,9 +266,9 @@ tests:
         cat('N4 correction successful\n')
       "
     expected_output_contains: "N4 correction successful"
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/linda/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_n4.nii.gz
 
   # ==========================================================================
   # MASK OPERATIONS
@@ -285,7 +285,7 @@ tests:
       "
     expected_output_contains: "Mask created"
     validate:
-      - output_exists: test_output/linda/t1w_simple_mask.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_simple_mask.nii.gz
 
   - name: Apply mask to image
     description: Apply mask to image using ANTsR
@@ -301,7 +301,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Masking successful"
     validate:
-      - output_exists: test_output/linda/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_masked.nii.gz
 
   # ==========================================================================
   # MORPHOLOGICAL OPERATIONS
@@ -319,7 +319,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Erosion successful"
     validate:
-      - output_exists: test_output/linda/mask_eroded.nii.gz
+      - output_exists: ${output_dir}/linda/mask_eroded.nii.gz
 
   - name: Morphological dilation
     description: Test morphological dilation
@@ -334,7 +334,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Dilation successful"
     validate:
-      - output_exists: test_output/linda/mask_dilated.nii.gz
+      - output_exists: ${output_dir}/linda/mask_dilated.nii.gz
 
   - name: Fill holes
     description: Test hole filling operation
@@ -349,7 +349,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Fill holes successful"
     validate:
-      - output_exists: test_output/linda/mask_filled.nii.gz
+      - output_exists: ${output_dir}/linda/mask_filled.nii.gz
 
   # ==========================================================================
   # REGISTRATION TESTS
@@ -366,9 +366,9 @@ tests:
         cat('Affine registration successful\n')
       "
     expected_output_contains: "Affine registration successful"
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/linda/t1w_affine_reg.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_affine_reg.nii.gz
 
   # ==========================================================================
   # LINDA FUNCTION TESTS
@@ -506,7 +506,7 @@ tests:
       "
     expected_output_contains: "Reflection successful"
     validate:
-      - output_exists: test_output/linda/t1w_reflected.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_reflected.nii.gz
 
   - name: Image cropping
     description: Test image cropping with ANTsR
@@ -521,7 +521,7 @@ tests:
       "
     expected_output_contains: "Cropping successful"
     validate:
-      - output_exists: test_output/linda/t1w_cropped.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_cropped.nii.gz
 
   # ==========================================================================
   # SEGMENTATION TESTS
@@ -538,9 +538,9 @@ tests:
         cat('Atropos segmentation successful, classes:', max(seg\$segmentation), '\n')
       "
     expected_output_contains: "Atropos segmentation successful"
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/linda/t1w_atropos_seg.nii.gz
+      - output_exists: ${output_dir}/linda/t1w_atropos_seg.nii.gz
 
   # ==========================================================================
   # RANDOM FOREST MODEL TESTS
@@ -611,7 +611,7 @@ tests:
     depends_on: Create simple mask
     expected_output_contains: "Connected components:"
     validate:
-      - output_exists: test_output/linda/mask_components.nii.gz
+      - output_exists: ${output_dir}/linda/mask_components.nii.gz
 
   # ==========================================================================
   # UTILITY TESTS
@@ -682,17 +682,17 @@ tests:
   #       cat('Output components:', paste(names(outputs), collapse=', '), '\n')
   #     "
   #   expected_output_contains: "LINDA prediction completed"
-  #   timeout: 3600000  # 60 minutes
+  #   timeout: 3600  # 60 minutes
   #   validate:
-  #     - output_exists: test_output/linda/linda_full
+  #     - output_exists: ${output_dir}/linda/linda_full
 
   # - name: LINDA predict via wrapper script
   #   description: Run LINDA using the wrapper shell script
   #   command: linda_predict.sh ${t1w} test_output/linda/linda_wrapper
   #   expected_output_contains: "SUCCESS"
-  #   timeout: 3600000  # 60 minutes
+  #   timeout: 3600  # 60 minutes
   #   validate:
-  #     - output_exists: test_output/linda/linda_wrapper/linda_outputs.RData
+  #     - output_exists: ${output_dir}/linda/linda_wrapper/linda_outputs.RData
 
   # - name: LINDA skull stripping
   #   description: Run LINDA skull stripping component
@@ -709,10 +709,10 @@ tests:
   #       cat('Skull stripping completed\n')
   #     "
   #   expected_output_contains: "Skull stripping completed"
-  #   timeout: 1800000  # 30 minutes
+  #   timeout: 1800  # 30 minutes
   #   validate:
-  #     - output_exists: test_output/linda/t1w_brain.nii.gz
-  #     - output_exists: test_output/linda/t1w_brain_mask.nii.gz
+  #     - output_exists: ${output_dir}/linda/t1w_brain.nii.gz
+  #     - output_exists: ${output_dir}/linda/t1w_brain_mask.nii.gz
 
 cleanup:
   script: |

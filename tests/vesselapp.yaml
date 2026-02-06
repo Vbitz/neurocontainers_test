@@ -212,7 +212,7 @@ tests:
     description: Test nibabel NIfTI creation and saving
     command: "python3 -c \"import nibabel as nib; import numpy as np; data = np.random.rand(32, 32, 32).astype(np.float32); img = nib.Nifti1Image(data, np.eye(4)); nib.save(img, 'test_output/test_nii.nii.gz'); print('NIfTI saved successfully')\""
     validate:
-      - output_exists: test_output/test_nii.nii.gz
+      - output_exists: ${output_dir}/test_nii.nii.gz
 
   - name: nibabel header inspection
     description: Test nibabel header reading
@@ -407,7 +407,7 @@ tests:
     description: Test Pillow PNG saving
     command: "python3 -c \"from PIL import Image; import numpy as np; arr = np.random.randint(0, 255, (64, 64), dtype=np.uint8); img = Image.fromarray(arr); img.save('test_output/test_pillow.png'); print('PNG saved successfully')\""
     validate:
-      - output_exists: test_output/test_pillow.png
+      - output_exists: ${output_dir}/test_pillow.png
 
   # ==========================================================================
   # SCIPY FUNCTIONALITY

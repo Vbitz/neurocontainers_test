@@ -99,7 +99,7 @@ tests:
     description: Index BIDS dataset with PyBIDS
     command: pybids layout ${bids_dir} test_output/bids_db.sqlite --no-validate 2>&1
     validate:
-      - output_exists: test_output/bids_db.sqlite
+      - output_exists: ${output_dir}/bids_db.sqlite
 
   # ==========================================================================
   # NIPYPE FUNCTIONALITY
@@ -149,7 +149,7 @@ tests:
     description: Run N4 bias field correction on T1w image
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/t1w_n4.nii.gz -s 4 -c [50x50x50x50,0.0] -b [200] 2>&1
     validate:
-      - output_exists: test_output/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/t1w_n4.nii.gz
 
   - name: ANTs DenoiseImage available
     description: Verify DenoiseImage is available
@@ -160,7 +160,7 @@ tests:
     description: Run denoising on T1w image
     command: DenoiseImage -d 3 -i ${t1w} -o test_output/t1w_denoised.nii.gz -s 2 2>&1
     validate:
-      - output_exists: test_output/t1w_denoised.nii.gz
+      - output_exists: ${output_dir}/t1w_denoised.nii.gz
 
   - name: ANTs ImageMath available
     description: Verify ImageMath is available
@@ -171,19 +171,19 @@ tests:
     description: Test ImageMath threshold operation
     command: ImageMath 3 test_output/t1w_thr.nii.gz ThresholdAtMean ${t1w} 0.5 2>&1
     validate:
-      - output_exists: test_output/t1w_thr.nii.gz
+      - output_exists: ${output_dir}/t1w_thr.nii.gz
 
   - name: ANTs ImageMath Gaussian smoothing
     description: Test ImageMath Gaussian smoothing
     command: ImageMath 3 test_output/t1w_smooth.nii.gz G ${t1w} 2 2>&1
     validate:
-      - output_exists: test_output/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth.nii.gz
 
   - name: ANTs ImageMath normalize
     description: Test ImageMath normalize intensity
     command: ImageMath 3 test_output/t1w_norm.nii.gz Normalize ${t1w} 2>&1
     validate:
-      - output_exists: test_output/t1w_norm.nii.gz
+      - output_exists: ${output_dir}/t1w_norm.nii.gz
 
   - name: ANTs PrintHeader available
     description: Verify PrintHeader is available
@@ -345,7 +345,7 @@ tests:
       print('Saved successfully')
       "
     validate:
-      - output_exists: test_output/t1w_nibabel_copy.nii.gz
+      - output_exists: ${output_dir}/t1w_nibabel_copy.nii.gz
 
   # ==========================================================================
   # BIDS DATASET EXPLORATION WITH PYBIDS
@@ -424,7 +424,7 @@ tests:
       print('Smoothed image saved')
       "
     validate:
-      - output_exists: test_output/t1w_nilearn_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_nilearn_smooth.nii.gz
 
   - name: Nilearn resample T1w
     description: Resample T1w image to different resolution
@@ -438,7 +438,7 @@ tests:
       print('Resampled shape:', resampled.shape)
       "
     validate:
-      - output_exists: test_output/t1w_nilearn_resampled.nii.gz
+      - output_exists: ${output_dir}/t1w_nilearn_resampled.nii.gz
 
   - name: Nilearn mean BOLD
     description: Calculate mean BOLD image with nilearn
@@ -451,7 +451,7 @@ tests:
       print('Mean image shape:', mean_img.shape)
       "
     validate:
-      - output_exists: test_output/bold_nilearn_mean.nii.gz
+      - output_exists: ${output_dir}/bold_nilearn_mean.nii.gz
 
   - name: Nilearn std BOLD
     description: Calculate std BOLD image with nilearn
@@ -468,7 +468,7 @@ tests:
       print('Std image shape:', std_img.shape)
       "
     validate:
-      - output_exists: test_output/bold_nilearn_std.nii.gz
+      - output_exists: ${output_dir}/bold_nilearn_std.nii.gz
 
   - name: Nilearn tSNR calculation
     description: Calculate temporal SNR (tSNR) for BOLD
@@ -488,7 +488,7 @@ tests:
       print('tSNR image saved, shape:', tsnr_img.shape)
       "
     validate:
-      - output_exists: test_output/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/bold_tsnr.nii.gz
 
   - name: Nilearn mask BOLD
     description: Create a simple brain mask from BOLD
@@ -500,7 +500,7 @@ tests:
       print('Mask shape:', mask.shape)
       "
     validate:
-      - output_exists: test_output/bold_mask.nii.gz
+      - output_exists: ${output_dir}/bold_mask.nii.gz
 
   - name: Nilearn extract time series
     description: Extract time series from BOLD using mask
@@ -514,7 +514,7 @@ tests:
       np.save('test_output/bold_timeseries.npy', time_series)
       "
     validate:
-      - output_exists: test_output/bold_timeseries.npy
+      - output_exists: ${output_dir}/bold_timeseries.npy
 
   # ==========================================================================
   # IMAGE QUALITY METRICS (Manual calculation examples)
@@ -565,7 +565,7 @@ tests:
       np.save('test_output/bold_dvars.npy', dvars)
       "
     validate:
-      - output_exists: test_output/bold_dvars.npy
+      - output_exists: ${output_dir}/bold_dvars.npy
 
   - name: Calculate framewise displacement
     description: Estimate motion from BOLD signal (simplified FD)
@@ -587,7 +587,7 @@ tests:
       np.save('test_output/bold_fd_proxy.npy', fd)
       "
     validate:
-      - output_exists: test_output/bold_fd_proxy.npy
+      - output_exists: ${output_dir}/bold_fd_proxy.npy
 
   # ==========================================================================
   # ADVANCED ANTs OPERATIONS
@@ -596,25 +596,25 @@ tests:
     description: Create a blank image with specified dimensions
     command: CreateImage 3 test_output/blank_image.nii.gz 64x64x64 1
     validate:
-      - output_exists: test_output/blank_image.nii.gz
+      - output_exists: ${output_dir}/blank_image.nii.gz
 
   - name: ANTs ImageMath PadImage
     description: Pad image with zeros
     command: ImageMath 3 test_output/t1w_padded.nii.gz PadImage ${t1w} 5 2>&1
     validate:
-      - output_exists: test_output/t1w_padded.nii.gz
+      - output_exists: ${output_dir}/t1w_padded.nii.gz
 
   - name: ANTs ImageMath TruncateImageIntensity
     description: Truncate image intensity (winsorize)
     command: ImageMath 3 test_output/t1w_truncated.nii.gz TruncateImageIntensity ${t1w} 0.01 0.99 2>&1
     validate:
-      - output_exists: test_output/t1w_truncated.nii.gz
+      - output_exists: ${output_dir}/t1w_truncated.nii.gz
 
   - name: ANTs ImageMath histogram match
     description: Match histogram of one image to another
     command: ImageMath 3 test_output/t1w_histmatch.nii.gz HistogramMatch ${t1w} ${t1w} 2>&1
     validate:
-      - output_exists: test_output/t1w_histmatch.nii.gz
+      - output_exists: ${output_dir}/t1w_histmatch.nii.gz
 
   - name: ANTs ImageMath morphological operations
     description: Test morphological dilation
@@ -622,20 +622,20 @@ tests:
       ImageMath 3 test_output/t1w_mask_for_morph.nii.gz ThresholdAtMean ${t1w} 1.0 && \
       ImageMath 3 test_output/t1w_dilated.nii.gz MD test_output/t1w_mask_for_morph.nii.gz 2 2>&1
     validate:
-      - output_exists: test_output/t1w_dilated.nii.gz
+      - output_exists: ${output_dir}/t1w_dilated.nii.gz
 
   - name: ANTs ImageMath erosion
     description: Test morphological erosion
     command: ImageMath 3 test_output/t1w_eroded.nii.gz ME test_output/t1w_mask_for_morph.nii.gz 2 2>&1
     depends_on: ANTs ImageMath morphological operations
     validate:
-      - output_exists: test_output/t1w_eroded.nii.gz
+      - output_exists: ${output_dir}/t1w_eroded.nii.gz
 
   - name: ANTs ConvertImagePixelType
     description: Convert image pixel type
     command: ConvertImagePixelType ${t1w} test_output/t1w_float.nii.gz 1 2>&1
     validate:
-      - output_exists: test_output/t1w_float.nii.gz
+      - output_exists: ${output_dir}/t1w_float.nii.gz
 
   # ==========================================================================
   # MRIQC SPECIFIC FUNCTIONALITY TESTS

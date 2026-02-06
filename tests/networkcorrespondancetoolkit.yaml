@@ -163,7 +163,7 @@ tests:
       print('Saved binary image successfully')
       "
     validate:
-      - output_exists: test_output/t1w_binary_nib.nii.gz
+      - output_exists: ${output_dir}/t1w_binary_nib.nii.gz
 
   # ==========================================================================
   # NUMPY - ARRAY OPERATIONS TESTS
@@ -218,7 +218,7 @@ tests:
       print('Arrays equal:', np.allclose(data, loaded))
       "
     validate:
-      - output_exists: test_output/t1w_data.npy
+      - output_exists: ${output_dir}/t1w_data.npy
 
   # ==========================================================================
   # SCIPY - SCIENTIFIC COMPUTING TESTS
@@ -287,7 +287,7 @@ tests:
       print('Array shape:', loaded['array'].shape)
       "
     validate:
-      - output_exists: test_output/test_data.mat
+      - output_exists: ${output_dir}/test_data.mat
 
   # ==========================================================================
   # NILEARN - NEUROIMAGING ANALYSIS TESTS
@@ -314,7 +314,7 @@ tests:
       print('Smoothed image shape:', smoothed.shape)
       "
     validate:
-      - output_exists: test_output/t1w_smoothed_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_smoothed_nilearn.nii.gz
 
   - name: Nilearn image resampling
     description: Test nilearn resampling to different resolution
@@ -341,7 +341,7 @@ tests:
       print('Thresholded image saved')
       "
     validate:
-      - output_exists: test_output/t1w_thresholded_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_thresholded_nilearn.nii.gz
 
   - name: Nilearn mean image computation
     description: Compute mean image from 4D data
@@ -355,7 +355,7 @@ tests:
       print('Original 4D shape:', img.shape)
       "
     validate:
-      - output_exists: test_output/bold_mean_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_mean_nilearn.nii.gz
 
   - name: Nilearn image concatenation
     description: Test nilearn image concatenation
@@ -387,7 +387,7 @@ tests:
       print('Mask created with', np.sum(mask_data), 'voxels')
       "
     validate:
-      - output_exists: test_output/t1w_mask_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_nilearn.nii.gz
 
   # ==========================================================================
   # NILEARN PLOTTING TESTS
@@ -403,7 +403,7 @@ tests:
       print('Anatomical plot saved')
       "
     validate:
-      - output_exists: test_output/plot_anat.png
+      - output_exists: ${output_dir}/plot_anat.png
 
   - name: Nilearn plot EPI
     description: Test nilearn EPI plotting (mean functional)
@@ -417,7 +417,7 @@ tests:
       print('EPI plot saved')
       "
     validate:
-      - output_exists: test_output/plot_epi.png
+      - output_exists: ${output_dir}/plot_epi.png
 
   - name: Nilearn plot stat map
     description: Test nilearn statistical map plotting
@@ -436,7 +436,7 @@ tests:
       print('Stat map plot saved')
       "
     validate:
-      - output_exists: test_output/plot_stat_map.png
+      - output_exists: ${output_dir}/plot_stat_map.png
 
   # ==========================================================================
   # MATPLOTLIB - PLOTTING TESTS
@@ -461,7 +461,7 @@ tests:
       print('Matplotlib plot saved')
       "
     validate:
-      - output_exists: test_output/matplotlib_test.png
+      - output_exists: ${output_dir}/matplotlib_test.png
 
   - name: Matplotlib histogram
     description: Test matplotlib histogram of image intensities
@@ -485,7 +485,7 @@ tests:
       print('Histogram saved')
       "
     validate:
-      - output_exists: test_output/intensity_histogram.png
+      - output_exists: ${output_dir}/intensity_histogram.png
 
   # ==========================================================================
   # SEABORN - STATISTICAL VISUALIZATION TESTS
@@ -513,7 +513,7 @@ tests:
       print('Seaborn heatmap saved')
       "
     validate:
-      - output_exists: test_output/seaborn_heatmap.png
+      - output_exists: ${output_dir}/seaborn_heatmap.png
 
   - name: Seaborn clustermap
     description: Test seaborn clustermap for hierarchical clustering visualization
@@ -530,7 +530,7 @@ tests:
       print('Clustermap saved')
       "
     validate:
-      - output_exists: test_output/seaborn_clustermap.png
+      - output_exists: ${output_dir}/seaborn_clustermap.png
 
   # ==========================================================================
   # PANDAS - DATA ANALYSIS TESTS
@@ -553,7 +553,7 @@ tests:
       df.to_csv('test_output/network_results.csv', index=False)
       "
     validate:
-      - output_exists: test_output/network_results.csv
+      - output_exists: ${output_dir}/network_results.csv
 
   - name: Pandas read CSV
     description: Test pandas CSV reading functionality
@@ -867,8 +867,8 @@ tests:
       print('Max Dice:', np.max(overlap))
       "
     validate:
-      - output_exists: test_output/simulated_overlap.mat
-      - output_exists: test_output/simulated_overlap_matrix.png
+      - output_exists: ${output_dir}/simulated_overlap.mat
+      - output_exists: ${output_dir}/simulated_overlap_matrix.png
 
   # ==========================================================================
   # CONFIG FILE CREATION AND PARSING
@@ -901,7 +901,7 @@ tests:
       print('Data_Space:', config2.get('data_info', 'Data_Space'))
       "
     validate:
-      - output_exists: test_output/test_config.ini
+      - output_exists: ${output_dir}/test_config.ini
 
   - name: Parse NCT config file
     description: Parse a configuration file with NCT functions
@@ -1055,10 +1055,10 @@ tests:
       print('  - test_output/nct_workflow_results.png')
       "
     validate:
-      - output_exists: test_output/simulated_ref_parcellation.nii.gz
-      - output_exists: test_output/simulated_target_parcellation.nii.gz
-      - output_exists: test_output/dice_overlap_workflow.mat
-      - output_exists: test_output/nct_workflow_results.png
+      - output_exists: ${output_dir}/simulated_ref_parcellation.nii.gz
+      - output_exists: ${output_dir}/simulated_target_parcellation.nii.gz
+      - output_exists: ${output_dir}/dice_overlap_workflow.mat
+      - output_exists: ${output_dir}/nct_workflow_results.png
 
   # ==========================================================================
   # MEMORY AND PERFORMANCE TESTS
@@ -1233,9 +1233,9 @@ tests:
       print('='*60)
       "
     validate:
-      - output_exists: test_output/comprehensive_test.png
-      - output_exists: test_output/comprehensive_results.csv
-      - output_exists: test_output/comprehensive_results.mat
+      - output_exists: ${output_dir}/comprehensive_test.png
+      - output_exists: ${output_dir}/comprehensive_results.csv
+      - output_exists: ${output_dir}/comprehensive_results.mat
 
 cleanup:
   script: |

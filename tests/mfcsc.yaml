@@ -161,8 +161,8 @@ tests:
       rm -rf output_ipsi && \
       mfcsc fc_sc_list.txt FC SC output_ipsi 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_ipsi
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_ipsi
+    timeout: 300
 
   - name: Check ipsilateral output directory structure
     description: Verify output directory was created with expected structure
@@ -198,8 +198,8 @@ tests:
       rm -rf output_contra && \
       mfcsc fc_sc_list.txt FC SC output_contra -99 true 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_contra
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_contra
+    timeout: 300
 
   - name: Check contralateral output structure
     description: Verify contralateral analysis output was created
@@ -222,8 +222,8 @@ tests:
       rm -rf output_mask0 && \
       mfcsc fc_sc_list.txt FC SC output_mask0 0 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_mask0
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_mask0
+    timeout: 300
 
   - name: Verify custom mask value in output
     description: Check that mask-final.csv uses the specified not_in_mask_value
@@ -240,8 +240,8 @@ tests:
       rm -rf output_negfc && \
       mfcsc fc_sc_list.txt FC SC output_negfc -99 false true 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_negfc
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_negfc
+    timeout: 300
 
   - name: Check negative FC output
     description: Verify analysis with negative FC completed
@@ -259,8 +259,8 @@ tests:
       rm -rf output_symm && \
       mfcsc fc_sc_list.txt FC SC output_symm -99 false false true 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_symm
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_symm
+    timeout: 300
 
   - name: Check symmetrical output structure
     description: Verify symmetrical analysis completed
@@ -278,8 +278,8 @@ tests:
       rm -rf output_full && \
       mfcsc fc_sc_list.txt FC SC output_full 0 false false false false 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_full
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_full
+    timeout: 300
 
   - name: Check full parameter output
     description: Verify analysis with all parameters completed
@@ -294,8 +294,8 @@ tests:
       rm -rf output_contra_neg && \
       mfcsc fc_sc_list.txt FC SC output_contra_neg -99 true true 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_contra_neg
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_contra_neg
+    timeout: 300
 
   # ==========================================================================
   # OUTPUT VALIDATION
@@ -377,8 +377,8 @@ tests:
       rm -rf output_repro1 && \
       mfcsc fc_sc_list.txt FC SC output_repro1 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_repro1
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_repro1
+    timeout: 300
 
   - name: Reproducibility test - run 2
     description: Second run for reproducibility check
@@ -387,8 +387,8 @@ tests:
       rm -rf output_repro2 && \
       mfcsc fc_sc_list.txt FC SC output_repro2 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_repro2
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_repro2
+    timeout: 300
 
   - name: Compare reproducibility outputs
     description: Verify that two runs produce identical results
@@ -415,8 +415,8 @@ tests:
       rm -rf output_single && \
       mfcsc fc_sc_list_single.txt FC_single SC_single output_single 2>&1
     validate:
-      - output_exists: test_output/mfcsc/output_single
-    timeout: 300000
+      - output_exists: ${output_dir}/mfcsc/output_single
+    timeout: 300
 
   - name: Check single subject output
     description: Verify single subject analysis completed

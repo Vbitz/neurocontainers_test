@@ -233,7 +233,7 @@ tests:
     command: palm -i ${t1w} -o test_output/palm/basic_input -n 5 -ee 2>&1
     expected_output_contains: "Reading input"
     validate:
-      - output_exists: test_output/palm/basic_input_elapsed.csv
+      - output_exists: ${output_dir}/palm/basic_input_elapsed.csv
 
   - name: Multiple inputs
     description: Test loading multiple NIfTI files
@@ -254,8 +254,8 @@ tests:
            -save1-p \
            2>&1
     validate:
-      - output_exists: test_output/palm/onesample_elapsed.csv
-      - output_exists: test_output/palm/onesample_vox_tstat_c1.nii.gz
+      - output_exists: ${output_dir}/palm/onesample_elapsed.csv
+      - output_exists: ${output_dir}/palm/onesample_vox_tstat_c1.nii.gz
 
   - name: One-sample with demean
     description: One-sample test with demeaning
@@ -267,7 +267,7 @@ tests:
            -n 50 -ee -demean \
            2>&1
     validate:
-      - output_exists: test_output/palm/onesample_demean_elapsed.csv
+      - output_exists: ${output_dir}/palm/onesample_demean_elapsed.csv
 
   # ==========================================================================
   # TWO-SAMPLE T-TEST
@@ -282,8 +282,8 @@ tests:
            -n 50 -ee \
            2>&1
     validate:
-      - output_exists: test_output/palm/twosample_elapsed.csv
-      - output_exists: test_output/palm/twosample_vox_tstat_c1.nii.gz
+      - output_exists: ${output_dir}/palm/twosample_elapsed.csv
+      - output_exists: ${output_dir}/palm/twosample_vox_tstat_c1.nii.gz
 
   - name: Two-sample with variance groups
     description: Two-group comparison allowing heteroscedasticity
@@ -296,7 +296,7 @@ tests:
            -n 50 -ee \
            2>&1
     validate:
-      - output_exists: test_output/palm/twosample_vg_elapsed.csv
+      - output_exists: ${output_dir}/palm/twosample_vg_elapsed.csv
 
   - name: Two-sample with auto variance groups
     description: Two-group comparison with automatic VG detection
@@ -309,7 +309,7 @@ tests:
            -n 50 -ee \
            2>&1
     validate:
-      - output_exists: test_output/palm/twosample_vgauto_elapsed.csv
+      - output_exists: ${output_dir}/palm/twosample_vgauto_elapsed.csv
 
   # ==========================================================================
   # TWO-TAILED TESTS
@@ -324,7 +324,7 @@ tests:
            -n 50 -ee -twotail \
            2>&1
     validate:
-      - output_exists: test_output/palm/twotail_elapsed.csv
+      - output_exists: ${output_dir}/palm/twotail_elapsed.csv
 
   # ==========================================================================
   # SIGN-FLIPPING (ISE)
@@ -339,7 +339,7 @@ tests:
            -n 50 -ise \
            2>&1
     validate:
-      - output_exists: test_output/palm/signflip_elapsed.csv
+      - output_exists: ${output_dir}/palm/signflip_elapsed.csv
 
   - name: Combined EE and ISE
     description: Test with both exchangeable and independent symmetric errors
@@ -351,7 +351,7 @@ tests:
            -n 50 -ee -ise \
            2>&1
     validate:
-      - output_exists: test_output/palm/ee_ise_elapsed.csv
+      - output_exists: ${output_dir}/palm/ee_ise_elapsed.csv
 
   # ==========================================================================
   # F-TESTS
@@ -367,8 +367,8 @@ tests:
            -n 50 -ee \
            2>&1
     validate:
-      - output_exists: test_output/palm/ftest_elapsed.csv
-      - output_exists: test_output/palm/ftest_vox_fstat_c1.nii.gz
+      - output_exists: ${output_dir}/palm/ftest_elapsed.csv
+      - output_exists: ${output_dir}/palm/ftest_vox_fstat_c1.nii.gz
 
   - name: F-test only
     description: Run only F-contrasts, not t-contrasts
@@ -381,7 +381,7 @@ tests:
            -n 50 -ee -fonly \
            2>&1
     validate:
-      - output_exists: test_output/palm/fonly_elapsed.csv
+      - output_exists: ${output_dir}/palm/fonly_elapsed.csv
 
   # ==========================================================================
   # EXCHANGEABILITY BLOCKS
@@ -397,7 +397,7 @@ tests:
            -n 50 -ee -within \
            2>&1
     validate:
-      - output_exists: test_output/palm/eb_within_elapsed.csv
+      - output_exists: ${output_dir}/palm/eb_within_elapsed.csv
 
   - name: Whole-block permutation
     description: Permutation of whole exchangeability blocks
@@ -410,7 +410,7 @@ tests:
            -n 50 -ee -whole \
            2>&1
     validate:
-      - output_exists: test_output/palm/eb_whole_elapsed.csv
+      - output_exists: ${output_dir}/palm/eb_whole_elapsed.csv
 
   # ==========================================================================
   # CORRELATION/REGRESSION
@@ -425,7 +425,7 @@ tests:
            -n 50 -ee -pearson \
            2>&1
     validate:
-      - output_exists: test_output/palm/pearson_elapsed.csv
+      - output_exists: ${output_dir}/palm/pearson_elapsed.csv
 
   # ==========================================================================
   # TFCE (Threshold-Free Cluster Enhancement)
@@ -440,8 +440,8 @@ tests:
            -n 20 -ee -T \
            2>&1
     validate:
-      - output_exists: test_output/palm/tfce_elapsed.csv
-      - output_exists: test_output/palm/tfce_vox_tfce_tstat_c1.nii.gz
+      - output_exists: ${output_dir}/palm/tfce_elapsed.csv
+      - output_exists: ${output_dir}/palm/tfce_vox_tfce_tstat_c1.nii.gz
 
   - name: TFCE with custom parameters
     description: TFCE with custom H, E, C parameters
@@ -454,7 +454,7 @@ tests:
            -tfce_H 2 -tfce_E 0.5 -tfce_C 6 \
            2>&1
     validate:
-      - output_exists: test_output/palm/tfce_custom_elapsed.csv
+      - output_exists: ${output_dir}/palm/tfce_custom_elapsed.csv
 
   - name: TFCE 2D parameters
     description: TFCE with 2D preset (for surface/TBSS data)
@@ -466,7 +466,7 @@ tests:
            -n 20 -ee -T -tfce2D \
            2>&1
     validate:
-      - output_exists: test_output/palm/tfce_2d_elapsed.csv
+      - output_exists: ${output_dir}/palm/tfce_2d_elapsed.csv
 
   # ==========================================================================
   # CLUSTER-BASED INFERENCE
@@ -481,7 +481,7 @@ tests:
            -n 20 -ee -C 3.1 -Cstat extent \
            2>&1
     validate:
-      - output_exists: test_output/palm/cluster_extent_elapsed.csv
+      - output_exists: ${output_dir}/palm/cluster_extent_elapsed.csv
 
   - name: Cluster mass inference
     description: Cluster-based inference with mass statistic
@@ -493,7 +493,7 @@ tests:
            -n 20 -ee -C 3.1 -Cstat mass \
            2>&1
     validate:
-      - output_exists: test_output/palm/cluster_mass_elapsed.csv
+      - output_exists: ${output_dir}/palm/cluster_mass_elapsed.csv
 
   # ==========================================================================
   # FDR CORRECTION
@@ -508,8 +508,8 @@ tests:
            -n 50 -ee -fdr \
            2>&1
     validate:
-      - output_exists: test_output/palm/fdr_elapsed.csv
-      - output_exists: test_output/palm/fdr_vox_tstat_fdrp_c1.nii.gz
+      - output_exists: ${output_dir}/palm/fdr_elapsed.csv
+      - output_exists: ${output_dir}/palm/fdr_vox_tstat_fdrp_c1.nii.gz
 
   # ==========================================================================
   # MULTIPLE TESTING CORRECTION OPTIONS
@@ -524,7 +524,7 @@ tests:
            -n 50 -ee -corrcon \
            2>&1
     validate:
-      - output_exists: test_output/palm/corrcon_elapsed.csv
+      - output_exists: ${output_dir}/palm/corrcon_elapsed.csv
 
   # ==========================================================================
   # ACCELERATION METHODS
@@ -539,7 +539,7 @@ tests:
            -n 100 -ee -accel negbin \
            2>&1
     validate:
-      - output_exists: test_output/palm/accel_negbin_elapsed.csv
+      - output_exists: ${output_dir}/palm/accel_negbin_elapsed.csv
 
   - name: Tail approximation acceleration
     description: Acceleration using tail approximation with GPD
@@ -551,7 +551,7 @@ tests:
            -n 100 -ee -accel tail \
            2>&1
     validate:
-      - output_exists: test_output/palm/accel_tail_elapsed.csv
+      - output_exists: ${output_dir}/palm/accel_tail_elapsed.csv
 
   - name: Gamma approximation acceleration
     description: Acceleration using gamma distribution approximation
@@ -563,7 +563,7 @@ tests:
            -n 100 -ee -accel gamma \
            2>&1
     validate:
-      - output_exists: test_output/palm/accel_gamma_elapsed.csv
+      - output_exists: ${output_dir}/palm/accel_gamma_elapsed.csv
 
   - name: No permutation approximation
     description: Compute permutation p-values without permutations
@@ -575,7 +575,7 @@ tests:
            -ee -accel noperm \
            2>&1
     validate:
-      - output_exists: test_output/palm/accel_noperm_elapsed.csv
+      - output_exists: ${output_dir}/palm/accel_noperm_elapsed.csv
 
   # ==========================================================================
   # OUTPUT OPTIONS
@@ -590,7 +590,7 @@ tests:
            -n 50 -ee -save1-p \
            2>&1
     validate:
-      - output_exists: test_output/palm/save1p_elapsed.csv
+      - output_exists: ${output_dir}/palm/save1p_elapsed.csv
 
   - name: Log p-values
     description: Output -log(p) values
@@ -602,7 +602,7 @@ tests:
            -n 50 -ee -logp \
            2>&1
     validate:
-      - output_exists: test_output/palm/logp_elapsed.csv
+      - output_exists: ${output_dir}/palm/logp_elapsed.csv
 
   - name: Z-statistic conversion
     description: Convert statistics to z-scores
@@ -614,7 +614,7 @@ tests:
            -n 50 -ee -zstat \
            2>&1
     validate:
-      - output_exists: test_output/palm/zstat_elapsed.csv
+      - output_exists: ${output_dir}/palm/zstat_elapsed.csv
 
   - name: Save DOF
     description: Save degrees of freedom file
@@ -626,7 +626,7 @@ tests:
            -n 50 -ee -savedof \
            2>&1
     validate:
-      - output_exists: test_output/palm/savedof_elapsed.csv
+      - output_exists: ${output_dir}/palm/savedof_elapsed.csv
 
   - name: Save GLM outputs
     description: Save COPEs, VARCOPEs, and Cohen's d
@@ -638,8 +638,8 @@ tests:
            -n 50 -ee -saveglm \
            2>&1
     validate:
-      - output_exists: test_output/palm/saveglm_elapsed.csv
-      - output_exists: test_output/palm/saveglm_vox_cope_c1.nii.gz
+      - output_exists: ${output_dir}/palm/saveglm_elapsed.csv
+      - output_exists: ${output_dir}/palm/saveglm_vox_cope_c1.nii.gz
 
   - name: Save effective mask
     description: Save masks used for each modality
@@ -651,7 +651,7 @@ tests:
            -n 50 -ee -savemask \
            2>&1
     validate:
-      - output_exists: test_output/palm/savemask_elapsed.csv
+      - output_exists: ${output_dir}/palm/savemask_elapsed.csv
 
   - name: Save permutation metrics
     description: Save CSV with permutation metrics
@@ -663,7 +663,7 @@ tests:
            -n 50 -ee -savemetrics \
            2>&1
     validate:
-      - output_exists: test_output/palm/metrics_elapsed.csv
+      - output_exists: ${output_dir}/palm/metrics_elapsed.csv
 
   - name: Save parametric p-values
     description: Save uncorrected parametric p-values
@@ -675,7 +675,7 @@ tests:
            -n 50 -ee -saveparametric \
            2>&1
     validate:
-      - output_exists: test_output/palm/parametric_elapsed.csv
+      - output_exists: ${output_dir}/palm/parametric_elapsed.csv
 
   # ==========================================================================
   # SEED AND REPRODUCIBILITY
@@ -690,7 +690,7 @@ tests:
            -n 50 -ee -seed 42 \
            2>&1
     validate:
-      - output_exists: test_output/palm/seed42_elapsed.csv
+      - output_exists: ${output_dir}/palm/seed42_elapsed.csv
 
   # ==========================================================================
   # EXHAUSTIVE PERMUTATIONS
@@ -706,7 +706,7 @@ tests:
            2>&1
     expected_output_contains: "permutation"
     validate:
-      - output_exists: test_output/palm/exhaustive_elapsed.csv
+      - output_exists: ${output_dir}/palm/exhaustive_elapsed.csv
 
   # ==========================================================================
   # REGRESSION METHODS
@@ -721,7 +721,7 @@ tests:
            -n 50 -ee -rmethod Freedman-Lane \
            2>&1
     validate:
-      - output_exists: test_output/palm/rmethod_fl_elapsed.csv
+      - output_exists: ${output_dir}/palm/rmethod_fl_elapsed.csv
 
   - name: Dekker method
     description: Permutation using Dekker regression method
@@ -733,7 +733,7 @@ tests:
            -n 50 -ee -rmethod Dekker \
            2>&1
     validate:
-      - output_exists: test_output/palm/rmethod_dekker_elapsed.csv
+      - output_exists: ${output_dir}/palm/rmethod_dekker_elapsed.csv
 
   - name: ter Braak method
     description: Permutation using ter Braak regression method
@@ -745,7 +745,7 @@ tests:
            -n 50 -ee -rmethod terBraak \
            2>&1
     validate:
-      - output_exists: test_output/palm/rmethod_terbraak_elapsed.csv
+      - output_exists: ${output_dir}/palm/rmethod_terbraak_elapsed.csv
 
   # ==========================================================================
   # DATA TRANSFORMATIONS
@@ -760,7 +760,7 @@ tests:
            -n 50 -ee -inormal \
            2>&1
     validate:
-      - output_exists: test_output/palm/inormal_elapsed.csv
+      - output_exists: ${output_dir}/palm/inormal_elapsed.csv
 
   - name: Inverse normal Blom method
     description: Inverse-normal transformation using Blom method
@@ -772,7 +772,7 @@ tests:
            -n 50 -ee -inormal Blom \
            2>&1
     validate:
-      - output_exists: test_output/palm/inormal_blom_elapsed.csv
+      - output_exists: ${output_dir}/palm/inormal_blom_elapsed.csv
 
   # ==========================================================================
   # QUIET MODE AND OUTPUT CONTROL
@@ -787,7 +787,7 @@ tests:
            -n 50 -ee -quiet \
            2>&1
     validate:
-      - output_exists: test_output/palm/quiet_elapsed.csv
+      - output_exists: ${output_dir}/palm/quiet_elapsed.csv
 
   - name: No uncorrected output
     description: Skip saving uncorrected p-values
@@ -799,7 +799,7 @@ tests:
            -n 50 -ee -nouncorrected -T \
            2>&1
     validate:
-      - output_exists: test_output/palm/nouncorr_elapsed.csv
+      - output_exists: ${output_dir}/palm/nouncorr_elapsed.csv
 
   # ==========================================================================
   # PARTITION METHODS
@@ -814,7 +814,7 @@ tests:
            -n 50 -ee -pmethodp Guttman \
            2>&1
     validate:
-      - output_exists: test_output/palm/pmethodp_guttman_elapsed.csv
+      - output_exists: ${output_dir}/palm/pmethodp_guttman_elapsed.csv
 
   - name: Beckmann partition method
     description: Use Beckmann partitioning for permutations
@@ -826,7 +826,7 @@ tests:
            -n 50 -ee -pmethodp Beckmann \
            2>&1
     validate:
-      - output_exists: test_output/palm/pmethodp_beckmann_elapsed.csv
+      - output_exists: ${output_dir}/palm/pmethodp_beckmann_elapsed.csv
 
   # ==========================================================================
   # PRECISION OPTIONS
@@ -841,7 +841,7 @@ tests:
            -n 50 -ee -precision single \
            2>&1
     validate:
-      - output_exists: test_output/palm/precision_single_elapsed.csv
+      - output_exists: ${output_dir}/palm/precision_single_elapsed.csv
 
   - name: Double precision
     description: Use double precision for inputs
@@ -853,7 +853,7 @@ tests:
            -n 50 -ee -precision double \
            2>&1
     validate:
-      - output_exists: test_output/palm/precision_double_elapsed.csv
+      - output_exists: ${output_dir}/palm/precision_double_elapsed.csv
 
   # ==========================================================================
   # COMBINED ANALYSES
@@ -868,7 +868,7 @@ tests:
            -n 20 -ee -T -fdr \
            2>&1
     validate:
-      - output_exists: test_output/palm/tfce_fdr_elapsed.csv
+      - output_exists: ${output_dir}/palm/tfce_fdr_elapsed.csv
 
   - name: Full analysis pipeline
     description: Comprehensive analysis with multiple corrections
@@ -883,7 +883,7 @@ tests:
            -saveglm -savedof \
            2>&1
     validate:
-      - output_exists: test_output/palm/full_analysis_elapsed.csv
+      - output_exists: ${output_dir}/palm/full_analysis_elapsed.csv
 
   # ==========================================================================
   # SYNCHRONIZED PERMUTATIONS
@@ -898,7 +898,7 @@ tests:
            -n 50 -ee -syncperms \
            2>&1
     validate:
-      - output_exists: test_output/palm/syncperms_elapsed.csv
+      - output_exists: ${output_dir}/palm/syncperms_elapsed.csv
 
   # ==========================================================================
   # VERBOSE OUTPUT
@@ -913,7 +913,7 @@ tests:
            -n 50 -ee -verbosefilenames \
            2>&1
     validate:
-      - output_exists: test_output/palm/verbose_elapsed.csv
+      - output_exists: ${output_dir}/palm/verbose_elapsed.csv
 
   # ==========================================================================
   # MAXIMUM STATISTIC DISTRIBUTION
@@ -928,7 +928,7 @@ tests:
            -n 50 -ee -savemax \
            2>&1
     validate:
-      - output_exists: test_output/palm/savemax_elapsed.csv
+      - output_exists: ${output_dir}/palm/savemax_elapsed.csv
 
 cleanup:
   script: |

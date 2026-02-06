@@ -513,7 +513,7 @@ tests:
     depends_on: Create test bvecs file
     expected_output_contains: "Scheme has 8 measurements"
     validate:
-      - output_exists: test_output/test.scheme
+      - output_exists: ${output_dir}/test.scheme
 
   - name: fsl2scheme with bStep rounding
     description: Test fsl2scheme with b-value rounding
@@ -1024,7 +1024,7 @@ tests:
     depends_on: Create synthetic DWI scheme file
     expected_output_contains: "Created synthetic DWI"
     validate:
-      - output_exists: test_output/synthetic_dwi.nii.gz
+      - output_exists: ${output_dir}/synthetic_dwi.nii.gz
 
   - name: Create synthetic mask
     description: Create binary mask for synthetic DWI
@@ -1047,7 +1047,7 @@ tests:
       "
     expected_output_contains: "Created mask"
     validate:
-      - output_exists: test_output/synthetic_mask.nii.gz
+      - output_exists: ${output_dir}/synthetic_mask.nii.gz
 
   # ==========================================================================
   # ERROR HANDLING TESTS
@@ -1369,7 +1369,7 @@ tests:
       "
     expected_output_contains: "SANDI scheme created"
     validate:
-      - output_exists: test_output/sandi_full.scheme
+      - output_exists: ${output_dir}/sandi_full.scheme
 
   # ==========================================================================
   # COMPLEX SYNTHESIS TESTS

@@ -51,15 +51,15 @@ tests:
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_default.nii.gz --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_default.nii.gz
-      - same_dimensions: ["test_output/t1w_defaced_default.nii.gz", "${t1w}"]
+      - output_exists: ${output_dir}/t1w_defaced_default.nii.gz
+      - same_dimensions: ["${output_dir}/t1w_defaced_default.nii.gz", "${t1w}"]
 
   - name: Defacing with custom output path
     description: Deface T1w image with explicit output filename
     command: pydeface ${t1w} --outfile test_output/t1w_custom_defaced.nii.gz --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_custom_defaced.nii.gz
+      - output_exists: ${output_dir}/t1w_custom_defaced.nii.gz
 
   - name: Defacing with force overwrite
     description: Deface and force overwrite existing output
@@ -67,7 +67,7 @@ tests:
     depends_on: Basic defacing with default output
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_default.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_default.nii.gz
 
   # ==========================================================================
   # COST FUNCTION OPTIONS
@@ -77,35 +77,35 @@ tests:
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_mutualinfo.nii.gz --cost mutualinfo --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_mutualinfo.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_mutualinfo.nii.gz
 
   - name: Defacing with corratio cost
     description: Test defacing with correlation ratio cost function
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_corratio.nii.gz --cost corratio --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_corratio.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_corratio.nii.gz
 
   - name: Defacing with normcorr cost
     description: Test defacing with normalized correlation cost function
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_normcorr.nii.gz --cost normcorr --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_normcorr.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_normcorr.nii.gz
 
   - name: Defacing with normmi cost
     description: Test defacing with normalized mutual information cost function
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_normmi.nii.gz --cost normmi --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_normmi.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_normmi.nii.gz
 
   - name: Defacing with leastsq cost
     description: Test defacing with least squares cost function
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_leastsq.nii.gz --cost leastsq --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_leastsq.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_leastsq.nii.gz
 
   # ==========================================================================
   # APPLY TO MULTIPLE IMAGES
@@ -115,7 +115,7 @@ tests:
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_applyto.nii.gz --applyto ${t2} --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_applyto.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_applyto.nii.gz
 
   # ==========================================================================
   # DEBUGGING AND VERBOSE OPTIONS
@@ -125,7 +125,7 @@ tests:
     command: pydeface ${t1w} --outfile test_output/t1w_defaced_nocleanup.nii.gz --nocleanup --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t1w_defaced_nocleanup.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_nocleanup.nii.gz
 
   - name: Defacing with verbose output
     description: Test defacing with verbose status messages
@@ -133,7 +133,7 @@ tests:
     timeout: 300
     expected_output_contains: "Defacing"
     validate:
-      - output_exists: test_output/t1w_defaced_verbose.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_verbose.nii.gz
 
   # ==========================================================================
   # DEFACING DIFFERENT IMAGE TYPES
@@ -143,8 +143,8 @@ tests:
     command: pydeface ${t2} --outfile test_output/t2_defaced.nii.gz --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/t2_defaced.nii.gz
-      - same_dimensions: ["test_output/t2_defaced.nii.gz", "${t2}"]
+      - output_exists: ${output_dir}/t2_defaced.nii.gz
+      - same_dimensions: ["${output_dir}/t2_defaced.nii.gz", "${t2}"]
 
   # ==========================================================================
   # FSL TOOLS (bundled with container)
@@ -159,29 +159,29 @@ tests:
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_to_t1w_flirt.nii.gz -omat test_output/t2_to_t1w.mat -dof 6
     timeout: 180
     validate:
-      - output_exists: test_output/t2_to_t1w_flirt.nii.gz
-      - output_exists: test_output/t2_to_t1w.mat
+      - output_exists: ${output_dir}/t2_to_t1w_flirt.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1w.mat
 
   - name: FSL flirt with mutualinfo cost
     description: Test FLIRT with mutual information cost function
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_to_t1w_mi.nii.gz -cost mutualinfo -dof 6
     timeout: 180
     validate:
-      - output_exists: test_output/t2_to_t1w_mi.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1w_mi.nii.gz
 
   - name: FSL flirt apply transform
     description: Apply existing transformation matrix
     command: flirt -in ${t2} -ref ${t1w} -applyxfm -init test_output/t2_to_t1w.mat -out test_output/t2_to_t1w_applied.nii.gz
     depends_on: FSL flirt basic registration
     validate:
-      - output_exists: test_output/t2_to_t1w_applied.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1w_applied.nii.gz
 
   - name: FSL convert_xfm invert
     description: Invert a transformation matrix
     command: convert_xfm -omat test_output/t1w_to_t2.mat -inverse test_output/t2_to_t1w.mat
     depends_on: FSL flirt basic registration
     validate:
-      - output_exists: test_output/t1w_to_t2.mat
+      - output_exists: ${output_dir}/t1w_to_t2.mat
 
   - name: FSL fslstats basic
     description: Get basic statistics from image
@@ -212,44 +212,44 @@ tests:
     description: Copy image using fslmaths
     command: fslmaths ${t1w} test_output/t1w_copy.nii.gz
     validate:
-      - output_exists: test_output/t1w_copy.nii.gz
+      - output_exists: ${output_dir}/t1w_copy.nii.gz
 
   - name: FSL fslmaths threshold
     description: Apply threshold using fslmaths
     command: fslmaths ${t1w} -thr 100 test_output/t1w_thr100.nii.gz
     validate:
-      - output_exists: test_output/t1w_thr100.nii.gz
+      - output_exists: ${output_dir}/t1w_thr100.nii.gz
 
   - name: FSL fslmaths binarize
     description: Binarize image using fslmaths
     command: fslmaths ${t1w} -bin test_output/t1w_bin.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin.nii.gz
+      - output_exists: ${output_dir}/t1w_bin.nii.gz
 
   - name: FSL fslmaths smooth
     description: Gaussian smoothing using fslmaths
     command: fslmaths ${t1w} -s 2 test_output/t1w_smooth.nii.gz
     validate:
-      - output_exists: test_output/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth.nii.gz
 
   - name: FSL fslmaths masking
     description: Apply mask using fslmaths
     command: fslmaths ${t1w} -mas test_output/t1w_bin.nii.gz test_output/t1w_masked.nii.gz
     depends_on: FSL fslmaths binarize
     validate:
-      - output_exists: test_output/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_masked.nii.gz
 
   - name: FSL fslmaths arithmetic
     description: Test arithmetic operations
     command: fslmaths ${t1w} -mul 2 -add 100 test_output/t1w_arith.nii.gz
     validate:
-      - output_exists: test_output/t1w_arith.nii.gz
+      - output_exists: ${output_dir}/t1w_arith.nii.gz
 
   - name: FSL fslroi extract subvolume
     description: Extract ROI from volume
     command: fslroi ${t1w} test_output/t1w_roi.nii.gz 40 80 40 80 40 80
     validate:
-      - output_exists: test_output/t1w_roi.nii.gz
+      - output_exists: ${output_dir}/t1w_roi.nii.gz
 
   - name: FSL fslsplit check
     description: Check fslsplit is available
@@ -266,15 +266,15 @@ tests:
     command: bet ${t1w} test_output/t1w_brain.nii.gz -f 0.5
     timeout: 120
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
 
   - name: FSL bet with mask
     description: Brain extraction with binary mask output
     command: bet ${t1w} test_output/t1w_brain_mask -m -f 0.5
     timeout: 120
     validate:
-      - output_exists: test_output/t1w_brain_mask.nii.gz
-      - output_exists: test_output/t1w_brain_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask_mask.nii.gz
 
   # ==========================================================================
   # NIBABEL UTILITIES
@@ -303,20 +303,20 @@ tests:
     description: Convert image datatype to float32
     command: nib-convert ${t1w} test_output/t1w_float32.nii.gz --out-dtype float32
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: nib-convert to int16
     description: Convert image datatype to int16
     command: nib-convert ${t1w} test_output/t1w_int16.nii.gz --out-dtype int16
     validate:
-      - output_exists: test_output/t1w_int16.nii.gz
+      - output_exists: ${output_dir}/t1w_int16.nii.gz
 
   - name: nib-convert force overwrite
     description: Convert with force overwrite
     command: nib-convert ${t1w} test_output/t1w_float32.nii.gz --out-dtype float32 --force
     depends_on: nib-convert to float32
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   # ==========================================================================
   # PYTHON/NIBABEL DIRECT ACCESS
@@ -439,8 +439,8 @@ tests:
       bet test_output/workflow_defaced.nii.gz test_output/workflow_defaced_brain.nii.gz -f 0.5
     timeout: 360
     validate:
-      - output_exists: test_output/workflow_defaced.nii.gz
-      - output_exists: test_output/workflow_defaced_brain.nii.gz
+      - output_exists: ${output_dir}/workflow_defaced.nii.gz
+      - output_exists: ${output_dir}/workflow_defaced_brain.nii.gz
 
   - name: Multi-contrast defacing workflow
     description: Deface T1w and apply mask to T2
@@ -448,7 +448,7 @@ tests:
       pydeface ${t1w} --outfile test_output/multicontrast_t1w_defaced.nii.gz --applyto ${t2} --verbose
     timeout: 300
     validate:
-      - output_exists: test_output/multicontrast_t1w_defaced.nii.gz
+      - output_exists: ${output_dir}/multicontrast_t1w_defaced.nii.gz
 
   - name: Quality check after defacing
     description: Compare statistics before and after defacing

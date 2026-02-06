@@ -141,7 +141,7 @@ tests:
     command: pybids layout ${bids_dir} test_output/bids_layout.db --no-validate 2>&1
     expected_exit_code: 0
     validate:
-      - output_exists: test_output/bids_layout.db
+      - output_exists: ${output_dir}/bids_layout.db
 
   # ==========================================================================
   # NIBABEL COMMAND LINE TOOLS
@@ -210,13 +210,13 @@ tests:
     description: Conform T1w to 1mm isotropic resolution
     command: nib-conform ${t1w} test_output/t1w_conformed.nii.gz --voxel-size 1 1 1 --out-shape 256 256 256 -f
     validate:
-      - output_exists: test_output/t1w_conformed.nii.gz
+      - output_exists: ${output_dir}/t1w_conformed.nii.gz
 
   - name: nib-conform with orientation
     description: Conform T1w to RAS orientation
     command: nib-conform ${t1w} test_output/t1w_ras.nii.gz --orientation RAS -f
     validate:
-      - output_exists: test_output/t1w_ras.nii.gz
+      - output_exists: ${output_dir}/t1w_ras.nii.gz
 
   - name: nib-convert help
     description: Verify nib-convert shows help
@@ -227,13 +227,13 @@ tests:
     description: Convert T1w to float32 data type
     command: nib-convert ${t1w} test_output/t1w_float32.nii.gz --out-dtype float32 -f
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: nib-convert T1w to int32
     description: Convert T1w to int32 data type
     command: nib-convert ${t1w} test_output/t1w_int32.nii.gz --out-dtype int32 -f
     validate:
-      - output_exists: test_output/t1w_int32.nii.gz
+      - output_exists: ${output_dir}/t1w_int32.nii.gz
 
   - name: nib-roi help
     description: Verify nib-roi shows help
@@ -244,13 +244,13 @@ tests:
     description: Extract ROI from T1w image
     command: nib-roi ${t1w} test_output/t1w_roi.nii.gz -i 40:120 -j 50:150 -k 50:150
     validate:
-      - output_exists: test_output/t1w_roi.nii.gz
+      - output_exists: ${output_dir}/t1w_roi.nii.gz
 
   - name: nib-roi extract BOLD temporal subset
     description: Extract first 10 volumes from BOLD
     command: nib-roi ${bold} test_output/bold_first10.nii.gz -t 0:10
     validate:
-      - output_exists: test_output/bold_first10.nii.gz
+      - output_exists: ${output_dir}/bold_first10.nii.gz
 
   - name: nib-nifti-dx help
     description: Verify nib-nifti-dx shows help
@@ -292,7 +292,7 @@ tests:
       "
     expected_output_contains: "Smoothed image saved"
     validate:
-      - output_exists: test_output/t1w_smoothed_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_smoothed_nilearn.nii.gz
 
   - name: nilearn resample T1w
     description: Resample T1w to different resolution using nilearn
@@ -307,7 +307,7 @@ tests:
       "
     expected_output_contains: "Resampled image saved"
     validate:
-      - output_exists: test_output/t1w_resampled_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_resampled_nilearn.nii.gz
 
   - name: nilearn mean BOLD image
     description: Compute mean BOLD image using nilearn
@@ -321,7 +321,7 @@ tests:
       "
     expected_output_contains: "Mean BOLD shape: (64, 64, 33)"
     validate:
-      - output_exists: test_output/bold_mean_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_mean_nilearn.nii.gz
 
   - name: nilearn threshold image
     description: Apply threshold to image using nilearn
@@ -335,7 +335,7 @@ tests:
       "
     expected_output_contains: "Thresholded image saved"
     validate:
-      - output_exists: test_output/t1w_thresh_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_thresh_nilearn.nii.gz
 
   - name: nilearn binarize image
     description: Create binary mask using nilearn
@@ -352,7 +352,7 @@ tests:
       "
     expected_output_contains: "Binary mask saved"
     validate:
-      - output_exists: test_output/t1w_binary_nilearn.nii.gz
+      - output_exists: ${output_dir}/t1w_binary_nilearn.nii.gz
 
   - name: nilearn index volume
     description: Extract single volume from 4D image
@@ -366,7 +366,7 @@ tests:
       "
     expected_output_contains: "First volume shape: (64, 64, 33)"
     validate:
-      - output_exists: test_output/bold_vol0_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_vol0_nilearn.nii.gz
 
   - name: nilearn concat images
     description: Concatenate multiple volumes using nilearn
@@ -382,7 +382,7 @@ tests:
       "
     expected_output_contains: "Concatenated shape: (64, 64, 33, 2)"
     validate:
-      - output_exists: test_output/bold_concat_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_concat_nilearn.nii.gz
 
   # ==========================================================================
   # NILEARN MASKING OPERATIONS
@@ -398,7 +398,7 @@ tests:
       "
     expected_output_contains: "EPI mask shape: (64, 64, 33)"
     validate:
-      - output_exists: test_output/bold_mask_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_mask_nilearn.nii.gz
 
   - name: nilearn apply mask
     description: Apply mask and extract time series
@@ -427,7 +427,7 @@ tests:
     depends_on: nilearn compute EPI mask
     expected_output_contains: "Unmasked mean image saved"
     validate:
-      - output_exists: test_output/bold_mean_masked_nilearn.nii.gz
+      - output_exists: ${output_dir}/bold_mean_masked_nilearn.nii.gz
 
   # ==========================================================================
   # NILEARN SIGNAL PROCESSING
@@ -479,7 +479,7 @@ tests:
     depends_on: nilearn compute EPI mask
     expected_output_contains: "Correlation matrix shape: (100, 100)"
     validate:
-      - output_exists: test_output/correlation_matrix.npy
+      - output_exists: ${output_dir}/correlation_matrix.npy
 
   - name: nilearn partial correlation
     description: Compute partial correlation matrix
@@ -659,7 +659,7 @@ tests:
       "
     expected_output_contains: "Image saved successfully"
     validate:
-      - output_exists: test_output/t1w_doubled_nibabel.nii.gz
+      - output_exists: ${output_dir}/t1w_doubled_nibabel.nii.gz
 
   - name: nibabel create new image
     description: Create new NIfTI image from scratch
@@ -675,7 +675,7 @@ tests:
       "
     expected_output_contains: "Random image shape: (64, 64, 32)"
     validate:
-      - output_exists: test_output/random_nibabel.nii.gz
+      - output_exists: ${output_dir}/random_nibabel.nii.gz
 
   - name: nibabel qform sform
     description: Check qform and sform codes
@@ -722,7 +722,7 @@ tests:
       "
     expected_output_contains: "Scipy smoothed image saved"
     validate:
-      - output_exists: test_output/t1w_scipy_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_smooth.nii.gz
 
   - name: scipy morphology operations
     description: Apply scipy morphological operations
@@ -741,7 +741,7 @@ tests:
       "
     expected_output_contains: "Scipy eroded image saved"
     validate:
-      - output_exists: test_output/t1w_scipy_eroded.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_eroded.nii.gz
 
   # ==========================================================================
   # PANDAS OPERATIONS
@@ -785,7 +785,7 @@ tests:
       "
     expected_output_contains: "Connectome CSV saved"
     validate:
-      - output_exists: test_output/sample_connectome.csv
+      - output_exists: ${output_dir}/sample_connectome.csv
 
   # ==========================================================================
   # GIGA_CONNECTOME MODULE TESTS
@@ -890,7 +890,7 @@ tests:
       "
     expected_output_contains: "6. Mean time series computed"
     validate:
-      - output_exists: test_output/bold_preprocessed.nii.gz
+      - output_exists: ${output_dir}/bold_preprocessed.nii.gz
 
   - name: connectivity analysis pipeline
     description: Complete connectivity analysis using nilearn
@@ -933,8 +933,8 @@ tests:
     depends_on: nilearn compute EPI mask
     expected_output_contains: "4. Saved connectivity matrices"
     validate:
-      - output_exists: test_output/connectivity_corr.npy
-      - output_exists: test_output/connectivity_cov.npy
+      - output_exists: ${output_dir}/connectivity_corr.npy
+      - output_exists: ${output_dir}/connectivity_cov.npy
 
   - name: atlas-based extraction simulation
     description: Simulate atlas-based time series extraction
@@ -985,8 +985,8 @@ tests:
       "
     expected_output_contains: "4. Pipeline completed successfully"
     validate:
-      - output_exists: test_output/fake_atlas.nii.gz
-      - output_exists: test_output/regional_connectivity.npy
+      - output_exists: ${output_dir}/fake_atlas.nii.gz
+      - output_exists: ${output_dir}/regional_connectivity.npy
 
 cleanup:
   script: |

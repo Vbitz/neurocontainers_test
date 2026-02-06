@@ -247,8 +247,8 @@ tests:
     description: Run BET on test data
     command: bet ${t1w} test_output/t1w_brain.nii.gz -m
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
-      - output_exists: test_output/t1w_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
 
   - name: FLIRT help
     description: Verify FSL FLIRT (linear registration) is available
@@ -294,7 +294,7 @@ tests:
     description: Test fslmaths binarization
     command: fslmaths ${t1w} -bin test_output/t1w_fsl_bin.nii.gz
     validate:
-      - output_exists: test_output/t1w_fsl_bin.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_bin.nii.gz
 
   - name: fslsplit exists
     description: Verify fslsplit is available
@@ -521,7 +521,7 @@ tests:
     description: Test NIfTI to MINC conversion
     command: /opt/minc/1.9.15/bin/nii2mnc ${t1w} test_output/t1w.mnc
     validate:
-      - output_exists: test_output/t1w.mnc
+      - output_exists: ${output_dir}/t1w.mnc
 
   - name: MINC file info
     description: Get info from converted MINC file
@@ -534,14 +534,14 @@ tests:
     command: /opt/minc/1.9.15/bin/mnc2nii test_output/t1w.mnc test_output/t1w_converted.nii
     depends_on: Convert NIfTI to MINC
     validate:
-      - output_exists: test_output/t1w_converted.nii
+      - output_exists: ${output_dir}/t1w_converted.nii
 
   - name: FAST tissue segmentation
     description: Run FAST segmentation on brain extracted data
     command: fast -o test_output/t1w_seg test_output/t1w_brain.nii.gz
     depends_on: BET run brain extraction
     validate:
-      - output_exists: test_output/t1w_seg_seg.nii.gz
+      - output_exists: ${output_dir}/t1w_seg_seg.nii.gz
 
   - name: fslstats on brain
     description: Get statistics from brain extracted image
@@ -554,21 +554,21 @@ tests:
     command: fslmaths test_output/t1w_brain.nii.gz -thr 100 test_output/t1w_brain_thr.nii.gz
     depends_on: BET run brain extraction
     validate:
-      - output_exists: test_output/t1w_brain_thr.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_thr.nii.gz
 
   - name: fslmaths multiply images
     description: Multiply brain by mask
     command: fslmaths test_output/t1w_brain.nii.gz -mul test_output/t1w_brain_mask.nii.gz test_output/t1w_brain_masked.nii.gz
     depends_on: BET run brain extraction
     validate:
-      - output_exists: test_output/t1w_brain_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_masked.nii.gz
 
   - name: fslmaths smoothing
     description: Apply Gaussian smoothing
     command: fslmaths test_output/t1w_brain.nii.gz -s 2 test_output/t1w_brain_smooth.nii.gz
     depends_on: BET run brain extraction
     validate:
-      - output_exists: test_output/t1w_brain_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_smooth.nii.gz
 
   # ==========================================================================
   # ADDITIONAL MINC TOOLS VERIFICATION

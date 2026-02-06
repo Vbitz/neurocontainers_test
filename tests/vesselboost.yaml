@@ -148,7 +148,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred
+      - output_exists: ${output_dir}/vesselboost/output_pred
 
   - name: Prediction with omelette1_0429 model (no preprocessing)
     description: Run vessel segmentation prediction using omelette1_0429 pretrained model
@@ -163,7 +163,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_omelette1
+      - output_exists: ${output_dir}/vesselboost/output_pred_omelette1
 
   - name: Prediction with omelette2_0429 model (no preprocessing)
     description: Run vessel segmentation prediction using omelette2_0429 pretrained model
@@ -178,7 +178,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_omelette2
+      - output_exists: ${output_dir}/vesselboost/output_pred_omelette2
 
   # ==========================================================================
   # PREDICTION MODULE - DIFFERENT THRESHOLD VALUES
@@ -196,7 +196,7 @@ tests:
         --thresh 0.05 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_thresh05
+      - output_exists: ${output_dir}/vesselboost/output_pred_thresh05
 
   - name: Prediction with higher threshold (thresh=0.3)
     description: Run prediction with higher binary threshold for more specific detection
@@ -211,7 +211,7 @@ tests:
         --thresh 0.3 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_thresh30
+      - output_exists: ${output_dir}/vesselboost/output_pred_thresh30
 
   - name: Prediction with very high threshold (thresh=0.5)
     description: Run prediction with very high binary threshold
@@ -226,7 +226,7 @@ tests:
         --thresh 0.5 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_thresh50
+      - output_exists: ${output_dir}/vesselboost/output_pred_thresh50
 
   # ==========================================================================
   # PREDICTION MODULE - DIFFERENT CONNECTED COMPONENTS VALUES
@@ -244,7 +244,7 @@ tests:
         --thresh 0.1 \
         --cc 0
     validate:
-      - output_exists: test_output/vesselboost/output_pred_cc0
+      - output_exists: ${output_dir}/vesselboost/output_pred_cc0
 
   - name: Prediction with higher cc threshold (cc=50)
     description: Run prediction with higher connected component threshold for more aggressive denoising
@@ -259,7 +259,7 @@ tests:
         --thresh 0.1 \
         --cc 50
     validate:
-      - output_exists: test_output/vesselboost/output_pred_cc50
+      - output_exists: ${output_dir}/vesselboost/output_pred_cc50
 
   - name: Prediction with very high cc threshold (cc=100)
     description: Run prediction with very high connected component threshold
@@ -274,7 +274,7 @@ tests:
         --thresh 0.1 \
         --cc 100
     validate:
-      - output_exists: test_output/vesselboost/output_pred_cc100
+      - output_exists: ${output_dir}/vesselboost/output_pred_cc100
 
   # ==========================================================================
   # PREDICTION MODULE - WITH PREPROCESSING
@@ -294,7 +294,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_prep1
+      - output_exists: ${output_dir}/vesselboost/output_pred_prep1
 
   - name: Prediction with denoising only (prep_mode=2)
     description: Run prediction with denoising preprocessing
@@ -311,7 +311,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_prep2
+      - output_exists: ${output_dir}/vesselboost/output_pred_prep2
 
   - name: Prediction with bias field correction and denoising (prep_mode=3)
     description: Run prediction with both N4 bias field correction and denoising
@@ -328,7 +328,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_prep3
+      - output_exists: ${output_dir}/vesselboost/output_pred_prep3
 
   # ==========================================================================
   # PREDICTION MODULE - DIFFERENT INPUT DATA
@@ -346,7 +346,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_pred_t2
+      - output_exists: ${output_dir}/vesselboost/output_pred_t2
 
   # ==========================================================================
   # BOOST MODULE - TRAINING FROM SCRATCH WITH LABELS
@@ -386,7 +386,7 @@ tests:
         --cc 10
     depends_on: Create dummy label for boost testing
     validate:
-      - output_exists: test_output/vesselboost/output_boost_test
+      - output_exists: ${output_dir}/vesselboost/output_boost_test
 
   - name: Boost module with different learning rate
     description: Test boost module with lower learning rate
@@ -405,7 +405,7 @@ tests:
         --cc 10
     depends_on: Create dummy label for boost testing
     validate:
-      - output_exists: test_output/vesselboost/output_boost_lr
+      - output_exists: ${output_dir}/vesselboost/output_boost_lr
 
   # ==========================================================================
   # TRAIN MODULE - BASE TRAINING
@@ -442,7 +442,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_tta_noproxy
+      - output_exists: ${output_dir}/vesselboost/output_tta_noproxy
 
   - name: Test-time adaptation with proxy segmentation
     description: Test TTA module with provided proxy segmentation
@@ -461,7 +461,7 @@ tests:
         --cc 10
     depends_on: Create dummy label for boost testing
     validate:
-      - output_exists: test_output/vesselboost/output_tta_proxy
+      - output_exists: ${output_dir}/vesselboost/output_tta_proxy
 
   - name: Test-time adaptation with preprocessing
     description: Test TTA module with bias field correction
@@ -480,7 +480,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_tta_preproc
+      - output_exists: ${output_dir}/vesselboost/output_tta_preproc
 
   - name: Test-time adaptation with different model
     description: Test TTA module with omelette1 model
@@ -497,7 +497,7 @@ tests:
         --thresh 0.1 \
         --cc 10
     validate:
-      - output_exists: test_output/vesselboost/output_tta_omelette
+      - output_exists: ${output_dir}/vesselboost/output_tta_omelette
 
   # ==========================================================================
   # UNET MODEL VERIFICATION
@@ -667,7 +667,7 @@ tests:
         --thresh 0.15 \
         --cc 25
     validate:
-      - output_exists: test_output/vesselboost/output_pred_combined
+      - output_exists: ${output_dir}/vesselboost/output_pred_combined
 
   # ==========================================================================
   # ERROR HANDLING TESTS

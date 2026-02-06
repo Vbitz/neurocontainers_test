@@ -86,50 +86,50 @@ tests:
     description: Convert NIfTI to FreeSurfer MGZ format
     command: mri_convert ${t1w} test_output/t1w.mgz
     validate:
-      - output_exists: test_output/t1w.mgz
+      - output_exists: ${output_dir}/t1w.mgz
 
   - name: mri_convert MGZ to NIfTI
     description: Convert MGZ back to NIfTI
     command: mri_convert test_output/t1w.mgz test_output/t1w_converted.nii.gz
     depends_on: mri_convert NIfTI to MGZ
     validate:
-      - output_exists: test_output/t1w_converted.nii.gz
+      - output_exists: ${output_dir}/t1w_converted.nii.gz
 
   - name: mri_convert conform
     description: Conform volume to 256x256x256 1mm isotropic
     command: mri_convert --conform ${t1w} test_output/t1w_conformed.mgz
     validate:
-      - output_exists: test_output/t1w_conformed.mgz
+      - output_exists: ${output_dir}/t1w_conformed.mgz
 
   - name: mri_convert resample
     description: Resample volume to different resolution
     command: mri_convert -vs 2 2 2 ${t1w} test_output/t1w_2mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_2mm.nii.gz
 
   - name: mri_convert crop
     description: Crop volume to specific region
     command: mri_convert --crop 20 20 20 ${t1w} test_output/t1w_cropped.nii.gz
     validate:
-      - output_exists: test_output/t1w_cropped.nii.gz
+      - output_exists: ${output_dir}/t1w_cropped.nii.gz
 
   - name: mri_convert reorient
     description: Reorient volume to LAS orientation
     command: mri_convert --out_orientation LAS ${t1w} test_output/t1w_las.nii.gz
     validate:
-      - output_exists: test_output/t1w_las.nii.gz
+      - output_exists: ${output_dir}/t1w_las.nii.gz
 
   - name: mri_convert frame extraction
     description: Extract single frame from 4D volume
     command: mri_convert --frame 0 ${bold} test_output/bold_frame0.nii.gz
     validate:
-      - output_exists: test_output/bold_frame0.nii.gz
+      - output_exists: ${output_dir}/bold_frame0.nii.gz
 
   - name: mri_convert data type change
     description: Convert to float data type
     command: mri_convert --out_type float ${t1w} test_output/t1w_float.nii.gz
     validate:
-      - output_exists: test_output/t1w_float.nii.gz
+      - output_exists: ${output_dir}/t1w_float.nii.gz
 
   # ==========================================================================
   # MRI_BINARIZE - THRESHOLDING AND MASKING
@@ -138,37 +138,37 @@ tests:
     description: Binarize volume with intensity threshold
     command: mri_binarize --i ${t1w} --min 100 --o test_output/t1w_bin_thr100.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_thr100.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_thr100.nii.gz
 
   - name: mri_binarize range
     description: Binarize volume with intensity range
     command: mri_binarize --i ${t1w} --min 100 --max 500 --o test_output/t1w_bin_range.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_range.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_range.nii.gz
 
   - name: mri_binarize invert
     description: Binarize and invert the result
     command: mri_binarize --i ${t1w} --min 100 --inv --o test_output/t1w_bin_inv.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_inv.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_inv.nii.gz
 
   - name: mri_binarize dilate
     description: Binarize and dilate the result
     command: mri_binarize --i ${t1w} --min 100 --dilate 2 --o test_output/t1w_bin_dilate.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_dilate.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_dilate.nii.gz
 
   - name: mri_binarize erode
     description: Binarize and erode the result
     command: mri_binarize --i ${t1w} --min 100 --erode 2 --o test_output/t1w_bin_erode.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_erode.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_erode.nii.gz
 
   - name: mri_binarize percentage
     description: Binarize using top percentage threshold
     command: mri_binarize --i ${t1w} --pct 10 --o test_output/t1w_bin_pct10.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_pct10.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_pct10.nii.gz
 
   # ==========================================================================
   # MRI_CONCAT - VOLUME CONCATENATION
@@ -177,31 +177,31 @@ tests:
     description: Compute mean across concatenated volumes
     command: mri_concat ${t1w} ${t1w} --mean --o test_output/t1w_concat_mean.nii.gz
     validate:
-      - output_exists: test_output/t1w_concat_mean.nii.gz
+      - output_exists: ${output_dir}/t1w_concat_mean.nii.gz
 
   - name: mri_concat std
     description: Compute standard deviation across concatenated volumes
     command: mri_concat ${t1w} ${t1w} --std --o test_output/t1w_concat_std.nii.gz
     validate:
-      - output_exists: test_output/t1w_concat_std.nii.gz
+      - output_exists: ${output_dir}/t1w_concat_std.nii.gz
 
   - name: mri_concat max
     description: Compute maximum across concatenated volumes
     command: mri_concat ${t1w} ${t1w} --max --o test_output/t1w_concat_max.nii.gz
     validate:
-      - output_exists: test_output/t1w_concat_max.nii.gz
+      - output_exists: ${output_dir}/t1w_concat_max.nii.gz
 
   - name: mri_concat sum
     description: Compute sum across concatenated volumes
     command: mri_concat ${t1w} ${t1w} --sum --o test_output/t1w_concat_sum.nii.gz
     validate:
-      - output_exists: test_output/t1w_concat_sum.nii.gz
+      - output_exists: ${output_dir}/t1w_concat_sum.nii.gz
 
   - name: mri_concat multiply
     description: Multiply all voxels by a constant
     command: mri_concat ${t1w} --mul 2 --o test_output/t1w_mul2.nii.gz
     validate:
-      - output_exists: test_output/t1w_mul2.nii.gz
+      - output_exists: ${output_dir}/t1w_mul2.nii.gz
 
   # ==========================================================================
   # MRI_MASK - APPLY MASKS
@@ -211,14 +211,14 @@ tests:
     command: mri_mask ${t1w} test_output/t1w_bin_thr100.nii.gz test_output/t1w_masked.nii.gz
     depends_on: mri_binarize threshold
     validate:
-      - output_exists: test_output/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_masked.nii.gz
 
   - name: mri_mask threshold
     description: Apply mask with threshold
     command: mri_mask -T 0.5 ${t1w} test_output/t1w_bin_thr100.nii.gz test_output/t1w_masked_thr.nii.gz
     depends_on: mri_binarize threshold
     validate:
-      - output_exists: test_output/t1w_masked_thr.nii.gz
+      - output_exists: ${output_dir}/t1w_masked_thr.nii.gz
 
   # ==========================================================================
   # MRI_VOL2VOL - VOLUME-TO-VOLUME RESAMPLING
@@ -227,25 +227,25 @@ tests:
     description: Resample volume using header registration
     command: mri_vol2vol --mov ${t1w} --targ ${t2} --regheader --o test_output/t1w_to_t2_regheader.nii.gz
     validate:
-      - output_exists: test_output/t1w_to_t2_regheader.nii.gz
+      - output_exists: ${output_dir}/t1w_to_t2_regheader.nii.gz
 
   - name: mri_vol2vol nearest neighbor
     description: Resample using nearest neighbor interpolation
     command: mri_vol2vol --mov ${t1w} --targ ${t2} --regheader --nearest --o test_output/t1w_to_t2_nn.nii.gz
     validate:
-      - output_exists: test_output/t1w_to_t2_nn.nii.gz
+      - output_exists: ${output_dir}/t1w_to_t2_nn.nii.gz
 
   - name: mri_vol2vol cubic
     description: Resample using cubic interpolation
     command: mri_vol2vol --mov ${t1w} --targ ${t2} --regheader --cubic --o test_output/t1w_to_t2_cubic.nii.gz
     validate:
-      - output_exists: test_output/t1w_to_t2_cubic.nii.gz
+      - output_exists: ${output_dir}/t1w_to_t2_cubic.nii.gz
 
   - name: mri_vol2vol downsample
     description: Downsample volume by factor of 2
     command: mri_vol2vol --mov ${t1w} --o test_output/t1w_downsample2.nii.gz --downsample 2 2 2
     validate:
-      - output_exists: test_output/t1w_downsample2.nii.gz
+      - output_exists: ${output_dir}/t1w_downsample2.nii.gz
 
   # ==========================================================================
   # MRI_COREG - COREGISTRATION
@@ -254,19 +254,19 @@ tests:
     description: Coregister T2 to T1
     command: mri_coreg --mov ${t2} --ref ${t1w} --reg test_output/t2_to_t1.lta
     validate:
-      - output_exists: test_output/t2_to_t1.lta
+      - output_exists: ${output_dir}/t2_to_t1.lta
 
   - name: mri_coreg 9dof
     description: Coregister with 9 degrees of freedom
     command: mri_coreg --mov ${t2} --ref ${t1w} --dof 9 --reg test_output/t2_to_t1_9dof.lta
     validate:
-      - output_exists: test_output/t2_to_t1_9dof.lta
+      - output_exists: ${output_dir}/t2_to_t1_9dof.lta
 
   - name: mri_coreg 12dof
     description: Coregister with 12 degrees of freedom (affine)
     command: mri_coreg --mov ${t2} --ref ${t1w} --dof 12 --reg test_output/t2_to_t1_12dof.lta
     validate:
-      - output_exists: test_output/t2_to_t1_12dof.lta
+      - output_exists: ${output_dir}/t2_to_t1_12dof.lta
 
   # ==========================================================================
   # MRI_ROBUST_REGISTER - ROBUST REGISTRATION
@@ -275,20 +275,20 @@ tests:
     description: Robust registration of T2 to T1
     command: mri_robust_register --mov ${t2} --dst ${t1w} --lta test_output/t2_to_t1_robust.lta --satit
     validate:
-      - output_exists: test_output/t2_to_t1_robust.lta
+      - output_exists: ${output_dir}/t2_to_t1_robust.lta
 
   - name: mri_robust_register affine
     description: Robust affine registration
     command: mri_robust_register --mov ${t2} --dst ${t1w} --lta test_output/t2_to_t1_robust_affine.lta --satit --affine
     validate:
-      - output_exists: test_output/t2_to_t1_robust_affine.lta
+      - output_exists: ${output_dir}/t2_to_t1_robust_affine.lta
 
   - name: mri_robust_register with output
     description: Robust registration with resampled output
     command: mri_robust_register --mov ${t2} --dst ${t1w} --lta test_output/t2_to_t1_robust2.lta --satit --mapmov test_output/t2_to_t1_mapped.nii.gz
     validate:
-      - output_exists: test_output/t2_to_t1_robust2.lta
-      - output_exists: test_output/t2_to_t1_mapped.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1_robust2.lta
+      - output_exists: ${output_dir}/t2_to_t1_mapped.nii.gz
 
   # ==========================================================================
   # TALAIRACH TRANSFORMATION
@@ -298,8 +298,8 @@ tests:
     command: talairach_avi --i test_output/t1w_conformed.mgz --xfm test_output/talairach.xfm
     depends_on: mri_convert conform
     validate:
-      - output_exists: test_output/talairach.xfm
-    timeout: 300000
+      - output_exists: ${output_dir}/talairach.xfm
+    timeout: 300
 
   # ==========================================================================
   # MRI_SYNTHSTRIP - DEEP LEARNING SKULL STRIPPING
@@ -308,23 +308,23 @@ tests:
     description: Deep learning-based skull stripping
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_synthstrip.nii.gz -m test_output/t1w_brainmask_synthstrip.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain_synthstrip.nii.gz
-      - output_exists: test_output/t1w_brainmask_synthstrip.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_brain_synthstrip.nii.gz
+      - output_exists: ${output_dir}/t1w_brainmask_synthstrip.nii.gz
+    timeout: 300
 
   - name: mri_synthstrip no csf
     description: Skull stripping excluding CSF from brain border
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_synthstrip_nocsf.nii.gz --no-csf
     validate:
-      - output_exists: test_output/t1w_brain_synthstrip_nocsf.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_brain_synthstrip_nocsf.nii.gz
+    timeout: 300
 
   - name: mri_synthstrip border
     description: Skull stripping with custom border threshold
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_synthstrip_b2.nii.gz -b 2
     validate:
-      - output_exists: test_output/t1w_brain_synthstrip_b2.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_brain_synthstrip_b2.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # MRI_SYNTHSEG - DEEP LEARNING SEGMENTATION
@@ -333,37 +333,37 @@ tests:
     description: Deep learning-based whole brain segmentation
     command: mri_synthseg --i ${t1w} --o test_output/t1w_synthseg.nii.gz --threads 1 --cpu
     validate:
-      - output_exists: test_output/t1w_synthseg.nii.gz
-    timeout: 600000
+      - output_exists: ${output_dir}/t1w_synthseg.nii.gz
+    timeout: 600
 
   - name: mri_synthseg with volumes
     description: Segmentation with volume statistics
     command: mri_synthseg --i ${t1w} --o test_output/t1w_synthseg_vol.nii.gz --vol test_output/t1w_synthseg_volumes.csv --threads 1 --cpu
     validate:
-      - output_exists: test_output/t1w_synthseg_vol.nii.gz
-      - output_exists: test_output/t1w_synthseg_volumes.csv
-    timeout: 600000
+      - output_exists: ${output_dir}/t1w_synthseg_vol.nii.gz
+      - output_exists: ${output_dir}/t1w_synthseg_volumes.csv
+    timeout: 600
 
   - name: mri_synthseg with parcellation
     description: Segmentation with cortical parcellation
     command: mri_synthseg --i ${t1w} --o test_output/t1w_synthseg_parc.nii.gz --parc --threads 1 --cpu
     validate:
-      - output_exists: test_output/t1w_synthseg_parc.nii.gz
-    timeout: 600000
+      - output_exists: ${output_dir}/t1w_synthseg_parc.nii.gz
+    timeout: 600
 
   - name: mri_synthseg robust
     description: Robust segmentation mode (slower but more accurate)
     command: mri_synthseg --i ${t1w} --o test_output/t1w_synthseg_robust.nii.gz --robust --threads 1 --cpu
     validate:
-      - output_exists: test_output/t1w_synthseg_robust.nii.gz
-    timeout: 600000
+      - output_exists: ${output_dir}/t1w_synthseg_robust.nii.gz
+    timeout: 600
 
   - name: mri_synthseg fast
     description: Fast segmentation mode
     command: mri_synthseg --i ${t1w} --o test_output/t1w_synthseg_fast.nii.gz --fast --threads 1 --cpu
     validate:
-      - output_exists: test_output/t1w_synthseg_fast.nii.gz
-    timeout: 600000
+      - output_exists: ${output_dir}/t1w_synthseg_fast.nii.gz
+    timeout: 600
 
   # ==========================================================================
   # MRI_WATERSHED - TRADITIONAL SKULL STRIPPING
@@ -373,8 +373,8 @@ tests:
     command: mri_watershed test_output/t1w_conformed.mgz test_output/t1w_brain_watershed.mgz
     depends_on: mri_convert conform
     validate:
-      - output_exists: test_output/t1w_brain_watershed.mgz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_brain_watershed.mgz
+    timeout: 300
 
   # ==========================================================================
   # MRI_NU_CORRECT.MNI - BIAS FIELD CORRECTION
@@ -383,8 +383,8 @@ tests:
     description: N3 bias field correction
     command: mri_nu_correct.mni --i ${t1w} --o test_output/t1w_nu.nii.gz --n 2
     validate:
-      - output_exists: test_output/t1w_nu.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_nu.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # ANTSN4BIASFIELDCORRECTIONFS - ANTs-BASED BIAS CORRECTION
@@ -393,16 +393,16 @@ tests:
     description: ANTs N4 bias field correction
     command: AntsN4BiasFieldCorrectionFs -i ${t1w} -o test_output/t1w_n4.nii.gz
     validate:
-      - output_exists: test_output/t1w_n4.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_n4.nii.gz
+    timeout: 300
 
   - name: AntsN4BiasFieldCorrectionFs with mask
     description: N4 correction with brain mask
     command: AntsN4BiasFieldCorrectionFs -i ${t1w} -o test_output/t1w_n4_masked.nii.gz -m test_output/t1w_brainmask_synthstrip.nii.gz
     depends_on: mri_synthstrip basic
     validate:
-      - output_exists: test_output/t1w_n4_masked.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_n4_masked.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # MRI_NORMALIZE - INTENSITY NORMALIZATION
@@ -412,8 +412,8 @@ tests:
     command: mri_normalize test_output/t1w_conformed.mgz test_output/t1w_norm.mgz
     depends_on: mri_convert conform
     validate:
-      - output_exists: test_output/t1w_norm.mgz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_norm.mgz
+    timeout: 300
 
   # ==========================================================================
   # MRI_SEGMENT - SEGMENTATION
@@ -423,8 +423,8 @@ tests:
     command: mri_segment test_output/t1w_norm.mgz test_output/t1w_wm.mgz
     depends_on: mri_normalize basic
     validate:
-      - output_exists: test_output/t1w_wm.mgz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_wm.mgz
+    timeout: 300
 
   # ==========================================================================
   # MRI_LABEL2VOL - LABEL TO VOLUME CONVERSION
@@ -434,8 +434,8 @@ tests:
     command: mri_binarize --i test_output/t1w_synthseg.nii.gz --match 2 41 --o test_output/wm_from_synthseg.nii.gz
     depends_on: mri_synthseg basic
     validate:
-      - output_exists: test_output/wm_from_synthseg.nii.gz
-    timeout: 120000
+      - output_exists: ${output_dir}/wm_from_synthseg.nii.gz
+    timeout: 120
 
   # ==========================================================================
   # MRI_SEGSTATS - SEGMENTATION STATISTICS
@@ -445,8 +445,8 @@ tests:
     command: mri_segstats --seg test_output/t1w_synthseg.nii.gz --i ${t1w} --sum test_output/segstats.txt
     depends_on: mri_synthseg basic
     validate:
-      - output_exists: test_output/segstats.txt
-    timeout: 120000
+      - output_exists: ${output_dir}/segstats.txt
+    timeout: 120
 
   # ==========================================================================
   # MRI_DIFF - VOLUME COMPARISON
@@ -481,8 +481,8 @@ tests:
     description: Run SAMSEG segmentation
     command: samseg --i ${t1w} --o test_output/samseg_output --threads 1
     validate:
-      - output_exists: test_output/samseg_output
-    timeout: 1200000
+      - output_exists: ${output_dir}/samseg_output
+    timeout: 1200
 
   # ==========================================================================
   # FREEVIEW - GUI APPLICATION (HEADLESS CHECK)
@@ -605,9 +605,9 @@ tests:
       mri_synthstrip -i ${t1w} -o test_output/pipeline_brain.nii.gz && \
       mri_synthseg --i test_output/pipeline_brain.nii.gz --o test_output/pipeline_seg.nii.gz --threads 1 --cpu --fast
     validate:
-      - output_exists: test_output/pipeline_brain.nii.gz
-      - output_exists: test_output/pipeline_seg.nii.gz
-    timeout: 600000
+      - output_exists: ${output_dir}/pipeline_brain.nii.gz
+      - output_exists: ${output_dir}/pipeline_seg.nii.gz
+    timeout: 600
 
   - name: Pipeline bias correct and normalize
     description: Chain N4 correction with intensity normalization
@@ -616,10 +616,10 @@ tests:
       mri_convert --conform test_output/pipeline_n4.nii.gz test_output/pipeline_n4_conf.mgz && \
       mri_normalize test_output/pipeline_n4_conf.mgz test_output/pipeline_norm.mgz
     validate:
-      - output_exists: test_output/pipeline_n4.nii.gz
-      - output_exists: test_output/pipeline_n4_conf.mgz
-      - output_exists: test_output/pipeline_norm.mgz
-    timeout: 600000
+      - output_exists: ${output_dir}/pipeline_n4.nii.gz
+      - output_exists: ${output_dir}/pipeline_n4_conf.mgz
+      - output_exists: ${output_dir}/pipeline_norm.mgz
+    timeout: 600
 
   - name: Pipeline registration and resampling
     description: Register T2 to T1 and apply transformation
@@ -627,9 +627,9 @@ tests:
       mri_coreg --mov ${t2} --ref ${t1w} --reg test_output/pipeline_reg.lta && \
       mri_vol2vol --mov ${t2} --targ ${t1w} --lta test_output/pipeline_reg.lta --o test_output/pipeline_t2_in_t1.nii.gz
     validate:
-      - output_exists: test_output/pipeline_reg.lta
-      - output_exists: test_output/pipeline_t2_in_t1.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/pipeline_reg.lta
+      - output_exists: ${output_dir}/pipeline_t2_in_t1.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # WORKBENCH COMMANDS (INCLUDED IN CONTAINER)

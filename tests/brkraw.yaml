@@ -291,43 +291,43 @@ tests:
     description: Extract central ROI from T1w image
     command: nib-roi -i 40:120 -j 40:120 -k 40:120 ${t1w} test_output/t1w_roi_center.nii.gz
     validate:
-      - output_exists: test_output/t1w_roi_center.nii.gz
+      - output_exists: ${output_dir}/t1w_roi_center.nii.gz
 
   - name: nib-roi T1w partial axes
     description: Crop T1w along specific axes only
     command: nib-roi -i 20:140 -j 30:160 ${t1w} test_output/t1w_roi_partial.nii.gz
     validate:
-      - output_exists: test_output/t1w_roi_partial.nii.gz
+      - output_exists: ${output_dir}/t1w_roi_partial.nii.gz
 
   - name: nib-roi T2 crop
     description: Extract ROI from T2 image
     command: nib-roi -i 50:200 -j 50:200 -k 5:28 ${t2} test_output/t2_roi.nii.gz
     validate:
-      - output_exists: test_output/t2_roi.nii.gz
+      - output_exists: ${output_dir}/t2_roi.nii.gz
 
   - name: nib-roi BOLD temporal crop
     description: Extract temporal subset from 4D BOLD (first 50 volumes)
     command: nib-roi -t 0:50 ${bold} test_output/bold_first50.nii.gz
     validate:
-      - output_exists: test_output/bold_first50.nii.gz
+      - output_exists: ${output_dir}/bold_first50.nii.gz
 
   - name: nib-roi BOLD spatial and temporal crop
     description: Extract both spatial and temporal ROI from BOLD
     command: nib-roi -i 10:54 -j 10:54 -k 5:28 -t 10:60 ${bold} test_output/bold_roi_4d.nii.gz
     validate:
-      - output_exists: test_output/bold_roi_4d.nii.gz
+      - output_exists: ${output_dir}/bold_roi_4d.nii.gz
 
   - name: nib-roi BOLD middle volumes
     description: Extract middle 100 volumes from BOLD
     command: nib-roi -t 100:200 ${bold} test_output/bold_middle100.nii.gz
     validate:
-      - output_exists: test_output/bold_middle100.nii.gz
+      - output_exists: ${output_dir}/bold_middle100.nii.gz
 
   - name: nib-roi with flip
     description: Extract ROI with axis flip (reversed order)
     command: nib-roi -i 120:40:-1 -j 120:40:-1 ${t1w} test_output/t1w_roi_flipped.nii.gz
     validate:
-      - output_exists: test_output/t1w_roi_flipped.nii.gz
+      - output_exists: ${output_dir}/t1w_roi_flipped.nii.gz
 
   # ==========================================================================
   # NIBABEL TOOLS - nib-conform (Conform Images)
@@ -345,37 +345,37 @@ tests:
     description: Conform T1w to 1mm isotropic voxels
     command: nib-conform --voxel-size 1 1 1 -f ${t1w} test_output/t1w_conform_1mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_conform_1mm.nii.gz
+      - output_exists: ${output_dir}/t1w_conform_1mm.nii.gz
 
   - name: nib-conform T1w to 2mm isotropic
     description: Conform T1w to 2mm isotropic voxels
     command: nib-conform --voxel-size 2 2 2 -f ${t1w} test_output/t1w_conform_2mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_conform_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_conform_2mm.nii.gz
 
   - name: nib-conform T1w custom shape
     description: Conform T1w to custom output shape
     command: nib-conform --out-shape 128 128 128 --voxel-size 1.5 1.5 1.5 -f ${t1w} test_output/t1w_conform_custom.nii.gz
     validate:
-      - output_exists: test_output/t1w_conform_custom.nii.gz
+      - output_exists: ${output_dir}/t1w_conform_custom.nii.gz
 
   - name: nib-conform T1w RAS orientation
     description: Conform T1w to RAS orientation
     command: nib-conform --orientation RAS -f ${t1w} test_output/t1w_conform_ras.nii.gz
     validate:
-      - output_exists: test_output/t1w_conform_ras.nii.gz
+      - output_exists: ${output_dir}/t1w_conform_ras.nii.gz
 
   - name: nib-conform T1w LPS orientation
     description: Conform T1w to LPS orientation
     command: nib-conform --orientation LPS -f ${t1w} test_output/t1w_conform_lps.nii.gz
     validate:
-      - output_exists: test_output/t1w_conform_lps.nii.gz
+      - output_exists: ${output_dir}/t1w_conform_lps.nii.gz
 
   - name: nib-conform T2 to standard space
     description: Conform T2 to standard FreeSurfer-like space
     command: nib-conform --out-shape 256 256 256 --voxel-size 1 1 1 --orientation RAS -f ${t2} test_output/t2_conform_standard.nii.gz
     validate:
-      - output_exists: test_output/t2_conform_standard.nii.gz
+      - output_exists: ${output_dir}/t2_conform_standard.nii.gz
 
   # ==========================================================================
   # NIBABEL TOOLS - nib-convert (Image Conversion)
@@ -392,37 +392,37 @@ tests:
     description: Convert T1w image to float32 datatype
     command: nib-convert --out-dtype float32 -f ${t1w} test_output/t1w_float32.nii.gz
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: nib-convert T1w to int16
     description: Convert T1w image to int16 datatype
     command: nib-convert --out-dtype int16 -f ${t1w} test_output/t1w_int16.nii.gz
     validate:
-      - output_exists: test_output/t1w_int16.nii.gz
+      - output_exists: ${output_dir}/t1w_int16.nii.gz
 
   - name: nib-convert T1w to uint8
     description: Convert T1w image to uint8 datatype
     command: nib-convert --out-dtype uint8 -f ${t1w} test_output/t1w_uint8.nii.gz
     validate:
-      - output_exists: test_output/t1w_uint8.nii.gz
+      - output_exists: ${output_dir}/t1w_uint8.nii.gz
 
   - name: nib-convert T1w to float64
     description: Convert T1w image to float64 (double) datatype
     command: nib-convert --out-dtype float64 -f ${t1w} test_output/t1w_float64.nii.gz
     validate:
-      - output_exists: test_output/t1w_float64.nii.gz
+      - output_exists: ${output_dir}/t1w_float64.nii.gz
 
   - name: nib-convert T2 to float32
     description: Convert T2 image to float32 datatype
     command: nib-convert --out-dtype float32 -f ${t2} test_output/t2_float32.nii.gz
     validate:
-      - output_exists: test_output/t2_float32.nii.gz
+      - output_exists: ${output_dir}/t2_float32.nii.gz
 
   - name: nib-convert T1w to uncompressed NIfTI
     description: Convert T1w to uncompressed NIfTI format
     command: nib-convert -f ${t1w} test_output/t1w_uncompressed.nii
     validate:
-      - output_exists: test_output/t1w_uncompressed.nii
+      - output_exists: ${output_dir}/t1w_uncompressed.nii
 
   # ==========================================================================
   # PARREC2NII - Philips PAR/REC Converter (Help Only)
@@ -530,7 +530,7 @@ tests:
       nib-roi -i 30:130 -j 40:150 -k 40:150 ${t1w} test_output/workflow_t1w_crop.nii.gz && \
       nib-ls test_output/workflow_t1w_crop.nii.gz
     validate:
-      - output_exists: test_output/workflow_t1w_crop.nii.gz
+      - output_exists: ${output_dir}/workflow_t1w_crop.nii.gz
 
   - name: workflow - conform and convert
     description: Conform to 1mm isotropic then convert to float32
@@ -539,7 +539,7 @@ tests:
       nib-convert --out-dtype float32 -f test_output/workflow_t1w_conformed.nii.gz test_output/workflow_t1w_final.nii.gz
     depends_on: nib-conform T1w to 1mm isotropic
     validate:
-      - output_exists: test_output/workflow_t1w_final.nii.gz
+      - output_exists: ${output_dir}/workflow_t1w_final.nii.gz
 
   - name: workflow - BOLD preprocessing
     description: Extract temporal subset and compare dimensions
@@ -548,7 +548,7 @@ tests:
       nib-ls -v test_output/workflow_bold_subset.nii.gz && \
       nib-diff ${bold} test_output/workflow_bold_subset.nii.gz || true
     validate:
-      - output_exists: test_output/workflow_bold_subset.nii.gz
+      - output_exists: ${output_dir}/workflow_bold_subset.nii.gz
 
   - name: workflow - multi-image comparison
     description: Compare multiple images after processing
@@ -556,7 +556,7 @@ tests:
       nib-roi -i 50:150 -j 50:150 -k 10:25 ${t2} test_output/workflow_t2_crop.nii.gz && \
       nib-ls -s test_output/workflow_t2_crop.nii.gz ${t2}
     validate:
-      - output_exists: test_output/workflow_t2_crop.nii.gz
+      - output_exists: ${output_dir}/workflow_t2_crop.nii.gz
 
   - name: workflow - Python data analysis
     description: Use Python to analyze image statistics

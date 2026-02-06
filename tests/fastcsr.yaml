@@ -90,7 +90,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_convert ${t1w} test_output/t1w_orig.mgz
     validate:
-      - output_exists: test_output/t1w_orig.mgz
+      - output_exists: ${output_dir}/t1w_orig.mgz
 
   - name: Convert MGZ back to NIfTI
     description: Convert MGZ back to NIfTI format
@@ -100,7 +100,7 @@ tests:
       mri_convert test_output/t1w_orig.mgz test_output/t1w_reconvert.nii.gz
     depends_on: Convert NIfTI to MGZ
     validate:
-      - output_exists: test_output/t1w_reconvert.nii.gz
+      - output_exists: ${output_dir}/t1w_reconvert.nii.gz
 
   - name: Conform volume to 256x256x256
     description: Conform T1w to standard FreeSurfer dimensions
@@ -109,7 +109,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_convert ${t1w} --conform test_output/t1w_conformed.mgz
     validate:
-      - output_exists: test_output/t1w_conformed.mgz
+      - output_exists: ${output_dir}/t1w_conformed.mgz
 
   - name: Convert with resampling
     description: Resample T1w to 1mm isotropic voxels
@@ -118,7 +118,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_convert ${t1w} -vs 1 1 1 test_output/t1w_1mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_1mm.nii.gz
+      - output_exists: ${output_dir}/t1w_1mm.nii.gz
 
   - name: Convert with output type specification
     description: Convert with explicit output data type
@@ -127,7 +127,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_convert ${t1w} --out_type nii test_output/t1w_nii.nii
     validate:
-      - output_exists: test_output/t1w_nii.nii
+      - output_exists: ${output_dir}/t1w_nii.nii
 
   # ==========================================================================
   # MRI_INFO - Volume Information
@@ -198,7 +198,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_normalize -conform ${t1w} test_output/t1w_norm.mgz 2>&1
     validate:
-      - output_exists: test_output/t1w_norm.mgz
+      - output_exists: ${output_dir}/t1w_norm.mgz
 
   - name: Normalize with gentle mode
     description: Perform gentle normalization
@@ -207,7 +207,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_normalize -gentle ${t1w} test_output/t1w_norm_gentle.mgz 2>&1
     validate:
-      - output_exists: test_output/t1w_norm_gentle.mgz
+      - output_exists: ${output_dir}/t1w_norm_gentle.mgz
 
   # ==========================================================================
   # MRI_WATERSHED - Skull Stripping
@@ -227,7 +227,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_watershed ${t1w} test_output/t1w_brain.mgz 2>&1
     validate:
-      - output_exists: test_output/t1w_brain.mgz
+      - output_exists: ${output_dir}/t1w_brain.mgz
 
   # ==========================================================================
   # MRI_BINARIZE - Thresholding and Binarization
@@ -247,7 +247,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --min 50 --o test_output/t1w_bin_min50.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_min50.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_min50.nii.gz
 
   - name: Binarize with max threshold
     description: Create binary mask with max threshold
@@ -256,7 +256,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --max 200 --o test_output/t1w_bin_max200.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_max200.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_max200.nii.gz
 
   - name: Binarize with range
     description: Create binary mask with min and max thresholds
@@ -265,7 +265,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --min 50 --max 200 --o test_output/t1w_bin_range.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_range.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_range.nii.gz
 
   - name: Binarize and dilate
     description: Create binary mask and dilate
@@ -274,7 +274,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --min 50 --dilate 2 --o test_output/t1w_bin_dilate.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_dilate.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_dilate.nii.gz
 
   - name: Binarize and erode
     description: Create binary mask and erode
@@ -283,7 +283,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --min 50 --erode 2 --o test_output/t1w_bin_erode.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_erode.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_erode.nii.gz
 
   - name: Binarize invert
     description: Create inverted binary mask
@@ -292,7 +292,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_binarize --i ${t1w} --min 50 --inv --o test_output/t1w_bin_inv.nii.gz
     validate:
-      - output_exists: test_output/t1w_bin_inv.nii.gz
+      - output_exists: ${output_dir}/t1w_bin_inv.nii.gz
 
   # ==========================================================================
   # MRI_MASK - Volume Masking
@@ -313,7 +313,7 @@ tests:
       mri_mask ${t1w} test_output/t1w_bin_min50.nii.gz test_output/t1w_masked.nii.gz
     depends_on: Binarize with minimum threshold
     validate:
-      - output_exists: test_output/t1w_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_masked.nii.gz
 
   # ==========================================================================
   # MRI_VOL2VOL - Volume Resampling
@@ -333,7 +333,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_vol2vol --mov ${t1w} --targ ${t1w} --regheader --o test_output/t1w_resampled.nii.gz
     validate:
-      - output_exists: test_output/t1w_resampled.nii.gz
+      - output_exists: ${output_dir}/t1w_resampled.nii.gz
 
   - name: Resample with nearest neighbor
     description: Resample volume using nearest neighbor interpolation
@@ -342,7 +342,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_vol2vol --mov ${t1w} --targ ${t1w} --regheader --nearest --o test_output/t1w_nn.nii.gz
     validate:
-      - output_exists: test_output/t1w_nn.nii.gz
+      - output_exists: ${output_dir}/t1w_nn.nii.gz
 
   - name: Resample with cubic interpolation
     description: Resample volume using cubic B-spline interpolation
@@ -351,7 +351,7 @@ tests:
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
       mri_vol2vol --mov ${t1w} --targ ${t1w} --regheader --cubic --o test_output/t1w_cubic.nii.gz
     validate:
-      - output_exists: test_output/t1w_cubic.nii.gz
+      - output_exists: ${output_dir}/t1w_cubic.nii.gz
 
   # ==========================================================================
   # MRI_SEGMENT - White Matter Segmentation
@@ -758,7 +758,7 @@ tests:
       mri_convert ${t1w} test_output/subjects/test_sub/mri/orig.mgz
     depends_on: Prepare subject directory structure
     validate:
-      - output_exists: test_output/subjects/test_sub/mri/orig.mgz
+      - output_exists: ${output_dir}/subjects/test_sub/mri/orig.mgz
 
   - name: Verify orig.mgz dimensions
     description: Check that orig.mgz has correct dimensions

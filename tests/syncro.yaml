@@ -78,34 +78,34 @@ tests:
   - name: SynthStrip skull stripping
     description: Run SynthStrip on T1w image to extract brain
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain.nii.gz -m test_output/t1w_brain_mask.nii.gz
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
-      - output_exists: test_output/t1w_brain_mask.nii.gz
-      - same_dimensions: ["test_output/t1w_brain.nii.gz", "${t1w}"]
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
+      - same_dimensions: ["${output_dir}/t1w_brain.nii.gz", "${t1w}"]
 
   - name: SynthStrip with distance transform
     description: Run SynthStrip and save signed distance transform
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_sdt.nii.gz -d test_output/t1w_sdt.nii.gz
-    timeout: 600000
+    timeout: 600
     depends_on: SynthStrip skull stripping
     validate:
-      - output_exists: test_output/t1w_brain_sdt.nii.gz
-      - output_exists: test_output/t1w_sdt.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_sdt.nii.gz
+      - output_exists: ${output_dir}/t1w_sdt.nii.gz
 
   - name: SynthStrip with custom border
     description: Run SynthStrip with modified mask border threshold
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_border2.nii.gz -b 2
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/t1w_brain_border2.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_border2.nii.gz
 
   - name: SynthStrip exclude CSF
     description: Run SynthStrip excluding CSF from brain border
     command: mri_synthstrip -i ${t1w} -o test_output/t1w_brain_nocsf.nii.gz --no-csf
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/t1w_brain_nocsf.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_nocsf.nii.gz
 
   # ==========================================================================
   # SYNCRO BASIC NORMALIZATION
@@ -113,9 +113,9 @@ tests:
   - name: Basic T1w normalization
     description: Normalize T1w image to MNI space (core functionality)
     command: SYNcro.py ${t1w} -d test_output/syncro_basic --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/syncro_basic/wbt1sub-01_T1w.nii.gz
+      - output_exists: ${output_dir}/syncro_basic/wbt1sub-01_T1w.nii.gz
     expected_output_contains: "SYNcro time"
 
   - name: Verify normalized output dimensions
@@ -140,33 +140,33 @@ tests:
   - name: Normalization with debug logging
     description: Run normalization with debug level logging
     command: SYNcro.py ${t1w} -d test_output/syncro_options --log debug 2>&1
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/syncro_options/wbt1sub-01_T1w.nii.gz
+      - output_exists: ${output_dir}/syncro_options/wbt1sub-01_T1w.nii.gz
     expected_output_contains: "DEBUG"
 
   - name: Normalization with silent logging
     description: Run normalization with minimal output
     command: SYNcro.py ${t1w} -d test_output/syncro_options --log silent 2>&1
-    timeout: 600000
+    timeout: 600
     expected_exit_code: 0
 
   - name: Normalization with verbose logging
     description: Run normalization with verbose logging
     command: SYNcro.py ${t1w} -d test_output/syncro_options --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     expected_output_contains: "INFO"
 
   - name: Force GPU disabled
     description: Run normalization with GPU explicitly disabled
     command: SYNcro.py ${t1w} -d test_output/syncro_options --force-gpu false --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     expected_exit_code: 0
 
   - name: Auto GPU detection
     description: Run normalization with auto GPU detection
     command: SYNcro.py ${t1w} -d test_output/syncro_options --force-gpu auto --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     expected_exit_code: 0
 
   # ==========================================================================
@@ -193,16 +193,16 @@ tests:
       print(f'Created lesion mask with {np.sum(data)} voxels')
       "
     validate:
-      - output_exists: test_output/syncro_lesion/synthetic_lesion.nii.gz
+      - output_exists: ${output_dir}/syncro_lesion/synthetic_lesion.nii.gz
 
   - name: Normalization with lesion map
     description: Normalize T1w with accompanying lesion mask
     command: SYNcro.py ${t1w} test_output/syncro_lesion/synthetic_lesion.nii.gz -d test_output/syncro_lesion --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     depends_on: Create synthetic lesion mask
     validate:
-      - output_exists: test_output/syncro_lesion/wbt1sub-01_T1w.nii.gz
-      - output_exists: test_output/syncro_lesion/wsynthetic_lesion.nii.gz
+      - output_exists: ${output_dir}/syncro_lesion/wbt1sub-01_T1w.nii.gz
+      - output_exists: ${output_dir}/syncro_lesion/wsynthetic_lesion.nii.gz
 
   - name: Verify warped lesion is binary
     description: Check that the warped lesion mask remains binary after transformation
@@ -247,7 +247,7 @@ tests:
       print(f'Created pathology mask with {np.sum(data)} voxels')
       "
     validate:
-      - output_exists: test_output/syncro_multiimage/synthetic_pathology.nii.gz
+      - output_exists: ${output_dir}/syncro_multiimage/synthetic_pathology.nii.gz
 
   - name: Create lesion for multi-image test
     description: Create lesion mask for multi-image normalization test
@@ -268,19 +268,19 @@ tests:
       print(f'Created lesion mask')
       "
     validate:
-      - output_exists: test_output/syncro_multiimage/synthetic_lesion.nii.gz
+      - output_exists: ${output_dir}/syncro_multiimage/synthetic_lesion.nii.gz
 
   - name: Normalization with multiple additional images
     description: Normalize T1w with both lesion and pathology maps
     command: SYNcro.py ${t1w} test_output/syncro_multiimage/synthetic_lesion.nii.gz test_output/syncro_multiimage/synthetic_pathology.nii.gz -d test_output/syncro_multiimage --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     depends_on:
       - Create synthetic pathological map
       - Create lesion for multi-image test
     validate:
-      - output_exists: test_output/syncro_multiimage/wbt1sub-01_T1w.nii.gz
-      - output_exists: test_output/syncro_multiimage/wsynthetic_lesion.nii.gz
-      - output_exists: test_output/syncro_multiimage/wsynthetic_pathology.nii.gz
+      - output_exists: ${output_dir}/syncro_multiimage/wbt1sub-01_T1w.nii.gz
+      - output_exists: ${output_dir}/syncro_multiimage/wsynthetic_lesion.nii.gz
+      - output_exists: ${output_dir}/syncro_multiimage/wsynthetic_pathology.nii.gz
 
   # ==========================================================================
   # SYNCRO CT MODE
@@ -288,7 +288,7 @@ tests:
   - name: CT mode flag
     description: Test that CT mode flag is accepted (even for non-CT data)
     command: SYNcro.py ${t1w} -c -d test_output/syncro_options --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     expected_exit_code: 0
 
   # ==========================================================================
@@ -297,7 +297,7 @@ tests:
   - name: Brain-extracted mode
     description: Test normalization assuming input is already brain-extracted
     command: SYNcro.py test_output/t1w_brain.nii.gz -b -d test_output/syncro_options --log verbose 2>&1
-    timeout: 600000
+    timeout: 600
     depends_on: SynthStrip skull stripping
     expected_exit_code: 0
 

@@ -442,16 +442,16 @@ tests:
     description: Test rigid (Euler) registration with minimal iterations
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/rigid_quick -p test_output/params/quick_rigid.txt
     validate:
-      - output_exists: test_output/elastix/rigid_quick/result.0.nii.gz
-      - output_exists: test_output/elastix/rigid_quick/TransformParameters.0.txt
-      - output_exists: test_output/elastix/rigid_quick/elastix.log
+      - output_exists: ${output_dir}/elastix/rigid_quick/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/rigid_quick/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/rigid_quick/elastix.log
 
   - name: Rigid registration full
     description: Test rigid registration with standard parameters
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/rigid_full -p test_output/params/rigid.txt
     validate:
-      - output_exists: test_output/elastix/rigid_full/result.0.nii.gz
-      - output_exists: test_output/elastix/rigid_full/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/rigid_full/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/rigid_full/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - AFFINE REGISTRATION
@@ -460,8 +460,8 @@ tests:
     description: Test affine (12 DOF) registration
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/affine -p test_output/params/affine.txt
     validate:
-      - output_exists: test_output/elastix/affine/result.0.nii.gz
-      - output_exists: test_output/elastix/affine/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/affine/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/affine/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - SIMILARITY REGISTRATION
@@ -470,8 +470,8 @@ tests:
     description: Test similarity transform (rigid + isotropic scaling)
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/similarity -p test_output/params/similarity.txt
     validate:
-      - output_exists: test_output/elastix/similarity/result.0.nii.gz
-      - output_exists: test_output/elastix/similarity/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/similarity/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/similarity/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - TRANSLATION REGISTRATION
@@ -480,8 +480,8 @@ tests:
     description: Test translation-only registration (3 DOF)
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/translation -p test_output/params/translation.txt
     validate:
-      - output_exists: test_output/elastix/translation/result.0.nii.gz
-      - output_exists: test_output/elastix/translation/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/translation/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/translation/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - BSPLINE (NONRIGID) REGISTRATION
@@ -490,8 +490,8 @@ tests:
     description: Test B-spline deformable registration
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/bspline -p test_output/params/bspline.txt
     validate:
-      - output_exists: test_output/elastix/bspline/result.0.nii.gz
-      - output_exists: test_output/elastix/bspline/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/bspline/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/bspline/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - DIFFERENT METRICS
@@ -500,15 +500,15 @@ tests:
     description: Test rigid registration using Normalized Cross Correlation
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/ncc -p test_output/params/ncc_rigid.txt
     validate:
-      - output_exists: test_output/elastix/ncc/result.0.nii.gz
-      - output_exists: test_output/elastix/ncc/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/ncc/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/ncc/TransformParameters.0.txt
 
   - name: Registration with MSD metric
     description: Test rigid registration using Mean Squared Differences
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/msd -p test_output/params/msd_rigid.txt
     validate:
-      - output_exists: test_output/elastix/msd/result.0.nii.gz
-      - output_exists: test_output/elastix/msd/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/msd/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/msd/TransformParameters.0.txt
 
   # ==========================================================================
   # ELASTIX - MULTI-STAGE REGISTRATION
@@ -517,10 +517,10 @@ tests:
     description: Test cascaded registration with multiple parameter files
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/multistage -p test_output/params/quick_rigid.txt -p test_output/params/affine.txt
     validate:
-      - output_exists: test_output/elastix/multistage/result.0.nii.gz
-      - output_exists: test_output/elastix/multistage/result.1.nii.gz
-      - output_exists: test_output/elastix/multistage/TransformParameters.0.txt
-      - output_exists: test_output/elastix/multistage/TransformParameters.1.txt
+      - output_exists: ${output_dir}/elastix/multistage/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/multistage/result.1.nii.gz
+      - output_exists: ${output_dir}/elastix/multistage/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/multistage/TransformParameters.1.txt
 
   # ==========================================================================
   # ELASTIX - THREADING OPTIONS
@@ -529,13 +529,13 @@ tests:
     description: Test registration with single thread
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/singlethread -p test_output/params/quick_rigid.txt -threads 1
     validate:
-      - output_exists: test_output/elastix/singlethread/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/singlethread/result.0.nii.gz
 
   - name: Multi-threaded registration
     description: Test registration with multiple threads
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/multithread -p test_output/params/quick_rigid.txt -threads 4
     validate:
-      - output_exists: test_output/elastix/multithread/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/multithread/result.0.nii.gz
 
   # ==========================================================================
   # ELASTIX - SELF REGISTRATION (identity transform test)
@@ -544,8 +544,8 @@ tests:
     description: Register image to itself - should produce near-identity transform
     command: elastix -f ${t1w} -m ${t1w} -out test_output/elastix/identity -p test_output/params/quick_rigid.txt
     validate:
-      - output_exists: test_output/elastix/identity/result.0.nii.gz
-      - output_exists: test_output/elastix/identity/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/identity/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/identity/TransformParameters.0.txt
 
   # ==========================================================================
   # TRANSFORMIX - APPLY TRANSFORM
@@ -555,14 +555,14 @@ tests:
     command: transformix -in ${t2} -out test_output/transformix/apply_transform -tp test_output/elastix/rigid_quick/TransformParameters.0.txt
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/apply_transform/result.nii.gz
+      - output_exists: ${output_dir}/transformix/apply_transform/result.nii.gz
 
   - name: Apply transform with threads
     description: Apply transform using multiple threads
     command: transformix -in ${t2} -out test_output/transformix/threaded -tp test_output/elastix/rigid_quick/TransformParameters.0.txt -threads 4
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/threaded/result.nii.gz
+      - output_exists: ${output_dir}/transformix/threaded/result.nii.gz
 
   # ==========================================================================
   # TRANSFORMIX - DEFORMATION FIELD
@@ -572,14 +572,14 @@ tests:
     command: transformix -def all -out test_output/transformix/deformation -tp test_output/elastix/rigid_quick/TransformParameters.0.txt
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/deformation/deformationField.nii.gz
+      - output_exists: ${output_dir}/transformix/deformation/deformationField.nii.gz
 
   - name: Generate deformation field from BSpline
     description: Generate deformation field from nonrigid registration
     command: transformix -def all -out test_output/transformix/deformation_bspline -tp test_output/elastix/bspline/TransformParameters.0.txt
     depends_on: BSpline nonrigid registration
     validate:
-      - output_exists: test_output/transformix/deformation_bspline/deformationField.nii.gz
+      - output_exists: ${output_dir}/transformix/deformation_bspline/deformationField.nii.gz
 
   # ==========================================================================
   # TRANSFORMIX - JACOBIAN
@@ -589,21 +589,21 @@ tests:
     command: transformix -jac all -out test_output/transformix/jacobian -tp test_output/elastix/rigid_quick/TransformParameters.0.txt
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/jacobian/spatialJacobian.nii.gz
+      - output_exists: ${output_dir}/transformix/jacobian/spatialJacobian.nii.gz
 
   - name: Generate Jacobian determinant from BSpline
     description: Compute Jacobian from nonrigid registration (detects folding)
     command: transformix -jac all -out test_output/transformix/jacobian_bspline -tp test_output/elastix/bspline/TransformParameters.0.txt
     depends_on: BSpline nonrigid registration
     validate:
-      - output_exists: test_output/transformix/jacobian_bspline/spatialJacobian.nii.gz
+      - output_exists: ${output_dir}/transformix/jacobian_bspline/spatialJacobian.nii.gz
 
   - name: Generate Jacobian matrix
     description: Use transformix to compute full spatial Jacobian matrix
     command: transformix -jacmat all -out test_output/transformix/jacobian_matrix -tp test_output/elastix/rigid_quick/TransformParameters.0.txt
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/jacobian_matrix/fullSpatialJacobian.nii.gz
+      - output_exists: ${output_dir}/transformix/jacobian_matrix/fullSpatialJacobian.nii.gz
 
   # ==========================================================================
   # TRANSFORMIX - COMBINED OUTPUTS
@@ -613,9 +613,9 @@ tests:
     command: transformix -in ${t2} -def all -jac all -out test_output/transformix/all_outputs -tp test_output/elastix/rigid_quick/TransformParameters.0.txt
     depends_on: Rigid registration (quick test)
     validate:
-      - output_exists: test_output/transformix/all_outputs/result.nii.gz
-      - output_exists: test_output/transformix/all_outputs/deformationField.nii.gz
-      - output_exists: test_output/transformix/all_outputs/spatialJacobian.nii.gz
+      - output_exists: ${output_dir}/transformix/all_outputs/result.nii.gz
+      - output_exists: ${output_dir}/transformix/all_outputs/deformationField.nii.gz
+      - output_exists: ${output_dir}/transformix/all_outputs/spatialJacobian.nii.gz
 
   # ==========================================================================
   # TRANSFORMIX - APPLY MULTISTAGE TRANSFORM
@@ -625,7 +625,7 @@ tests:
     command: transformix -in ${t2} -out test_output/transformix/multistage -tp test_output/elastix/multistage/TransformParameters.1.txt
     depends_on: Multi-stage registration (rigid then affine)
     validate:
-      - output_exists: test_output/transformix/multistage/result.nii.gz
+      - output_exists: ${output_dir}/transformix/multistage/result.nii.gz
 
   # ==========================================================================
   # ELASTIX - LOG FILE VERIFICATION
@@ -650,8 +650,8 @@ tests:
     command: elastix -f ${t1w} -m ${t2} -out test_output/elastix/with_init -p test_output/params/quick_rigid.txt -t0 test_output/elastix/translation/TransformParameters.0.txt
     depends_on: Translation registration
     validate:
-      - output_exists: test_output/elastix/with_init/result.0.nii.gz
-      - output_exists: test_output/elastix/with_init/TransformParameters.0.txt
+      - output_exists: ${output_dir}/elastix/with_init/result.0.nii.gz
+      - output_exists: ${output_dir}/elastix/with_init/TransformParameters.0.txt
 
   # ==========================================================================
   # ERROR HANDLING

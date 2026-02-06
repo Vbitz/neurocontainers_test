@@ -166,7 +166,7 @@ tests:
       cd test_output/cat12_work && \
       timeout 120 /opt/cat12/run_spm12.sh /opt/mcr/v93/ quit 2>&1 | tail -20 || echo "SPM12 init test complete"
     expected_exit_code: 0
-    timeout: 180000
+    timeout: 180
 
   # ==========================================================================
   # INPUT DATA PREPARATION
@@ -177,7 +177,7 @@ tests:
       gunzip -c ${t1w} > test_output/sub-01_T1w.nii && \
       test -f test_output/sub-01_T1w.nii && echo "T1w uncompressed successfully"
     validate:
-      - output_exists: test_output/sub-01_T1w.nii
+      - output_exists: ${output_dir}/sub-01_T1w.nii
     expected_output_contains: "T1w uncompressed successfully"
 
   # ==========================================================================
@@ -228,9 +228,9 @@ tests:
       cd test_output/cat12_work && \
       timeout 300 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_smooth.m 2>&1 | tail -30
     depends_on: Prepare smoothing batch
-    timeout: 360000
+    timeout: 360
     validate:
-      - output_exists: test_output/cat12_work/s6sub-01_T1w.nii
+      - output_exists: ${output_dir}/cat12_work/s6sub-01_T1w.nii
 
   # ==========================================================================
   # DEFACE BATCH TEST
@@ -250,9 +250,9 @@ tests:
       cd test_output/cat12_work && \
       timeout 300 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_deface.m 2>&1 | tail -30
     depends_on: Prepare deface batch
-    timeout: 360000
+    timeout: 360
     validate:
-      - output_exists: test_output/anon_sub-01_T1w.nii
+      - output_exists: ${output_dir}/anon_sub-01_T1w.nii
 
   # ==========================================================================
   # CAT12 STANDALONE SHELL SCRIPT INTEGRATION TESTS
@@ -289,11 +289,11 @@ tests:
       cd test_output/cat12_work && \
       timeout 1800 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_segment_nosurf.m 2>&1 | tail -50
     depends_on: Prepare no-surface segmentation batch
-    timeout: 1900000
+    timeout: 1900
     validate:
-      - output_exists: test_output/mri/mwp1sub-01_T1w.nii
-      - output_exists: test_output/mri/mwp2sub-01_T1w.nii
-      - output_exists: test_output/report/cat_sub-01_T1w.xml
+      - output_exists: ${output_dir}/mri/mwp1sub-01_T1w.nii
+      - output_exists: ${output_dir}/mri/mwp2sub-01_T1w.nii
+      - output_exists: ${output_dir}/report/cat_sub-01_T1w.xml
 
   # ==========================================================================
   # POST-SEGMENTATION TESTS (require segmentation output)
@@ -305,7 +305,7 @@ tests:
       ls -la test_output/mri/mwp1sub-01_T1w.nii
     depends_on: Run CAT12 segmentation (no surface)
     validate:
-      - output_exists: test_output/mri/mwp1sub-01_T1w.nii
+      - output_exists: ${output_dir}/mri/mwp1sub-01_T1w.nii
 
   - name: Verify WM segmentation output
     description: Check white matter modulated normalized output exists
@@ -314,7 +314,7 @@ tests:
       ls -la test_output/mri/mwp2sub-01_T1w.nii
     depends_on: Run CAT12 segmentation (no surface)
     validate:
-      - output_exists: test_output/mri/mwp2sub-01_T1w.nii
+      - output_exists: ${output_dir}/mri/mwp2sub-01_T1w.nii
 
   - name: Verify CAT12 report XML
     description: Check CAT12 XML report was generated
@@ -331,7 +331,7 @@ tests:
       ls -la test_output/mri/p0sub-01_T1w.nii
     depends_on: Run CAT12 segmentation (no surface)
     validate:
-      - output_exists: test_output/mri/p0sub-01_T1w.nii
+      - output_exists: ${output_dir}/mri/p0sub-01_T1w.nii
 
   - name: Verify deformation field output
     description: Check forward deformation field was generated
@@ -362,7 +362,7 @@ tests:
       cd test_output/cat12_work && \
       timeout 180 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_tiv.m 2>&1 | tail -20
     depends_on: Prepare TIV extraction batch
-    timeout: 240000
+    timeout: 240
 
   # ==========================================================================
   # QUALITY MEASURES TEST
@@ -384,7 +384,7 @@ tests:
       cd test_output/cat12_work && \
       timeout 180 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_quality.m 2>&1 | tail -20
     depends_on: Prepare quality measures batch
-    timeout: 240000
+    timeout: 240
 
   # ==========================================================================
   # IQR EXTRACTION TEST
@@ -405,7 +405,7 @@ tests:
       cd test_output/cat12_work && \
       timeout 180 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_iqr.m 2>&1 | tail -20
     depends_on: Prepare IQR extraction batch
-    timeout: 240000
+    timeout: 240
 
   # ==========================================================================
   # SMOOTHING SEGMENTED DATA
@@ -427,9 +427,9 @@ tests:
       cd test_output/cat12_work && \
       timeout 300 /opt/cat12/run_spm12.sh /opt/mcr/v93/ batch test_smooth_gm.m 2>&1 | tail -20
     depends_on: Prepare GM smoothing batch
-    timeout: 360000
+    timeout: 360
     validate:
-      - output_exists: test_output/mri/s8mwp1sub-01_T1w.nii
+      - output_exists: ${output_dir}/mri/s8mwp1sub-01_T1w.nii
 
   # ==========================================================================
   # ROI VALUES EXTRACTION TEST
@@ -492,10 +492,10 @@ tests:
   #       -b /opt/cat12/standalone/cat_standalone_segment.m \
   #       $(pwd)/../sub-01_T1w.nii 2>&1 | tail -50
   #   depends_on: Prepare uncompressed T1w for CAT12
-  #   timeout: 7200000
+  #   timeout: 7200
   #   validate:
-  #     - output_exists: test_output/surf/lh.thickness.sub-01_T1w
-  #     - output_exists: test_output/surf/rh.thickness.sub-01_T1w
+  #     - output_exists: ${output_dir}/surf/lh.thickness.sub-01_T1w
+  #     - output_exists: ${output_dir}/surf/rh.thickness.sub-01_T1w
 
   # ==========================================================================
   # CAT12 OUTPUT STRUCTURE VERIFICATION

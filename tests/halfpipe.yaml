@@ -133,7 +133,7 @@ tests:
       print('Saved normalized image')
       "
     validate:
-      - output_exists: test_output/nibabel_output/t1w_normalized.nii.gz
+      - output_exists: ${output_dir}/nibabel_output/t1w_normalized.nii.gz
 
   - name: Nibabel extract mean volume
     description: Extract temporal mean from 4D BOLD using nibabel
@@ -149,7 +149,7 @@ tests:
       print('Saved mean volume, shape:', mean_data.shape)
       "
     validate:
-      - output_exists: test_output/nibabel_output/bold_mean.nii.gz
+      - output_exists: ${output_dir}/nibabel_output/bold_mean.nii.gz
 
   - name: Nibabel extract single volume
     description: Extract first volume from 4D BOLD
@@ -162,7 +162,7 @@ tests:
       print('Saved first volume')
       "
     validate:
-      - output_exists: test_output/nibabel_output/bold_vol0.nii.gz
+      - output_exists: ${output_dir}/nibabel_output/bold_vol0.nii.gz
 
   # ==========================================================================
   # NILEARN OPERATIONS
@@ -179,7 +179,7 @@ tests:
       print('Non-zero voxels:', mask.get_fdata().sum())
       "
     validate:
-      - output_exists: test_output/nilearn_output/bold_mask.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/bold_mask.nii.gz
 
   - name: Nilearn apply mask
     description: Apply brain mask to BOLD data
@@ -255,7 +255,7 @@ tests:
       print('Smoothed image saved, shape:', smoothed.shape)
       "
     validate:
-      - output_exists: test_output/nilearn_output/bold_smoothed.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/bold_smoothed.nii.gz
 
   - name: Nilearn resample image
     description: Resample T1w to different resolution
@@ -275,7 +275,7 @@ tests:
       print('Resampled image saved')
       "
     validate:
-      - output_exists: test_output/nilearn_output/t1w_resampled.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/t1w_resampled.nii.gz
 
   - name: Nilearn compute mean image
     description: Compute mean across 4D image
@@ -289,7 +289,7 @@ tests:
       print('Mean image shape:', mean_img.shape)
       "
     validate:
-      - output_exists: test_output/nilearn_output/bold_mean_nilearn.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/bold_mean_nilearn.nii.gz
 
   # ==========================================================================
   # ANTS TOOLS
@@ -303,21 +303,21 @@ tests:
         -o test_output/ants_output/t1w_n4corrected.nii.gz \
         -v 0
     validate:
-      - output_exists: test_output/ants_output/t1w_n4corrected.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_n4corrected.nii.gz
 
   - name: ANTs ImageMath operations
     description: Test ANTs ImageMath for basic operations
     command: |
       ImageMath 3 test_output/ants_output/t1w_normalized.nii.gz Normalize ${t1w}
     validate:
-      - output_exists: test_output/ants_output/t1w_normalized.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_normalized.nii.gz
 
   - name: ANTs create brain mask with Atropos
     description: Create simple threshold mask using ANTs
     command: |
       ThresholdImage 3 ${t1w} test_output/ants_output/t1w_thresh_mask.nii.gz 50 Inf
     validate:
-      - output_exists: test_output/ants_output/t1w_thresh_mask.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_thresh_mask.nii.gz
 
   - name: ANTs apply transforms info
     description: Check ANTs transform info utility
@@ -351,19 +351,19 @@ tests:
     description: Resample image to isotropic 2mm using c3d
     command: c3d ${t1w} -resample 50% -o test_output/ants_output/t1w_c3d_resample.nii.gz
     validate:
-      - output_exists: test_output/ants_output/t1w_c3d_resample.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_c3d_resample.nii.gz
 
   - name: C3D threshold
     description: Threshold image using c3d
     command: c3d ${t1w} -threshold 100 inf 1 0 -o test_output/ants_output/t1w_c3d_thresh.nii.gz
     validate:
-      - output_exists: test_output/ants_output/t1w_c3d_thresh.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_c3d_thresh.nii.gz
 
   - name: C3D smoothing
     description: Apply Gaussian smoothing using c3d
     command: c3d ${t1w} -smooth 2mm -o test_output/ants_output/t1w_c3d_smooth.nii.gz
     validate:
-      - output_exists: test_output/ants_output/t1w_c3d_smooth.nii.gz
+      - output_exists: ${output_dir}/ants_output/t1w_c3d_smooth.nii.gz
 
   - name: C3D affine tool check
     description: Check c3d_affine_tool availability
@@ -603,7 +603,7 @@ tests:
       print('Median tSNR:', round(np.median(valid_tsnr), 2))
       "
     validate:
-      - output_exists: test_output/nilearn_output/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/bold_tsnr.nii.gz
 
   - name: Compute framewise displacement proxy
     description: Compute simple motion metrics from BOLD
@@ -820,7 +820,7 @@ tests:
       print('=== Pipeline completed successfully ===')
       "
     validate:
-      - output_exists: test_output/nilearn_output/bold_preprocessed.nii.gz
+      - output_exists: ${output_dir}/nilearn_output/bold_preprocessed.nii.gz
 
 cleanup:
   script: |

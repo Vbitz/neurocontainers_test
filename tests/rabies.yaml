@@ -108,7 +108,7 @@ tests:
         -o test_output/ants_reg_ \
         -t a -n 1 2>&1 | tail -5
     validate:
-      - output_exists: test_output/ants_reg_Warped.nii.gz
+      - output_exists: ${output_dir}/ants_reg_Warped.nii.gz
 
   - name: ANTs N4 bias correction
     description: Test N4 inhomogeneity correction
@@ -119,7 +119,7 @@ tests:
         -c [20x20x20,0.0] \
         -s 4 2>&1
     validate:
-      - output_exists: test_output/t1w_n4corrected.nii.gz
+      - output_exists: ${output_dir}/t1w_n4corrected.nii.gz
 
   - name: ANTs apply transforms
     description: Test applying identity transform
@@ -130,7 +130,7 @@ tests:
         -o test_output/t1w_identity.nii.gz \
         -n Linear 2>&1
     validate:
-      - output_exists: test_output/t1w_identity.nii.gz
+      - output_exists: ${output_dir}/t1w_identity.nii.gz
 
   # ==========================================================================
   # FSL TOOLS (via FSL conda package)
@@ -144,19 +144,19 @@ tests:
     description: Test fslmaths temporal mean on BOLD
     command: fslmaths ${bold} -Tmean test_output/bold_fsl_tmean.nii.gz 2>&1
     validate:
-      - output_exists: test_output/bold_fsl_tmean.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_tmean.nii.gz
 
   - name: fslmaths smoothing
     description: Test fslmaths Gaussian smoothing
     command: fslmaths ${t1w} -s 2 test_output/t1w_fsl_smooth.nii.gz 2>&1
     validate:
-      - output_exists: test_output/t1w_fsl_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_smooth.nii.gz
 
   - name: fslmaths threshold and binarize
     description: Test fslmaths thresholding
     command: fslmaths ${t1w} -thr 100 -bin test_output/t1w_fsl_mask.nii.gz 2>&1
     validate:
-      - output_exists: test_output/t1w_fsl_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_mask.nii.gz
 
   - name: fslmaths multiply images
     description: Test fslmaths image multiplication (masking)
@@ -165,13 +165,13 @@ tests:
       fslmaths ${t1w} -mul test_output/mask_tmp.nii.gz test_output/t1w_fsl_masked.nii.gz 2>&1
     depends_on: fslmaths threshold and binarize
     validate:
-      - output_exists: test_output/t1w_fsl_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_masked.nii.gz
 
   - name: fslmaths bandpass filter
     description: Test fslmaths bandpass temporal filtering
     command: fslmaths ${bold} -bptf 25 2 test_output/bold_fsl_bptf.nii.gz 2>&1
     validate:
-      - output_exists: test_output/bold_fsl_bptf.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_bptf.nii.gz
 
   # ==========================================================================
   # AFNI TOOLS
@@ -202,7 +202,7 @@ tests:
       3dDespike -prefix test_output/bold_despike.nii.gz \
         -NEW -nomask ${bold} 2>&1 | tail -3
     validate:
-      - output_exists: test_output/bold_despike.nii.gz
+      - output_exists: ${output_dir}/bold_despike.nii.gz
 
   - name: 3dTshift slice timing
     description: Test slice timing correction
@@ -212,7 +212,7 @@ tests:
         -TR 2.0 \
         ${bold} 2>&1 | tail -3
     validate:
-      - output_exists: test_output/bold_stc.nii.gz
+      - output_exists: ${output_dir}/bold_stc.nii.gz
 
   - name: 3dAutobox on T1w
     description: Test automatic bounding box cropping
@@ -220,7 +220,7 @@ tests:
       3dAutobox -prefix test_output/t1w_autobox.nii.gz \
         -npad 5 ${t1w} 2>&1
     validate:
-      - output_exists: test_output/t1w_autobox.nii.gz
+      - output_exists: ${output_dir}/t1w_autobox.nii.gz
 
   # ==========================================================================
   # MINC TOOLKIT (N3 inhomogeneity correction)
@@ -358,7 +358,7 @@ tests:
       " 2>&1
     expected_output_contains: "Smoothed image saved"
     validate:
-      - output_exists: test_output/t1w_nilearn_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_nilearn_smooth.nii.gz
 
   - name: nilearn mean image
     description: Test nilearn mean computation on 4D
@@ -372,7 +372,7 @@ tests:
       " 2>&1
     expected_output_contains: "Mean image saved"
     validate:
-      - output_exists: test_output/bold_nilearn_mean.nii.gz
+      - output_exists: ${output_dir}/bold_nilearn_mean.nii.gz
 
   - name: nilearn resample to template
     description: Test nilearn resampling functionality
@@ -386,7 +386,7 @@ tests:
       " 2>&1
     expected_output_contains: "Resampled image saved"
     validate:
-      - output_exists: test_output/t1w_nilearn_resampled.nii.gz
+      - output_exists: ${output_dir}/t1w_nilearn_resampled.nii.gz
 
   - name: nilearn masking
     description: Test nilearn brain masking
@@ -400,7 +400,7 @@ tests:
       " 2>&1
     expected_output_contains: "Masked image saved"
     validate:
-      - output_exists: test_output/t1w_nilearn_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_nilearn_masked.nii.gz
 
   - name: nilearn signal extraction
     description: Test nilearn signal extraction from ROI
@@ -459,7 +459,7 @@ tests:
       antsMotionCorr -d 3 -a test_output/bold_10vol.nii.gz \
         -o test_output/bold_avg.nii.gz 2>&1 | tail -3
     validate:
-      - output_exists: test_output/bold_avg.nii.gz
+      - output_exists: ${output_dir}/bold_avg.nii.gz
 
   # ==========================================================================
   # IMAGE MATH AND STATISTICS
@@ -469,14 +469,14 @@ tests:
     command: |
       ImageMath 3 test_output/t1w_norm.nii.gz Normalize ${t1w} 2>&1
     validate:
-      - output_exists: test_output/t1w_norm.nii.gz
+      - output_exists: ${output_dir}/t1w_norm.nii.gz
 
   - name: ANTs ImageMath pad
     description: Test image padding with ANTs
     command: |
       ImageMath 3 test_output/t1w_padded.nii.gz PadImage ${t1w} 5 2>&1
     validate:
-      - output_exists: test_output/t1w_padded.nii.gz
+      - output_exists: ${output_dir}/t1w_padded.nii.gz
 
   - name: fslmaths statistics
     description: Test fslmaths statistical operations
@@ -485,9 +485,9 @@ tests:
       fslmaths ${bold} -Tmin test_output/bold_fsl_tmin.nii.gz && \
       fslmaths ${bold} -Tmax test_output/bold_fsl_tmax.nii.gz 2>&1
     validate:
-      - output_exists: test_output/bold_fsl_tstd.nii.gz
-      - output_exists: test_output/bold_fsl_tmin.nii.gz
-      - output_exists: test_output/bold_fsl_tmax.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_tstd.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_tmin.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_tmax.nii.gz
 
   # ==========================================================================
   # CONFOUND COMPUTATION TESTS
@@ -635,7 +635,7 @@ tests:
       fslmaths test_output/chain_despike.nii.gz \
         -s 2 test_output/chain_smooth.nii.gz 2>&1
     validate:
-      - output_exists: test_output/chain_smooth.nii.gz
+      - output_exists: ${output_dir}/chain_smooth.nii.gz
 
   - name: Registration chain
     description: Test registration workflow concept
@@ -652,7 +652,7 @@ tests:
         -o test_output/chain_registered.nii.gz \
         -n Linear 2>&1
     validate:
-      - output_exists: test_output/chain_registered.nii.gz
+      - output_exists: ${output_dir}/chain_registered.nii.gz
 
   # ==========================================================================
   # CONFOUND CORRECTION SIMULATION
@@ -727,7 +727,7 @@ tests:
       " 2>&1
     expected_output_contains: "float32"
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: fslmaths output types
     description: Test fslmaths data type conversion
@@ -735,8 +735,8 @@ tests:
       fslmaths ${t1w} -odt float test_output/t1w_fsl_float.nii.gz && \
       fslmaths ${t1w} -odt short test_output/t1w_fsl_short.nii.gz 2>&1
     validate:
-      - output_exists: test_output/t1w_fsl_float.nii.gz
-      - output_exists: test_output/t1w_fsl_short.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_float.nii.gz
+      - output_exists: ${output_dir}/t1w_fsl_short.nii.gz
 
   # ==========================================================================
   # PARALLEL PROCESSING CHECKS

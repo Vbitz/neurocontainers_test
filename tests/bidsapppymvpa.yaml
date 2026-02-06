@@ -836,7 +836,7 @@ tests:
       print('Figure saved successfully')
       " 2>&1
     validate:
-      - output_exists: test_output/test_rdm.png
+      - output_exists: ${output_dir}/test_rdm.png
     expected_output_contains: "Figure saved successfully"
 
 cleanup:

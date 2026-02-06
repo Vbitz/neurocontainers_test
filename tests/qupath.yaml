@@ -319,7 +319,7 @@ tests:
       QuPath script test_output/qupath_scripts/simple.groovy 2>&1
     expected_output_contains: "Script file executed successfully"
     validate:
-      - output_exists: test_output/qupath_scripts/simple.groovy
+      - output_exists: ${output_dir}/qupath_scripts/simple.groovy
 
   - name: Create and run computation script
     description: Create a Groovy script with computation
@@ -347,7 +347,7 @@ tests:
     command: ls -la test_output/qupath_scripts/simple.groovy
     depends_on: Create and run simple script file
     validate:
-      - output_exists: test_output/qupath_scripts/simple.groovy
+      - output_exists: ${output_dir}/qupath_scripts/simple.groovy
 
   # ==========================================================================
   # QUPATH CLASSES AND API ACCESS (via script)
@@ -535,7 +535,7 @@ tests:
       cat test_output/qupath_test_output.txt
     expected_output_contains: "QuPath test output"
     validate:
-      - output_exists: test_output/qupath_test_output.txt
+      - output_exists: ${output_dir}/qupath_test_output.txt
 
   - name: Write JSON via script
     description: Test writing JSON data via script
@@ -544,7 +544,7 @@ tests:
       cat test_output/qupath_data.json
     expected_output_contains: '"name"'
     validate:
-      - output_exists: test_output/qupath_data.json
+      - output_exists: ${output_dir}/qupath_data.json
 
   - name: Read file via script
     description: Test reading a file via Groovy script

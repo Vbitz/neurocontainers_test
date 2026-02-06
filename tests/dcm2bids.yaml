@@ -82,7 +82,7 @@ tests:
     description: Test dcm2bids_scaffold creates basic BIDS directory
     command: dcm2bids_scaffold -o test_output/scaffold_test --force 2>&1
     validate:
-      - output_exists: test_output/scaffold_test
+      - output_exists: ${output_dir}/scaffold_test
 
   - name: Verify scaffold created dataset_description.json
     description: Check that dataset_description.json was created
@@ -135,7 +135,7 @@ tests:
       cp ${t1w} test_output/dcm2niix_test/sidecar_only/ && \
       dcm2niix -b o -o test_output/dcm2niix_test/sidecar_only test_output/dcm2niix_test/sidecar_only 2>&1 || true
     validate:
-      - output_exists: test_output/dcm2niix_test/sidecar_only
+      - output_exists: ${output_dir}/dcm2niix_test/sidecar_only
 
   - name: dcm2niix compression level test
     description: Test dcm2niix with internal zlib compression
@@ -166,8 +166,8 @@ tests:
       echo "Mock T1w data created"
     expected_output_contains: "Mock T1w data created"
     validate:
-      - output_exists: test_output/mock_dicom/003_MPRAGE_20230101120000.nii.gz
-      - output_exists: test_output/mock_dicom/003_MPRAGE_20230101120000.json
+      - output_exists: ${output_dir}/mock_dicom/003_MPRAGE_20230101120000.nii.gz
+      - output_exists: ${output_dir}/mock_dicom/003_MPRAGE_20230101120000.json
 
   - name: Create mock NIfTI with JSON sidecar (BOLD)
     description: Set up mock BOLD data for dcm2bids testing
@@ -177,8 +177,8 @@ tests:
       echo "Mock BOLD data created"
     expected_output_contains: "Mock BOLD data created"
     validate:
-      - output_exists: test_output/mock_dicom/004_ep2d_bold_20230101120000.nii.gz
-      - output_exists: test_output/mock_dicom/004_ep2d_bold_20230101120000.json
+      - output_exists: ${output_dir}/mock_dicom/004_ep2d_bold_20230101120000.nii.gz
+      - output_exists: ${output_dir}/mock_dicom/004_ep2d_bold_20230101120000.json
 
   - name: Create mock T2w data
     description: Set up mock T2w data for dcm2bids testing
@@ -188,8 +188,8 @@ tests:
       echo "Mock T2w data created"
     expected_output_contains: "Mock T2w data created"
     validate:
-      - output_exists: test_output/mock_dicom/005_T2_20230101120000.nii.gz
-      - output_exists: test_output/mock_dicom/005_T2_20230101120000.json
+      - output_exists: ${output_dir}/mock_dicom/005_T2_20230101120000.nii.gz
+      - output_exists: ${output_dir}/mock_dicom/005_T2_20230101120000.json
 
   # ==========================================================================
   # DCM2BIDS CONFIGURATION FILE TESTS
@@ -213,7 +213,7 @@ tests:
       echo "Config file created"
     expected_output_contains: "Config file created"
     validate:
-      - output_exists: test_output/config_basic.json
+      - output_exists: ${output_dir}/config_basic.json
 
   - name: Create comprehensive dcm2bids config file
     description: Create config with multiple modalities
@@ -254,7 +254,7 @@ tests:
       echo "Full config file created"
     expected_output_contains: "Full config file created"
     validate:
-      - output_exists: test_output/config_full.json
+      - output_exists: ${output_dir}/config_full.json
 
   - name: Create config with sidecar changes
     description: Create config that modifies JSON sidecars
@@ -279,7 +279,7 @@ tests:
       echo "Sidecar config created"
     expected_output_contains: "Sidecar config created"
     validate:
-      - output_exists: test_output/config_sidecar.json
+      - output_exists: ${output_dir}/config_sidecar.json
 
   - name: Create config with extractors
     description: Create config using regex extractors
@@ -304,7 +304,7 @@ tests:
       echo "Extractor config created"
     expected_output_contains: "Extractor config created"
     validate:
-      - output_exists: test_output/config_extractor.json
+      - output_exists: ${output_dir}/config_extractor.json
 
   - name: Create config with IntendedFor
     description: Create config with fieldmap IntendedFor references
@@ -337,7 +337,7 @@ tests:
       echo "IntendedFor config created"
     expected_output_contains: "IntendedFor config created"
     validate:
-      - output_exists: test_output/config_intendedfor.json
+      - output_exists: ${output_dir}/config_intendedfor.json
 
   # ==========================================================================
   # DCM2BIDS CONVERSION TESTS (SKIP_DCM2NIIX MODE)
@@ -357,7 +357,7 @@ tests:
       - Create mock NIfTI with JSON sidecar (T1w)
       - Create basic dcm2bids config file
     validate:
-      - output_exists: test_output/dcm2bids_test/basic
+      - output_exists: ${output_dir}/dcm2bids_test/basic
 
   - name: Verify T1w conversion output
     description: Check that T1w was converted to BIDS format
@@ -380,7 +380,7 @@ tests:
       - Create mock NIfTI with JSON sidecar (T1w)
       - Create basic dcm2bids config file
     validate:
-      - output_exists: test_output/dcm2bids_test/session
+      - output_exists: ${output_dir}/dcm2bids_test/session
 
   - name: dcm2bids with full config
     description: Test dcm2bids with comprehensive config
@@ -399,7 +399,7 @@ tests:
       - Create mock T2w data
       - Create comprehensive dcm2bids config file
     validate:
-      - output_exists: test_output/dcm2bids_test/full
+      - output_exists: ${output_dir}/dcm2bids_test/full
 
   - name: dcm2bids with auto_extract_entities
     description: Test automatic entity extraction from SeriesDescription
@@ -416,7 +416,7 @@ tests:
       - Create mock NIfTI with JSON sidecar (BOLD)
       - Create config with extractors
     validate:
-      - output_exists: test_output/dcm2bids_test/autoextract
+      - output_exists: ${output_dir}/dcm2bids_test/autoextract
 
   - name: dcm2bids with sidecar changes
     description: Test config that modifies output JSON files
@@ -432,7 +432,7 @@ tests:
       - Create mock NIfTI with JSON sidecar (T1w)
       - Create config with sidecar changes
     validate:
-      - output_exists: test_output/dcm2bids_test/sidecar
+      - output_exists: ${output_dir}/dcm2bids_test/sidecar
 
   - name: dcm2bids with DEBUG logging
     description: Test verbose debug output
@@ -478,7 +478,7 @@ tests:
       - Create mock NIfTI with JSON sidecar (T1w)
       - Create mock NIfTI with JSON sidecar (BOLD)
     validate:
-      - output_exists: test_output/helper_test/output
+      - output_exists: ${output_dir}/helper_test/output
 
   - name: dcm2bids_helper with nested output
     description: Test helper with nest option for organizing runs
@@ -491,7 +491,7 @@ tests:
     depends_on:
       - Create mock NIfTI with JSON sidecar (T1w)
     validate:
-      - output_exists: test_output/helper_test/nested
+      - output_exists: ${output_dir}/helper_test/nested
 
   - name: dcm2bids_helper with DEBUG logging
     description: Test helper with verbose debug output
@@ -661,7 +661,7 @@ tests:
       - Create comprehensive dcm2bids config file
     expected_output_contains: "Integration test completed"
     validate:
-      - output_exists: test_output/integration_test
+      - output_exists: ${output_dir}/integration_test
 
   - name: Verify integration test outputs
     description: Check integration test created expected files

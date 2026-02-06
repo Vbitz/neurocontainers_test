@@ -137,7 +137,7 @@ tests:
         --reg_type=0 \
         --output_mapping=test_output/t1w_to_template_linear.mz 2>&1 || true
     validate:
-      - output_exists: test_output/t1w_to_template_linear.mz
+      - output_exists: ${output_dir}/t1w_to_template_linear.mz
 
   - name: reg action - apply mapping to transform image
     description: Apply saved mapping to transform source image to template space
@@ -159,7 +159,7 @@ tests:
         --speed=1 \
         --output_mapping=test_output/t1w_to_template_nonlinear.mz 2>&1 || true
     validate:
-      - output_exists: test_output/t1w_to_template_nonlinear.mz
+      - output_exists: ${output_dir}/t1w_to_template_nonlinear.mz
 
   - name: reg action - subject to template transformation
     description: Transform additional files from subject to template space
@@ -222,7 +222,7 @@ tests:
         --seed_count=100 \
         --output=test_output/template_wb_tracks.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_wb_tracks.tt.gz
+      - output_exists: ${output_dir}/template_wb_tracks.tt.gz
 
   - name: trk action - tracking with parameters
     description: Test fiber tracking with custom parameters
@@ -237,7 +237,7 @@ tests:
         --max_length=200 \
         --output=test_output/template_tracks_params.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_params.tt.gz
+      - output_exists: ${output_dir}/template_tracks_params.tt.gz
 
   - name: trk action - tracking with ROI
     description: Test fiber tracking with region of interest
@@ -248,7 +248,7 @@ tests:
         --roi=HCP-MMP:L_V1 \
         --output=test_output/template_tracks_roi.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_roi.tt.gz
+      - output_exists: ${output_dir}/template_tracks_roi.tt.gz
 
   - name: trk action - tracking with connectome
     description: Test fiber tracking with connectivity matrix output
@@ -259,7 +259,7 @@ tests:
         --connectivity=Brodmann \
         --output=test_output/template_tracks_conn.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_conn.tt.gz
+      - output_exists: ${output_dir}/template_tracks_conn.tt.gz
 
   # ==========================================================================
   # ACTION: atk - Automatic Fiber Tracking on Template
@@ -473,7 +473,7 @@ tests:
         --smoothing=0.5 \
         --output=test_output/template_tracks_smooth.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_smooth.tt.gz
+      - output_exists: ${output_dir}/template_tracks_smooth.tt.gz
 
   - name: trk action - delete repeat streamlines
     description: Test fiber tracking with duplicate removal
@@ -484,7 +484,7 @@ tests:
         --delete_repeat=1 \
         --output=test_output/template_tracks_unique.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_unique.tt.gz
+      - output_exists: ${output_dir}/template_tracks_unique.tt.gz
 
   - name: trk action - output tract statistics
     description: Test fiber tracking with inline statistics export
@@ -495,7 +495,7 @@ tests:
         --export=stat \
         --output=test_output/template_tracks_stat.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_stat.tt.gz
+      - output_exists: ${output_dir}/template_tracks_stat.tt.gz
 
   # ==========================================================================
   # CONNECTIVITY ANALYSIS
@@ -510,7 +510,7 @@ tests:
         --connectivity_type=pass \
         --output=test_output/template_conn_hcpmmp.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_conn_hcpmmp.tt.gz
+      - output_exists: ${output_dir}/template_conn_hcpmmp.tt.gz
 
   - name: trk action - multiple atlas connectivity
     description: Generate connectivity matrices for multiple atlases
@@ -521,7 +521,7 @@ tests:
         --connectivity=Brodmann,FreeSurferDKT_Cortical \
         --output=test_output/template_conn_multi.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_conn_multi.tt.gz
+      - output_exists: ${output_dir}/template_conn_multi.tt.gz
 
   - name: trk action - endpoint connectivity
     description: Generate endpoint-based connectivity matrix
@@ -533,7 +533,7 @@ tests:
         --connectivity_type=end \
         --output=test_output/template_conn_end.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_conn_end.tt.gz
+      - output_exists: ${output_dir}/template_conn_end.tt.gz
 
   # ==========================================================================
   # REGISTRATION WITH DIFFERENT PARAMETERS
@@ -548,7 +548,7 @@ tests:
         --reg_type=0 \
         --output_mapping=test_output/t1w_reg_mi.mz 2>&1 || true
     validate:
-      - output_exists: test_output/t1w_reg_mi.mz
+      - output_exists: ${output_dir}/t1w_reg_mi.mz
 
   - name: reg action - high resolution registration
     description: Test registration at higher resolution
@@ -560,7 +560,7 @@ tests:
         --reg_type=0 \
         --output_mapping=test_output/t1w_reg_hires.mz 2>&1 || true
     validate:
-      - output_exists: test_output/t1w_reg_hires.mz
+      - output_exists: ${output_dir}/t1w_reg_hires.mz
 
   - name: reg action - smoothed registration
     description: Test registration with mapping smoothing
@@ -572,7 +572,7 @@ tests:
         --reg_type=0 \
         --output_mapping=test_output/t1w_reg_smooth.mz 2>&1 || true
     validate:
-      - output_exists: test_output/t1w_reg_smooth.mz
+      - output_exists: ${output_dir}/t1w_reg_smooth.mz
 
   # ==========================================================================
   # BUNDLE-SPECIFIC AUTOMATIC TRACKING
@@ -712,7 +712,7 @@ tests:
         --seed_count=50 \
         --output=test_output/template_tracks.trk.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks.trk.gz
+      - output_exists: ${output_dir}/template_tracks.trk.gz
 
   # ==========================================================================
   # ERROR HANDLING
@@ -739,7 +739,7 @@ tests:
         --thread_count=1 \
         --output=test_output/template_tracks_1thread.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_1thread.tt.gz
+      - output_exists: ${output_dir}/template_tracks_1thread.tt.gz
 
   - name: trk action - multi threaded
     description: Test fiber tracking with multiple threads
@@ -750,7 +750,7 @@ tests:
         --thread_count=4 \
         --output=test_output/template_tracks_4thread.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/template_tracks_4thread.tt.gz
+      - output_exists: ${output_dir}/template_tracks_4thread.tt.gz
 
   # ==========================================================================
   # COMPLEX PIPELINES
@@ -768,8 +768,8 @@ tests:
         --seed_count=50 \
         --output=test_output/pipeline_tracks.tt.gz 2>&1 || true
     validate:
-      - output_exists: test_output/pipeline_mapping.mz
-      - output_exists: test_output/pipeline_tracks.tt.gz
+      - output_exists: ${output_dir}/pipeline_mapping.mz
+      - output_exists: ${output_dir}/pipeline_tracks.tt.gz
 
   - name: Pipeline - track and analyze
     description: Run tracking and then analyze the resulting tracts
@@ -783,7 +783,7 @@ tests:
         --tract=test_output/pipeline_ana_tracks.tt.gz \
         --connectivity=Brodmann 2>&1 || true
     validate:
-      - output_exists: test_output/pipeline_ana_tracks.tt.gz
+      - output_exists: ${output_dir}/pipeline_ana_tracks.tt.gz
 
   - name: Pipeline - autotrack multiple bundles with export
     description: Automatically track bundles and export statistics

@@ -97,50 +97,50 @@ tests:
     description: Convert NIfTI to MGZ format
     command: mri_convert ${t2} test_output/t2_converted.mgz
     validate:
-      - output_exists: test_output/t2_converted.mgz
+      - output_exists: ${output_dir}/t2_converted.mgz
 
   - name: mri_convert back to NIfTI
     description: Convert MGZ back to NIfTI
     command: mri_convert test_output/t2_converted.mgz test_output/t2_reconverted.nii.gz
     depends_on: mri_convert format conversion
     validate:
-      - output_exists: test_output/t2_reconverted.nii.gz
+      - output_exists: ${output_dir}/t2_reconverted.nii.gz
 
   - name: mri_convert resample
     description: Resample T2 to 2mm isotropic
     command: mri_convert ${t2} -vs 2 2 2 test_output/t2_2mm.nii.gz
     validate:
-      - output_exists: test_output/t2_2mm.nii.gz
+      - output_exists: ${output_dir}/t2_2mm.nii.gz
 
   - name: mri_convert conform
     description: Conform T2 to 256x256x256 1mm
     command: mri_convert ${t2} --conform test_output/t2_conformed.mgz
     validate:
-      - output_exists: test_output/t2_conformed.mgz
+      - output_exists: ${output_dir}/t2_conformed.mgz
 
   - name: mri_binarize simple threshold
     description: Binarize T2 with threshold
     command: mri_binarize --i ${t2} --min 100 --o test_output/t2_bin.nii.gz
     validate:
-      - output_exists: test_output/t2_bin.nii.gz
+      - output_exists: ${output_dir}/t2_bin.nii.gz
 
   - name: mri_binarize with dilation
     description: Binarize and dilate
     command: mri_binarize --i ${t2} --min 50 --dilate 2 --o test_output/t2_bin_dilate.nii.gz
     validate:
-      - output_exists: test_output/t2_bin_dilate.nii.gz
+      - output_exists: ${output_dir}/t2_bin_dilate.nii.gz
 
   - name: mri_binarize with erosion
     description: Binarize and erode
     command: mri_binarize --i ${t2} --min 50 --erode 2 --o test_output/t2_bin_erode.nii.gz
     validate:
-      - output_exists: test_output/t2_bin_erode.nii.gz
+      - output_exists: ${output_dir}/t2_bin_erode.nii.gz
 
   - name: mri_vol2vol identity transform
     description: Apply identity transform to volume
     command: mri_vol2vol --mov ${t2} --targ ${t2} --o test_output/t2_vol2vol.nii.gz --regheader --no-save-reg
     validate:
-      - output_exists: test_output/t2_vol2vol.nii.gz
+      - output_exists: ${output_dir}/t2_vol2vol.nii.gz
 
   - name: mris_convert help
     description: Verify surface conversion tool available
@@ -174,49 +174,49 @@ tests:
     description: Create a blank volume
     command: wb_command -volume-create 64 64 32 test_output/blank_volume.nii.gz -plumb XYZ 2 2 2 -90 -126 -72
     validate:
-      - output_exists: test_output/blank_volume.nii.gz
+      - output_exists: ${output_dir}/blank_volume.nii.gz
 
   - name: Workbench volume math identity
     description: Copy volume using volume-math
     command: wb_command -volume-math "x" test_output/t2_copy.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_copy.nii.gz
+      - output_exists: ${output_dir}/t2_copy.nii.gz
 
   - name: Workbench volume math add constant
     description: Add constant to volume
     command: wb_command -volume-math "x + 100" test_output/t2_plus100.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_plus100.nii.gz
+      - output_exists: ${output_dir}/t2_plus100.nii.gz
 
   - name: Workbench volume math multiply
     description: Multiply volume by constant
     command: wb_command -volume-math "x * 2" test_output/t2_times2.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_times2.nii.gz
+      - output_exists: ${output_dir}/t2_times2.nii.gz
 
   - name: Workbench volume math threshold
     description: Threshold using volume-math
     command: wb_command -volume-math "x * (x > 100)" test_output/t2_thresh100.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_thresh100.nii.gz
+      - output_exists: ${output_dir}/t2_thresh100.nii.gz
 
   - name: Workbench volume math binarize
     description: Binarize using volume-math
     command: wb_command -volume-math "(x > 50)" test_output/t2_bin_wb.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_bin_wb.nii.gz
+      - output_exists: ${output_dir}/t2_bin_wb.nii.gz
 
   - name: Workbench volume smoothing
     description: Gaussian smooth volume
     command: wb_command -volume-smoothing ${t2} 4 test_output/t2_smooth4mm.nii.gz
     validate:
-      - output_exists: test_output/t2_smooth4mm.nii.gz
+      - output_exists: ${output_dir}/t2_smooth4mm.nii.gz
 
   - name: Workbench volume smoothing FWHM
     description: Gaussian smooth with FWHM specification
     command: wb_command -volume-smoothing ${t2} 6 test_output/t2_smooth6mm_fwhm.nii.gz -fwhm
     validate:
-      - output_exists: test_output/t2_smooth6mm_fwhm.nii.gz
+      - output_exists: ${output_dir}/t2_smooth6mm_fwhm.nii.gz
 
   - name: Workbench volume stats mean
     description: Calculate volume mean
@@ -247,13 +247,13 @@ tests:
     description: Resample volume with trilinear interpolation
     command: wb_command -volume-resample ${t2} ${mni_template} TRILINEAR test_output/t2_resample_trilin.nii.gz
     validate:
-      - output_exists: test_output/t2_resample_trilin.nii.gz
+      - output_exists: ${output_dir}/t2_resample_trilin.nii.gz
 
   - name: Workbench volume resample cubic
     description: Resample volume with cubic interpolation
     command: wb_command -volume-resample ${t2} ${mni_template} CUBIC test_output/t2_resample_cubic.nii.gz
     validate:
-      - output_exists: test_output/t2_resample_cubic.nii.gz
+      - output_exists: ${output_dir}/t2_resample_cubic.nii.gz
 
   # ==========================================================================
   # FSL TOOLS
@@ -282,106 +282,106 @@ tests:
     description: Copy volume with fslmaths
     command: fslmaths ${t2} test_output/t2_fslcopy.nii.gz
     validate:
-      - output_exists: test_output/t2_fslcopy.nii.gz
+      - output_exists: ${output_dir}/t2_fslcopy.nii.gz
 
   - name: fslmaths add constant
     description: Add constant with fslmaths
     command: fslmaths ${t2} -add 100 test_output/t2_fsl_add100.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_add100.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_add100.nii.gz
 
   - name: fslmaths multiply
     description: Multiply with fslmaths
     command: fslmaths ${t2} -mul 2 test_output/t2_fsl_mul2.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_mul2.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_mul2.nii.gz
 
   - name: fslmaths threshold
     description: Threshold with fslmaths
     command: fslmaths ${t2} -thr 100 test_output/t2_fsl_thr100.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_thr100.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_thr100.nii.gz
 
   - name: fslmaths binarize
     description: Binarize with fslmaths
     command: fslmaths ${t2} -bin test_output/t2_fsl_bin.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_bin.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_bin.nii.gz
 
   - name: fslmaths smooth
     description: Gaussian smooth with fslmaths
     command: fslmaths ${t2} -s 2 test_output/t2_fsl_smooth2.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_smooth2.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_smooth2.nii.gz
 
   - name: fslmaths dilate
     description: Dilate binary mask
     command: fslmaths ${t2} -bin -dilM test_output/t2_fsl_dilM.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_dilM.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_dilM.nii.gz
 
   - name: fslmaths erode
     description: Erode binary mask
     command: fslmaths ${t2} -bin -ero test_output/t2_fsl_ero.nii.gz
     validate:
-      - output_exists: test_output/t2_fsl_ero.nii.gz
+      - output_exists: ${output_dir}/t2_fsl_ero.nii.gz
 
   - name: fslmaths temporal mean
     description: Calculate temporal mean of BOLD
     command: fslmaths ${bold} -Tmean test_output/bold_fsl_Tmean.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmean.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmean.nii.gz
 
   - name: fslmaths temporal std
     description: Calculate temporal std of BOLD
     command: fslmaths ${bold} -Tstd test_output/bold_fsl_Tstd.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tstd.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tstd.nii.gz
 
   - name: fslmaths temporal max
     description: Calculate temporal max of BOLD
     command: fslmaths ${bold} -Tmax test_output/bold_fsl_Tmax.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmax.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmax.nii.gz
 
   - name: fslmaths temporal min
     description: Calculate temporal min of BOLD
     command: fslmaths ${bold} -Tmin test_output/bold_fsl_Tmin.nii.gz
     validate:
-      - output_exists: test_output/bold_fsl_Tmin.nii.gz
+      - output_exists: ${output_dir}/bold_fsl_Tmin.nii.gz
 
   - name: FLIRT registration to template
     description: Register T2 to MNI template
     command: flirt -in ${t2} -ref ${mni_template} -out test_output/t2_flirt_mni.nii.gz -omat test_output/t2_to_mni.mat -dof 12
     validate:
-      - output_exists: test_output/t2_flirt_mni.nii.gz
-      - output_exists: test_output/t2_to_mni.mat
+      - output_exists: ${output_dir}/t2_flirt_mni.nii.gz
+      - output_exists: ${output_dir}/t2_to_mni.mat
 
   - name: FLIRT apply transform
     description: Apply saved transformation matrix
     command: flirt -in ${t2} -ref ${mni_template} -applyxfm -init test_output/t2_to_mni.mat -out test_output/t2_flirt_applied.nii.gz
     depends_on: FLIRT registration to template
     validate:
-      - output_exists: test_output/t2_flirt_applied.nii.gz
+      - output_exists: ${output_dir}/t2_flirt_applied.nii.gz
 
   - name: FLIRT rigid body registration
     description: 6-DOF rigid registration
     command: flirt -in ${t2} -ref ${mni_template} -out test_output/t2_flirt_rigid.nii.gz -dof 6
     validate:
-      - output_exists: test_output/t2_flirt_rigid.nii.gz
+      - output_exists: ${output_dir}/t2_flirt_rigid.nii.gz
 
   - name: BET brain extraction
     description: Extract brain from T2 using BET
     command: bet ${t2} test_output/t2_bet -m -f 0.3
     validate:
-      - output_exists: test_output/t2_bet.nii.gz
-      - output_exists: test_output/t2_bet_mask.nii.gz
+      - output_exists: ${output_dir}/t2_bet.nii.gz
+      - output_exists: ${output_dir}/t2_bet_mask.nii.gz
 
   - name: BET robust brain extraction
     description: Robust brain extraction with multiple iterations
     command: bet ${t2} test_output/t2_bet_robust -R -f 0.3
     validate:
-      - output_exists: test_output/t2_bet_robust.nii.gz
+      - output_exists: ${output_dir}/t2_bet_robust.nii.gz
 
   # ==========================================================================
   # HCP TEMPLATES
@@ -484,8 +484,8 @@ tests:
       bet ${t2} test_output/workflow_bet -m -f 0.3 && \
       fslmaths test_output/workflow_bet.nii.gz -s 2 test_output/workflow_bet_smooth.nii.gz
     validate:
-      - output_exists: test_output/workflow_bet.nii.gz
-      - output_exists: test_output/workflow_bet_smooth.nii.gz
+      - output_exists: ${output_dir}/workflow_bet.nii.gz
+      - output_exists: ${output_dir}/workflow_bet_smooth.nii.gz
 
   - name: BOLD preprocessing basic
     description: Temporal mean and masking
@@ -493,8 +493,8 @@ tests:
       fslmaths ${bold} -Tmean test_output/bold_mean.nii.gz && \
       fslmaths test_output/bold_mean.nii.gz -bin -dilM test_output/bold_mask.nii.gz
     validate:
-      - output_exists: test_output/bold_mean.nii.gz
-      - output_exists: test_output/bold_mask.nii.gz
+      - output_exists: ${output_dir}/bold_mean.nii.gz
+      - output_exists: ${output_dir}/bold_mask.nii.gz
 
   - name: tSNR calculation
     description: Calculate temporal signal-to-noise ratio
@@ -503,13 +503,13 @@ tests:
       fslmaths ${bold} -Tstd test_output/bold_tsnr_std.nii.gz && \
       fslmaths test_output/bold_tsnr_mean.nii.gz -div test_output/bold_tsnr_std.nii.gz test_output/bold_tsnr.nii.gz
     validate:
-      - output_exists: test_output/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/bold_tsnr.nii.gz
 
   - name: Volume math complex expression
     description: Complex mathematical operation with wb_command
     command: wb_command -volume-math "sqrt(x*x + 100)" test_output/t2_complex.nii.gz -var x ${t2}
     validate:
-      - output_exists: test_output/t2_complex.nii.gz
+      - output_exists: ${output_dir}/t2_complex.nii.gz
 
   - name: Multi-tool pipeline
     description: FreeSurfer convert, wb_command stats, FSL smooth
@@ -518,7 +518,7 @@ tests:
       wb_command -volume-stats test_output/pipeline_step1.nii.gz -reduce MEAN && \
       fslmaths test_output/pipeline_step1.nii.gz -s 3 test_output/pipeline_final.nii.gz
     validate:
-      - output_exists: test_output/pipeline_final.nii.gz
+      - output_exists: ${output_dir}/pipeline_final.nii.gz
 
   # ==========================================================================
   # ENVIRONMENT AND PATHS

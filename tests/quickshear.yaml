@@ -54,59 +54,59 @@ tests:
     description: Generate brain mask using SynthStrip for T1w image
     command: /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_brain_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain_mask.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
+    timeout: 300
 
   - name: Skull strip T1w - generate stripped brain
     description: Generate stripped brain image using SynthStrip
     command: /freesurfer/mri_synthstrip -i ${t1w} -o test_output/t1w_stripped.nii.gz
     validate:
-      - output_exists: test_output/t1w_stripped.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_stripped.nii.gz
+    timeout: 300
 
   - name: Skull strip T1w - mask and stripped together
     description: Generate both brain mask and stripped image in single run
     command: /freesurfer/mri_synthstrip -i ${t1w} -o test_output/t1w_stripped_full.nii.gz -m test_output/t1w_mask_full.nii.gz
     validate:
-      - output_exists: test_output/t1w_stripped_full.nii.gz
-      - output_exists: test_output/t1w_mask_full.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_stripped_full.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_full.nii.gz
+    timeout: 300
 
   - name: Skull strip T1w - with distance transform
     description: Generate brain mask with signed distance transform output
     command: /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_mask_sdt.nii.gz -d test_output/t1w_sdt.nii.gz
     validate:
-      - output_exists: test_output/t1w_mask_sdt.nii.gz
-      - output_exists: test_output/t1w_sdt.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_mask_sdt.nii.gz
+      - output_exists: ${output_dir}/t1w_sdt.nii.gz
+    timeout: 300
 
   - name: Skull strip with custom border
     description: Generate brain mask with larger border (2mm)
     command: /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_mask_border2.nii.gz -b 2
     validate:
-      - output_exists: test_output/t1w_mask_border2.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_mask_border2.nii.gz
+    timeout: 300
 
   - name: Skull strip with zero border
     description: Generate tight brain mask with no border expansion
     command: /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_mask_border0.nii.gz -b 0
     validate:
-      - output_exists: test_output/t1w_mask_border0.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_mask_border0.nii.gz
+    timeout: 300
 
   - name: Skull strip excluding CSF
     description: Generate brain mask excluding CSF from border
     command: /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_mask_nocsf.nii.gz --no-csf
     validate:
-      - output_exists: test_output/t1w_mask_nocsf.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_mask_nocsf.nii.gz
+    timeout: 300
 
   - name: Skull strip T2 image
     description: Generate brain mask from inplane T2 image
     command: /freesurfer/mri_synthstrip -i ${t2} -m test_output/t2_mask.nii.gz
     validate:
-      - output_exists: test_output/t2_mask.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t2_mask.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # QUICKSHEAR DEFACING
@@ -116,64 +116,64 @@ tests:
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced.nii.gz
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced.nii.gz
-      - same_dimensions: ["test_output/t1w_defaced.nii.gz", "${t1w}"]
+      - output_exists: ${output_dir}/t1w_defaced.nii.gz
+      - same_dimensions: ["${output_dir}/t1w_defaced.nii.gz", "${t1w}"]
 
   - name: Quickshear with default buffer
     description: Deface T1w with explicit default buffer size (10 voxels)
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_buf10.nii.gz 10
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_buf10.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buf10.nii.gz
 
   - name: Quickshear with small buffer
     description: Deface T1w with small buffer (5 voxels) - more aggressive defacing
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_buf5.nii.gz 5
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_buf5.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buf5.nii.gz
 
   - name: Quickshear with large buffer
     description: Deface T1w with large buffer (20 voxels) - more conservative defacing
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_buf20.nii.gz 20
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_buf20.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buf20.nii.gz
 
   - name: Quickshear with zero buffer
     description: Deface T1w with zero buffer - maximally aggressive defacing
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_buf0.nii.gz 0
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_buf0.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buf0.nii.gz
 
   - name: Quickshear with very large buffer
     description: Deface T1w with 50 voxel buffer - minimal defacing
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_buf50.nii.gz 50
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_buf50.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buf50.nii.gz
 
   - name: Quickshear with custom border mask
     description: Deface using mask with 2mm border
     command: quickshear ${t1w} test_output/t1w_mask_border2.nii.gz test_output/t1w_defaced_border2mask.nii.gz
     depends_on: Skull strip with custom border
     validate:
-      - output_exists: test_output/t1w_defaced_border2mask.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_border2mask.nii.gz
 
   - name: Quickshear with tight mask
     description: Deface using tight mask (0mm border)
     command: quickshear ${t1w} test_output/t1w_mask_border0.nii.gz test_output/t1w_defaced_tightmask.nii.gz
     depends_on: Skull strip with zero border
     validate:
-      - output_exists: test_output/t1w_defaced_tightmask.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_tightmask.nii.gz
 
   - name: Quickshear with no-CSF mask
     description: Deface using mask that excludes CSF
     command: quickshear ${t1w} test_output/t1w_mask_nocsf.nii.gz test_output/t1w_defaced_nocsf.nii.gz
     depends_on: Skull strip excluding CSF
     validate:
-      - output_exists: test_output/t1w_defaced_nocsf.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_nocsf.nii.gz
 
   # ==========================================================================
   # COMPLETE WORKFLOW PIPELINES
@@ -184,9 +184,9 @@ tests:
       /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_pipe_mask.nii.gz && \
       quickshear ${t1w} test_output/t1w_pipe_mask.nii.gz test_output/t1w_pipe_defaced.nii.gz
     validate:
-      - output_exists: test_output/t1w_pipe_mask.nii.gz
-      - output_exists: test_output/t1w_pipe_defaced.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_pipe_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_pipe_defaced.nii.gz
+    timeout: 300
 
   - name: Full pipeline - T2 defacing
     description: Complete pipeline for T2 image - skull strip then deface
@@ -194,9 +194,9 @@ tests:
       /freesurfer/mri_synthstrip -i ${t2} -m test_output/t2_pipe_mask.nii.gz && \
       quickshear ${t2} test_output/t2_pipe_mask.nii.gz test_output/t2_defaced.nii.gz
     validate:
-      - output_exists: test_output/t2_pipe_mask.nii.gz
-      - output_exists: test_output/t2_defaced.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t2_pipe_mask.nii.gz
+      - output_exists: ${output_dir}/t2_defaced.nii.gz
+    timeout: 300
 
   - name: Full pipeline - conservative defacing
     description: Pipeline with conservative settings (large border, large buffer)
@@ -204,9 +204,9 @@ tests:
       /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_cons_mask.nii.gz -b 3 && \
       quickshear ${t1w} test_output/t1w_cons_mask.nii.gz test_output/t1w_conservative.nii.gz 30
     validate:
-      - output_exists: test_output/t1w_cons_mask.nii.gz
-      - output_exists: test_output/t1w_conservative.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_cons_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_conservative.nii.gz
+    timeout: 300
 
   - name: Full pipeline - aggressive defacing
     description: Pipeline with aggressive settings (tight mask, small buffer)
@@ -214,9 +214,9 @@ tests:
       /freesurfer/mri_synthstrip -i ${t1w} -m test_output/t1w_agg_mask.nii.gz -b 0 --no-csf && \
       quickshear ${t1w} test_output/t1w_agg_mask.nii.gz test_output/t1w_aggressive.nii.gz 3
     validate:
-      - output_exists: test_output/t1w_agg_mask.nii.gz
-      - output_exists: test_output/t1w_aggressive.nii.gz
-    timeout: 300000
+      - output_exists: ${output_dir}/t1w_agg_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_aggressive.nii.gz
+    timeout: 300
 
   # ==========================================================================
   # PYTHON API TESTS
@@ -386,7 +386,7 @@ tests:
     command: quickshear ${t1w} test_output/t1w_brain_mask.nii.gz test_output/t1w_defaced_frac.nii.gz 7.5
     depends_on: Skull strip T1w - generate mask only
     validate:
-      - output_exists: test_output/t1w_defaced_frac.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_frac.nii.gz
 
   - name: Quickshear negative buffer
     description: Test quickshear with negative buffer (edge case behavior)

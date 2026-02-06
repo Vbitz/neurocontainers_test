@@ -155,14 +155,14 @@ tests:
     description: Reorient T1w image to standard orientation
     command: fslreorient2std ${t1w} test_output/t1w_reoriented.nii.gz
     validate:
-      - output_exists: test_output/t1w_reoriented.nii.gz
+      - output_exists: ${output_dir}/t1w_reoriented.nii.gz
 
   - name: fslreorient2std with matrix file
     description: Save reorientation matrix to file
     command: fslreorient2std -m test_output/reorient_matrix.mat ${t1w} test_output/t1w_reoriented2.nii.gz
     validate:
-      - output_exists: test_output/reorient_matrix.mat
-      - output_exists: test_output/t1w_reoriented2.nii.gz
+      - output_exists: ${output_dir}/reorient_matrix.mat
+      - output_exists: ${output_dir}/t1w_reoriented2.nii.gz
 
   # ==========================================================================
   # FSL UTILITIES - REGISTRATION (FLIRT)
@@ -176,58 +176,58 @@ tests:
     description: Register inplaneT2 to T1w using FLIRT
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_to_t1w.nii.gz -omat test_output/t2_to_t1w.mat -dof 6 -cost corratio
     validate:
-      - output_exists: test_output/t2_to_t1w.nii.gz
-      - output_exists: test_output/t2_to_t1w.mat
+      - output_exists: ${output_dir}/t2_to_t1w.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1w.mat
 
   - name: flirt rigid registration
     description: Test 6-DOF rigid body registration
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_rigid.nii.gz -dof 6
     validate:
-      - output_exists: test_output/t2_rigid.nii.gz
+      - output_exists: ${output_dir}/t2_rigid.nii.gz
 
   - name: flirt affine registration
     description: Test 12-DOF affine registration
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_affine.nii.gz -dof 12
     validate:
-      - output_exists: test_output/t2_affine.nii.gz
+      - output_exists: ${output_dir}/t2_affine.nii.gz
 
   - name: flirt mutual information cost
     description: Test registration with mutual information cost function
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_mi.nii.gz -cost mutualinfo -dof 6
     validate:
-      - output_exists: test_output/t2_mi.nii.gz
+      - output_exists: ${output_dir}/t2_mi.nii.gz
 
   - name: flirt apply transformation
     description: Apply existing transformation matrix to image
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_applied.nii.gz -init test_output/t2_to_t1w.mat -applyxfm
     depends_on: flirt T2 to T1 registration
     validate:
-      - output_exists: test_output/t2_applied.nii.gz
+      - output_exists: ${output_dir}/t2_applied.nii.gz
 
   - name: flirt nearest neighbor interpolation
     description: Test nearest neighbor interpolation for label images
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_nn.nii.gz -interp nearestneighbour -dof 6
     validate:
-      - output_exists: test_output/t2_nn.nii.gz
+      - output_exists: ${output_dir}/t2_nn.nii.gz
 
   - name: flirt spline interpolation
     description: Test spline interpolation for smoother results
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_spline.nii.gz -interp spline -dof 6
     validate:
-      - output_exists: test_output/t2_spline.nii.gz
+      - output_exists: ${output_dir}/t2_spline.nii.gz
 
   - name: flirt no search
     description: Test registration without angular search (faster)
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_nosearch.nii.gz -nosearch
     validate:
-      - output_exists: test_output/t2_nosearch.nii.gz
+      - output_exists: ${output_dir}/t2_nosearch.nii.gz
 
   - name: flirt to MNI template
     description: Register T1w to MNI152 template
     command: flirt -in ${t1w} -ref /usr/local/fsl/data/standard/MNI152_T1_2mm_brain.nii.gz -out test_output/t1w_mni.nii.gz -omat test_output/t1w_to_mni.mat -dof 12
     validate:
-      - output_exists: test_output/t1w_mni.nii.gz
-      - output_exists: test_output/t1w_to_mni.mat
+      - output_exists: ${output_dir}/t1w_mni.nii.gz
+      - output_exists: ${output_dir}/t1w_to_mni.mat
 
   - name: avscale read transformation
     description: Extract transformation parameters from matrix
@@ -242,14 +242,14 @@ tests:
     description: Extract brain from T1w using ROBEX
     command: /ROBEX/runROBEX.sh ${t1w} test_output/t1w_brain_robex.nii.gz test_output/t1w_brain_mask_robex.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain_robex.nii.gz
-      - output_exists: test_output/t1w_brain_mask_robex.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_robex.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask_robex.nii.gz
 
   - name: ROBEX brain only
     description: Extract brain without saving mask
     command: /ROBEX/runROBEX.sh ${t1w} test_output/t1w_brain_only.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain_only.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_only.nii.gz
 
   # ==========================================================================
   # QUICKSHEAR - DEFACING
@@ -264,14 +264,14 @@ tests:
     command: quickshear ${t1w} test_output/t1w_brain_mask_robex.nii.gz test_output/t1w_defaced_quickshear.nii.gz
     depends_on: ROBEX brain extraction
     validate:
-      - output_exists: test_output/t1w_defaced_quickshear.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_quickshear.nii.gz
 
   - name: quickshear with buffer
     description: Test quickshear with custom buffer size
     command: quickshear ${t1w} test_output/t1w_brain_mask_robex.nii.gz test_output/t1w_defaced_buffer.nii.gz 15
     depends_on: ROBEX brain extraction
     validate:
-      - output_exists: test_output/t1w_defaced_buffer.nii.gz
+      - output_exists: ${output_dir}/t1w_defaced_buffer.nii.gz
 
   # ==========================================================================
   # DCM2NIIX4PET - PET TO BIDS CONVERSION
@@ -388,7 +388,7 @@ tests:
       cp ${bids_dataset}/README test_output/readme_copy.txt && \
       pigz -k test_output/readme_copy.txt
     validate:
-      - output_exists: test_output/readme_copy.txt.gz
+      - output_exists: ${output_dir}/readme_copy.txt.gz
 
   - name: detox version
     description: Verify detox filename sanitizer is available
@@ -461,7 +461,7 @@ tests:
       print('Saved float32 image')
       "
     validate:
-      - output_exists: test_output/t1w_float32.nii.gz
+      - output_exists: ${output_dir}/t1w_float32.nii.gz
 
   - name: nibabel threshold image
     description: Apply intensity threshold using nibabel
@@ -477,7 +477,7 @@ tests:
       print('Saved thresholded image')
       "
     validate:
-      - output_exists: test_output/t1w_thresholded.nii.gz
+      - output_exists: ${output_dir}/t1w_thresholded.nii.gz
 
   - name: nibabel create binary mask
     description: Create binary mask from T1w image
@@ -493,7 +493,7 @@ tests:
       print('Saved binary mask')
       "
     validate:
-      - output_exists: test_output/t1w_mask_nibabel.nii.gz
+      - output_exists: ${output_dir}/t1w_mask_nibabel.nii.gz
 
   - name: nibabel extract middle slice
     description: Extract statistics from middle slice
@@ -579,10 +579,10 @@ tests:
       flirt -in test_output/pipeline_brain.nii.gz -ref /usr/local/fsl/data/standard/MNI152_T1_2mm_brain.nii.gz -out test_output/pipeline_mni.nii.gz -dof 12 && \
       echo "Pipeline complete"
     validate:
-      - output_exists: test_output/pipeline_reoriented.nii.gz
-      - output_exists: test_output/pipeline_brain.nii.gz
-      - output_exists: test_output/pipeline_mask.nii.gz
-      - output_exists: test_output/pipeline_mni.nii.gz
+      - output_exists: ${output_dir}/pipeline_reoriented.nii.gz
+      - output_exists: ${output_dir}/pipeline_brain.nii.gz
+      - output_exists: ${output_dir}/pipeline_mask.nii.gz
+      - output_exists: ${output_dir}/pipeline_mni.nii.gz
 
   - name: Brain extraction and defacing pipeline
     description: Extract brain, then deface original using mask
@@ -591,9 +591,9 @@ tests:
       quickshear ${t1w} test_output/pipeline2_mask.nii.gz test_output/pipeline2_defaced.nii.gz && \
       echo "Defacing pipeline complete"
     validate:
-      - output_exists: test_output/pipeline2_brain.nii.gz
-      - output_exists: test_output/pipeline2_mask.nii.gz
-      - output_exists: test_output/pipeline2_defaced.nii.gz
+      - output_exists: ${output_dir}/pipeline2_brain.nii.gz
+      - output_exists: ${output_dir}/pipeline2_mask.nii.gz
+      - output_exists: ${output_dir}/pipeline2_defaced.nii.gz
 
   - name: Header comparison workflow
     description: Compare headers of original and processed images
@@ -644,13 +644,13 @@ tests:
     description: Force float output datatype in FLIRT
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_float.nii.gz -datatype float -dof 6
     validate:
-      - output_exists: test_output/t2_float.nii.gz
+      - output_exists: ${output_dir}/t2_float.nii.gz
 
   - name: flirt output datatype short
     description: Force short integer output datatype in FLIRT
     command: flirt -in ${t2} -ref ${t1w} -out test_output/t2_short.nii.gz -datatype short -dof 6
     validate:
-      - output_exists: test_output/t2_short.nii.gz
+      - output_exists: ${output_dir}/t2_short.nii.gz
 
   - name: verify output datatypes
     description: Verify datatype of processed images

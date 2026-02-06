@@ -221,9 +221,9 @@ tests:
       /opt/spm12/run.sh ${bids_dir} test_output/bidsappspm_participant participant \
         --participant_label 02 \
         --skip-bids-validator 2>&1
-    timeout: 1800000
+    timeout: 1800
     validate:
-      - output_exists: test_output/bidsappspm_participant/sub-02
+      - output_exists: ${output_dir}/bidsappspm_participant/sub-02
     tags: [long_running, preprocessing]
 
   - name: Verify realignment output
@@ -305,9 +305,9 @@ tests:
     command: |
       /opt/spm12/run.sh ${bids_dir} test_output/bidsappspm_participant group \
         --skip-bids-validator 2>&1
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/bidsappspm_participant/meanT1w.nii
+      - output_exists: ${output_dir}/bidsappspm_participant/meanT1w.nii
     tags: [long_running, group_analysis]
 
   - name: Verify group mean T1w
@@ -326,10 +326,10 @@ tests:
       /opt/spm12/run.sh ${bids_dir} test_output/bidsappspm_multi participant \
         --participant_label 02 03 \
         --skip-bids-validator 2>&1
-    timeout: 3600000
+    timeout: 3600
     validate:
-      - output_exists: test_output/bidsappspm_multi/sub-02
-      - output_exists: test_output/bidsappspm_multi/sub-03
+      - output_exists: ${output_dir}/bidsappspm_multi/sub-02
+      - output_exists: ${output_dir}/bidsappspm_multi/sub-03
     tags: [long_running, multi_subject]
 
   # ==========================================================================

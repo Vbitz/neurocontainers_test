@@ -69,55 +69,55 @@ tests:
   - name: BSE basic extraction
     description: Run BSE on T1w image for skull stripping
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz --mask test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz
 
   - name: BSE with auto parameters
     description: Run BSE with automatic parameter tuning
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_auto.nii.gz --auto -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_auto.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_auto.nii.gz
 
   - name: BSE with edge detection output
     description: Run BSE with edge map output
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_edge.nii.gz --edge test_output/bidsappbrainsuite/bse_output/t1w_edge.nii.gz -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_edge.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_edge.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_edge.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_edge.nii.gz
 
   - name: BSE with diffusion filter output
     description: Run BSE with anisotropic diffusion filter output
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_adf.nii.gz --adf test_output/bidsappbrainsuite/bse_output/t1w_adf.nii.gz -d 25 -n 3 -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_adf.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_adf.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_adf.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_adf.nii.gz
 
   - name: BSE with custom diffusion parameters
     description: Run BSE with custom diffusion constant and iterations
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_custom.nii.gz -d 30 -n 5 -s 0.7 -r 2 -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_custom.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_custom.nii.gz
 
   - name: BSE with brainstem trimming
     description: Run BSE with brainstem trimming option
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_trim.nii.gz --trim -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_trim.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_trim.nii.gz
 
   - name: BSE with high-resolution mask
     description: Run BSE with detailed brain mask output
     command: /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/bse_output/t1w_brain_hires.nii.gz --hires test_output/bidsappbrainsuite/bse_output/t1w_hires_mask.nii.gz -v 1
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_brain_hires.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/bse_output/t1w_hires_mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_brain_hires.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bse_output/t1w_hires_mask.nii.gz
 
   # ==========================================================================
   # BFC - BIAS FIELD CORRECTOR
@@ -131,66 +131,66 @@ tests:
     description: Run BFC on skull-stripped image
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz
 
   - name: BFC with bias field output
     description: Run BFC and save bias field estimate
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_bias.nii.gz --bias test_output/bidsappbrainsuite/bfc_output/t1w_bias.nii.gz -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_bias.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bias.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_bias.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bias.nii.gz
 
   - name: BFC with mask
     description: Run BFC with brain mask input
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_masked.nii.gz -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_masked.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_masked.nii.gz
 
   - name: BFC iterative mode
     description: Run BFC in iterative mode for severe artifacts
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_iter.nii.gz --iterate -v 1
     depends_on: BSE basic extraction
-    timeout: 600000
+    timeout: 600
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_iter.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_iter.nii.gz
 
   - name: BFC with ellipsoid ROI
     description: Run BFC using ellipsoid for ROI histogram
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_ellipse.nii.gz --ellipse -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_ellipse.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_ellipse.nii.gz
 
   - name: BFC with custom parameters
     description: Run BFC with custom histogram and control point spacing
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_custom.nii.gz -r 10 -s 12 -c 48 -w 0.0005 -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_custom.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_custom.nii.gz
 
   - name: BFC high bias model
     description: Run BFC with high bias model for strong artifacts
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_high.nii.gz --high -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_high.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_high.nii.gz
 
   - name: BFC with extrapolation
     description: Run BFC and extrapolate correction to entire volume
     command: /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/bse_output/t1w_brain.nii.gz -o test_output/bidsappbrainsuite/bfc_output/t1w_bfc_extrap.nii.gz --extrapolate -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/bfc_output/t1w_bfc_extrap.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/bfc_output/t1w_bfc_extrap.nii.gz
 
   # ==========================================================================
   # PVC - PARTIAL VOLUME CLASSIFIER
@@ -204,42 +204,42 @@ tests:
     description: Run PVC on bias-corrected image
     command: /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_pvc.label.nii.gz -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc.label.nii.gz
 
   - name: PVC with tissue fractions
     description: Run PVC with tissue fraction output
     command: /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_pvc_frac.label.nii.gz -f test_output/bidsappbrainsuite/pvc_output/t1w_pvc.frac.nii.gz -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc_frac.label.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc.frac.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc_frac.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc.frac.nii.gz
 
   - name: PVC with mask
     description: Run PVC with brain mask input
     command: /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_pvc_masked.label.nii.gz -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc_masked.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc_masked.label.nii.gz
 
   - name: PVC three-class labeling
     description: Run PVC with simplified three-class output (CSF/GM/WM)
     command: /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_pvc_3class.label.nii.gz -3 -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc_3class.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc_3class.label.nii.gz
 
   - name: PVC with custom spatial prior
     description: Run PVC with modified spatial prior strength
     command: /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_pvc_lambda.label.nii.gz -l 0.2 -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_pvc_lambda.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_pvc_lambda.label.nii.gz
 
   # ==========================================================================
   # SKULLFINDER - SKULL AND SCALP SEGMENTATION
@@ -253,25 +253,25 @@ tests:
     description: Run skullfinder for skull/scalp labeling
     command: /opt/BrainSuite21a/bin/skullfinder -i ${t1w} -o test_output/bidsappbrainsuite/mask_output/t1w_skull.label.nii.gz -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_skull.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_skull.label.nii.gz
 
   - name: Skullfinder with custom thresholds
     description: Run skullfinder with custom intensity thresholds
     command: /opt/BrainSuite21a/bin/skullfinder -i ${t1w} -o test_output/bidsappbrainsuite/mask_output/t1w_skull_thresh.label.nii.gz -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -l 20 -u 200 -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_skull_thresh.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_skull_thresh.label.nii.gz
 
   - name: Skullfinder with final opening
     description: Run skullfinder with final opening operation
     command: /opt/BrainSuite21a/bin/skullfinder -i ${t1w} -o test_output/bidsappbrainsuite/mask_output/t1w_skull_open.label.nii.gz -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz --finalOpening -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_skull_open.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_skull_open.label.nii.gz
 
   # ==========================================================================
   # TCA - TOPOLOGICAL CORRECTION ALGORITHM
@@ -285,25 +285,25 @@ tests:
     description: Run TCA to remove topological handles from mask
     command: /opt/BrainSuite21a/bin/tca -i test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_tca.mask.nii.gz -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_tca.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_tca.mask.nii.gz
 
   - name: TCA with custom correction size
     description: Run TCA with custom maximum correction size
     command: /opt/BrainSuite21a/bin/tca -i test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_tca_custom.mask.nii.gz -m 300 -n 2 -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_tca_custom.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_tca_custom.mask.nii.gz
 
   - name: TCA with delta
     description: Run TCA with foreground delta parameter
     command: /opt/BrainSuite21a/bin/tca -i test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_tca_delta.mask.nii.gz --delta 1 -v 1
     depends_on: BSE basic extraction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_tca_delta.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_tca_delta.mask.nii.gz
 
   # ==========================================================================
   # DEWISP - WISP REMOVAL
@@ -317,17 +317,17 @@ tests:
     description: Run dewisp to remove wisps from cortex mask
     command: /opt/BrainSuite21a/bin/dewisp -i test_output/bidsappbrainsuite/mask_output/t1w_tca.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_dewisp.mask.nii.gz -v 1
     depends_on: TCA basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_dewisp.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_dewisp.mask.nii.gz
 
   - name: Dewisp with custom threshold
     description: Run dewisp with custom size threshold
     command: /opt/BrainSuite21a/bin/dewisp -i test_output/bidsappbrainsuite/mask_output/t1w_tca.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_dewisp_custom.mask.nii.gz -t 20 -n 15 -v 1
     depends_on: TCA basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_dewisp_custom.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_dewisp_custom.mask.nii.gz
 
   # ==========================================================================
   # SCRUBMASK - MASK FILTERING
@@ -341,17 +341,17 @@ tests:
     description: Run scrubmask to filter binary mask
     command: /opt/BrainSuite21a/bin/scrubmask -i test_output/bidsappbrainsuite/mask_output/t1w_dewisp.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -v 1
     depends_on: Dewisp basic removal
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz
 
   - name: Scrubmask with custom parameters
     description: Run scrubmask with custom thresholds and iterations
     command: /opt/BrainSuite21a/bin/scrubmask -i test_output/bidsappbrainsuite/mask_output/t1w_dewisp.mask.nii.gz -o test_output/bidsappbrainsuite/mask_output/t1w_scrub_custom.mask.nii.gz -b 2 -f 2 -n 15 -v 1
     depends_on: Dewisp basic removal
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/mask_output/t1w_scrub_custom.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/mask_output/t1w_scrub_custom.mask.nii.gz
 
   # ==========================================================================
   # DFS - SURFACE GENERATOR
@@ -365,49 +365,49 @@ tests:
     description: Generate mesh surface from mask volume
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs -v 1
     depends_on: Scrubmask basic filtering
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_inner.dfs
 
   - name: DFS with smoothing
     description: Generate surface with custom smoothing parameters
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_inner_smooth.dfs -n 20 -a 0.4 -v 1
     depends_on: Scrubmask basic filtering
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_inner_smooth.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_inner_smooth.dfs
 
   - name: DFS with color mapping
     description: Generate surface with intensity coloring from volume
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_inner_color.dfs -c test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -v 1
     depends_on: Scrubmask basic filtering
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_inner_color.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_inner_color.dfs
 
   - name: DFS with curvature weighting
     description: Generate surface with curvature-weighted smoothing
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_inner_curv.dfs -w 0.5 -v 1
     depends_on: Scrubmask basic filtering
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_inner_curv.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_inner_curv.dfs
 
   - name: DFS with zero padding
     description: Generate surface with zero-padded volume (avoid edge clipping)
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/mask_output/t1w_scrub.mask.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_inner_zpad.dfs -z -v 1
     depends_on: Scrubmask basic filtering
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_inner_zpad.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_inner_zpad.dfs
 
   - name: DFS with threshold
     description: Generate surface from thresholded volume
     command: /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_thresh.dfs -gt 50 -v 1
     depends_on: BFC basic correction
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_thresh.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_thresh.dfs
 
   # ==========================================================================
   # CORTEX - CORTEX EXTRACTOR
@@ -453,17 +453,17 @@ tests:
     description: Run clustermap on PVC labels
     command: /opt/BrainSuite21a/bin/clustermap -i test_output/bidsappbrainsuite/pvc_output/t1w_pvc.frac.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_cluster_stats.txt -t 1.5 -n 5 -v 1
     depends_on: PVC with tissue fractions
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_cluster_stats.txt
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_cluster_stats.txt
 
   - name: Clustermap with label output
     description: Run clustermap with cluster label volume output
     command: /opt/BrainSuite21a/bin/clustermap -i test_output/bidsappbrainsuite/pvc_output/t1w_pvc.frac.nii.gz -o test_output/bidsappbrainsuite/pvc_output/t1w_cluster_stats2.txt -l test_output/bidsappbrainsuite/pvc_output/t1w_cluster.label.nii.gz -t 1.5 -v 1
     depends_on: PVC with tissue fractions
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pvc_output/t1w_cluster.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pvc_output/t1w_cluster.label.nii.gz
 
   # ==========================================================================
   # VOLSLICE - VOLUME SLICING AND VISUALIZATION
@@ -476,53 +476,53 @@ tests:
   - name: Volslice axial slice
     description: Generate axial slice image from T1w
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_axial.png --view 1 -v 1
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_axial.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_axial.png
 
   - name: Volslice coronal slice
     description: Generate coronal slice image from T1w
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_coronal.png --view 2 -v 1
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_coronal.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_coronal.png
 
   - name: Volslice sagittal slice
     description: Generate sagittal slice image from T1w
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_sagittal.png --view 3 -v 1
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_sagittal.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_sagittal.png
 
   - name: Volslice with specific slice
     description: Generate slice at specific position
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_slice50.png --view 1 --slice 50 -v 1
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_slice50.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_slice50.png
 
   - name: Volslice with colormap
     description: Generate slice with hot colormap
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_hot.png --view 1 -c hot -v 1
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_hot.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_hot.png
 
   - name: Volslice with label overlay
     description: Generate slice with label overlay
     command: /opt/BrainSuite21a/bin/volslice -i test_output/bidsappbrainsuite/bfc_output/t1w_bfc.nii.gz -o test_output/bidsappbrainsuite/surface_output/t1w_label_overlay.png -l test_output/bidsappbrainsuite/pvc_output/t1w_pvc.label.nii.gz --view 1 -v 1
     depends_on: PVC basic classification
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_label_overlay.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_label_overlay.png
 
   - name: Volslice with mask overlay
     description: Generate slice with mask overlay
     command: /opt/BrainSuite21a/bin/volslice -i ${t1w} -o test_output/bidsappbrainsuite/surface_output/t1w_mask_overlay.png -m test_output/bidsappbrainsuite/bse_output/t1w_brain.mask.nii.gz --view 1 --alpha 128 -v 1
     depends_on: BSE basic extraction
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_mask_overlay.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_mask_overlay.png
 
   # ==========================================================================
   # RENDERDFS - SURFACE RENDERING
@@ -536,65 +536,65 @@ tests:
     description: Render surface to PNG image
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_render.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_render.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_render.png
 
   - name: Renderdfs anterior view
     description: Render surface from anterior viewpoint
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_ant.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --ant -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_ant.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_ant.png
 
   - name: Renderdfs superior view
     description: Render surface from superior viewpoint
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_sup.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --sup -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_sup.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_sup.png
 
   - name: Renderdfs left sagittal view
     description: Render surface from left sagittal viewpoint
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_left.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --left -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_left.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_left.png
 
   - name: Renderdfs with rotation
     description: Render surface with custom rotation angles
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_rot.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --xrot 45 --yrot 30 -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_rot.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_rot.png
 
   - name: Renderdfs with zoom
     description: Render surface with zoom factor
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_zoom.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --zoom 1.5 -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_zoom.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_zoom.png
 
   - name: Renderdfs with custom background
     description: Render surface with white background
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_white_bg.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs --bg 255 255 255 -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_white_bg.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_white_bg.png
 
   - name: Renderdfs with custom resolution
     description: Render surface at higher resolution
     command: /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/surface_output/t1w_surface_hires.png -s test_output/bidsappbrainsuite/surface_output/t1w_inner.dfs -x 1024 -y 1024 -v 1
     depends_on: DFS basic surface generation
-    timeout: 120000
+    timeout: 120
     validate:
-      - output_exists: test_output/bidsappbrainsuite/surface_output/t1w_surface_hires.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/surface_output/t1w_surface_hires.png
 
   # ==========================================================================
   # SVREG - SURFACE AND VOLUME REGISTRATION
@@ -680,13 +680,13 @@ tests:
       /opt/BrainSuite21a/bin/bse -i ${t1w} -o test_output/bidsappbrainsuite/pipeline/t1w.bse.nii.gz --mask test_output/bidsappbrainsuite/pipeline/t1w.mask.nii.gz --auto -v 1 && \
       /opt/BrainSuite21a/bin/bfc -i test_output/bidsappbrainsuite/pipeline/t1w.bse.nii.gz -o test_output/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz -m test_output/bidsappbrainsuite/pipeline/t1w.mask.nii.gz -v 1 && \
       /opt/BrainSuite21a/bin/pvc -i test_output/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz -o test_output/bidsappbrainsuite/pipeline/t1w.pvc.label.nii.gz -f test_output/bidsappbrainsuite/pipeline/t1w.pvc.frac.nii.gz -v 1
-    timeout: 600000
+    timeout: 600
     setup_command: mkdir -p test_output/bidsappbrainsuite/pipeline
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.bse.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.pvc.label.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.pvc.frac.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.bse.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.pvc.label.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.pvc.frac.nii.gz
 
   - name: Full mask cleanup pipeline (TCA + Dewisp + Scrubmask)
     description: Run complete mask cleanup sequence
@@ -695,11 +695,11 @@ tests:
       /opt/BrainSuite21a/bin/dewisp -i test_output/bidsappbrainsuite/pipeline/t1w.tca.mask.nii.gz -o test_output/bidsappbrainsuite/pipeline/t1w.dewisp.mask.nii.gz -v 1 && \
       /opt/BrainSuite21a/bin/scrubmask -i test_output/bidsappbrainsuite/pipeline/t1w.dewisp.mask.nii.gz -o test_output/bidsappbrainsuite/pipeline/t1w.cortex.mask.nii.gz -v 1
     depends_on: Full CSE pipeline (BSE + BFC + PVC)
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.tca.mask.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.dewisp.mask.nii.gz
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.cortex.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.tca.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.dewisp.mask.nii.gz
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.cortex.mask.nii.gz
 
   - name: Surface generation pipeline
     description: Generate inner cortical surface from cleaned mask
@@ -707,10 +707,10 @@ tests:
       /opt/BrainSuite21a/bin/dfs -i test_output/bidsappbrainsuite/pipeline/t1w.cortex.mask.nii.gz -o test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs -n 15 -a 0.5 -v 1 && \
       /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.png -s test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs --left -v 1
     depends_on: Full mask cleanup pipeline (TCA + Dewisp + Scrubmask)
-    timeout: 300000
+    timeout: 300
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs
-      - output_exists: test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/t1w.inner.cortex.png
 
   # ==========================================================================
   # QC VISUALIZATION PIPELINE
@@ -722,11 +722,11 @@ tests:
       /opt/BrainSuite21a/bin/volslice -i test_output/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz -o test_output/bidsappbrainsuite/pipeline/qc_coronal.png -l test_output/bidsappbrainsuite/pipeline/t1w.pvc.label.nii.gz --view 2 --labelalpha 100 -v 1 && \
       /opt/BrainSuite21a/bin/volslice -i test_output/bidsappbrainsuite/pipeline/t1w.bfc.nii.gz -o test_output/bidsappbrainsuite/pipeline/qc_sagittal.png -l test_output/bidsappbrainsuite/pipeline/t1w.pvc.label.nii.gz --view 3 --labelalpha 100 -v 1
     depends_on: Full CSE pipeline (BSE + BFC + PVC)
-    timeout: 180000
+    timeout: 180
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_axial.png
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_coronal.png
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_sagittal.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_axial.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_coronal.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_sagittal.png
 
   - name: Surface QC multi-view
     description: Generate surface QC images from multiple viewpoints
@@ -736,12 +736,12 @@ tests:
       /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/pipeline/qc_surface_sup.png -s test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs --sup --bg 255 255 255 -v 1 && \
       /opt/BrainSuite21a/bin/renderdfs -o test_output/bidsappbrainsuite/pipeline/qc_surface_ant.png -s test_output/bidsappbrainsuite/pipeline/t1w.inner.cortex.dfs --ant --bg 255 255 255 -v 1
     depends_on: Surface generation pipeline
-    timeout: 180000
+    timeout: 180
     validate:
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_surface_left.png
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_surface_right.png
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_surface_sup.png
-      - output_exists: test_output/bidsappbrainsuite/pipeline/qc_surface_ant.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_surface_left.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_surface_right.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_surface_sup.png
+      - output_exists: ${output_dir}/bidsappbrainsuite/pipeline/qc_surface_ant.png
 
 cleanup:
   script: |

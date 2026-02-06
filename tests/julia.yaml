@@ -478,7 +478,7 @@ tests:
     description: Test writedlm function
     command: julia -e 'using DelimitedFiles; writedlm("test_output/test_data.csv", [1 2 3; 4 5 6], ","); println("written")'
     validate:
-      - output_exists: test_output/test_data.csv
+      - output_exists: ${output_dir}/test_data.csv
 
   - name: Read delimited file
     description: Test readdlm function
@@ -552,7 +552,7 @@ tests:
     description: Test serialize function
     command: julia -e 'using Serialization; open("test_output/data.jls", "w") do f; serialize(f, [1, 2, 3]); end; println("serialized")'
     validate:
-      - output_exists: test_output/data.jls
+      - output_exists: ${output_dir}/data.jls
 
   - name: Deserialize data
     description: Test deserialize function
@@ -672,7 +672,7 @@ tests:
     description: Test basic file writing
     command: julia -e 'open("test_output/hello.txt", "w") do f; write(f, "Hello Julia"); end; println("written")'
     validate:
-      - output_exists: test_output/hello.txt
+      - output_exists: ${output_dir}/hello.txt
 
   - name: Read text file
     description: Test basic file reading

@@ -129,26 +129,26 @@ tests:
     description: Convert NIfTI input to FreeSurfer MGZ format
     command: mri_convert ${t2} test_output/t2_converted.mgz
     validate:
-      - output_exists: test_output/t2_converted.mgz
+      - output_exists: ${output_dir}/t2_converted.mgz
 
   - name: mri_convert MGZ to NIfTI
     description: Convert MGZ back to NIfTI format
     command: mri_convert test_output/t2_converted.mgz test_output/t2_roundtrip.nii.gz
     depends_on: mri_convert NIfTI to MGZ
     validate:
-      - output_exists: test_output/t2_roundtrip.nii.gz
+      - output_exists: ${output_dir}/t2_roundtrip.nii.gz
 
   - name: mri_convert with resampling
     description: Resample image to 2mm isotropic
     command: mri_convert -vs 2 2 2 ${t2} test_output/t2_2mm.nii.gz
     validate:
-      - output_exists: test_output/t2_2mm.nii.gz
+      - output_exists: ${output_dir}/t2_2mm.nii.gz
 
   - name: mri_convert conform
     description: Conform image to FreeSurfer standard (256x256x256, 1mm)
     command: mri_convert --conform ${t2} test_output/t2_conformed.mgz
     validate:
-      - output_exists: test_output/t2_conformed.mgz
+      - output_exists: ${output_dir}/t2_conformed.mgz
 
   # ==========================================================================
   # FREESURFER IMAGE INFORMATION
@@ -390,7 +390,7 @@ tests:
     description: Binarize image with threshold
     command: mri_binarize --i ${t2} --min 50 --o test_output/t2_binarized.nii.gz
     validate:
-      - output_exists: test_output/t2_binarized.nii.gz
+      - output_exists: ${output_dir}/t2_binarized.nii.gz
 
   - name: mri_mask help
     description: Check volume masking tool
@@ -493,7 +493,7 @@ tests:
       mri_convert --conform ${t2} test_output/t2_conform_check.mgz && \
       mri_info --conformed test_output/t2_conform_check.mgz
     validate:
-      - output_exists: test_output/t2_conform_check.mgz
+      - output_exists: ${output_dir}/t2_conform_check.mgz
 
   - name: Create simple brain mask
     description: Create binary mask using intensity threshold
@@ -501,14 +501,14 @@ tests:
       mri_binarize --i ${t2} --min 30 --o test_output/t2_mask_simple.nii.gz && \
       mri_info test_output/t2_mask_simple.nii.gz
     validate:
-      - output_exists: test_output/t2_mask_simple.nii.gz
+      - output_exists: ${output_dir}/t2_mask_simple.nii.gz
 
   - name: Apply mask to image
     description: Apply binary mask to input image
     command: mri_mask ${t2} test_output/t2_mask_simple.nii.gz test_output/t2_masked.nii.gz
     depends_on: Create simple brain mask
     validate:
-      - output_exists: test_output/t2_masked.nii.gz
+      - output_exists: ${output_dir}/t2_masked.nii.gz
 
   # ==========================================================================
   # FREESURFER LONGITUDINAL TOOLS
@@ -572,19 +572,19 @@ tests:
     description: Convert to standard NIfTI format
     command: mri_convert --out_type nii ${t2} test_output/t2_nifti.nii
     validate:
-      - output_exists: test_output/t2_nifti.nii
+      - output_exists: ${output_dir}/t2_nifti.nii
 
   - name: mri_convert to compressed NIFTI
     description: Convert to compressed NIfTI format
     command: mri_convert --out_type nii.gz ${t2} test_output/t2_nifti_gz.nii.gz
     validate:
-      - output_exists: test_output/t2_nifti_gz.nii.gz
+      - output_exists: ${output_dir}/t2_nifti_gz.nii.gz
 
   - name: mri_convert to analyze
     description: Convert to Analyze format
     command: mri_convert --out_type analyze ${t2} test_output/t2_analyze.img
     validate:
-      - output_exists: test_output/t2_analyze.img
+      - output_exists: ${output_dir}/t2_analyze.img
 
   # ==========================================================================
   # RESAMPLING AND INTERPOLATION
@@ -593,13 +593,13 @@ tests:
     description: Resample with trilinear interpolation
     command: mri_convert -vs 1.5 1.5 1.5 -rt interpolate ${t2} test_output/t2_trilinear.nii.gz
     validate:
-      - output_exists: test_output/t2_trilinear.nii.gz
+      - output_exists: ${output_dir}/t2_trilinear.nii.gz
 
   - name: mri_convert nearest neighbor
     description: Resample with nearest neighbor interpolation
     command: mri_convert -vs 2 2 2 -rt nearest ${t2} test_output/t2_nearest.nii.gz
     validate:
-      - output_exists: test_output/t2_nearest.nii.gz
+      - output_exists: ${output_dir}/t2_nearest.nii.gz
 
   # ==========================================================================
   # COMPLEX PIPELINE TESTS
@@ -611,15 +611,15 @@ tests:
       mri_binarize --i test_output/chain_conformed.mgz --min 20 --o test_output/chain_mask.mgz && \
       mri_mask test_output/chain_conformed.mgz test_output/chain_mask.mgz test_output/chain_masked.mgz
     validate:
-      - output_exists: test_output/chain_conformed.mgz
-      - output_exists: test_output/chain_mask.mgz
-      - output_exists: test_output/chain_masked.mgz
+      - output_exists: ${output_dir}/chain_conformed.mgz
+      - output_exists: ${output_dir}/chain_mask.mgz
+      - output_exists: ${output_dir}/chain_masked.mgz
 
   - name: Image statistics extraction
     description: Extract basic statistics from image
     command: mri_segstats --i ${t2} --sum test_output/t2_stats.txt --avgwf test_output/t2_avgwf.txt
     validate:
-      - output_exists: test_output/t2_stats.txt
+      - output_exists: ${output_dir}/t2_stats.txt
 
   # ==========================================================================
   # FREESURFER CORTICAL RECONSTRUCTION CHECKS

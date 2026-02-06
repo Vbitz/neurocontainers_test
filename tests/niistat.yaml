@@ -493,7 +493,7 @@ tests:
       " 2>&1
     expected_output_contains: "Mask created successfully"
     validate:
-      - output_exists: test_output/t1w_mask.nii
+      - output_exists: ${output_dir}/t1w_mask.nii
 
   - name: Extract ROI statistics
     description: Test extracting mean value from image using mask

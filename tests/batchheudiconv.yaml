@@ -340,7 +340,7 @@ tests:
     description: Extract a central region from T2 image
     command: nib-roi -i 40:100 -j 40:100 -k 10:25 ${t2} test_output/nibabel_out/t2_roi_central.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_roi_central.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_roi_central.nii.gz
 
   - name: nib-roi verify extracted dimensions
     description: Verify the dimensions of extracted ROI
@@ -352,13 +352,13 @@ tests:
     description: Extract a single slice along k dimension
     command: nib-roi -k 15:16 ${t2} test_output/nibabel_out/t2_single_slice.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_single_slice.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_single_slice.nii.gz
 
   - name: nib-roi extract temporal subset
     description: Extract first 10 timepoints from BOLD
     command: nib-roi -t 0:10 ${bold} test_output/nibabel_out/bold_first10.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_first10.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_first10.nii.gz
 
   - name: nib-roi verify temporal subset
     description: Verify BOLD temporal subset has 10 volumes
@@ -370,25 +370,25 @@ tests:
     description: Extract last 20 timepoints from BOLD
     command: nib-roi -t 280:300 ${bold} test_output/nibabel_out/bold_last20.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_last20.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_last20.nii.gz
 
   - name: nib-roi flip i axis
     description: Extract ROI with flipped i axis
     command: nib-roi -i 0:64:-1 ${bold} test_output/nibabel_out/bold_flip_i.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_flip_i.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_flip_i.nii.gz
 
   - name: nib-roi spatial and temporal crop
     description: Extract spatial and temporal subset from BOLD
     command: nib-roi -i 10:50 -j 10:50 -k 5:28 -t 10:20 ${bold} test_output/nibabel_out/bold_cropped.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_cropped.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_cropped.nii.gz
 
   - name: nib-roi middle timepoints
     description: Extract middle portion of BOLD time series
     command: nib-roi -t 100:200 ${bold} test_output/nibabel_out/bold_middle.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_middle.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_middle.nii.gz
 
   # ==========================================================================
   # NIBABEL - nib-conform (Image conforming)
@@ -397,13 +397,13 @@ tests:
     description: Conform T2 to default shape and voxel size
     command: nib-conform ${t2} test_output/nibabel_out/t2_conformed.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_conformed.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_conformed.nii.gz
 
   - name: nib-conform custom shape
     description: Conform T2 to custom shape (128x128x64)
     command: nib-conform --out-shape 128 128 64 ${t2} test_output/nibabel_out/t2_128cube.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_128cube.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_128cube.nii.gz
 
   - name: nib-conform verify custom shape
     description: Verify conformed image has correct dimensions
@@ -415,31 +415,31 @@ tests:
     description: Conform T2 to 2mm isotropic voxels
     command: nib-conform --voxel-size 2.0 2.0 2.0 ${t2} test_output/nibabel_out/t2_2mm.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_2mm.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_2mm.nii.gz
 
   - name: nib-conform RAS orientation
     description: Conform T2 to RAS orientation
     command: nib-conform --orientation RAS ${t2} test_output/nibabel_out/t2_ras.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_ras.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_ras.nii.gz
 
   - name: nib-conform LPI orientation
     description: Conform T2 to LPI orientation
     command: nib-conform --orientation LPI ${t2} test_output/nibabel_out/t2_lpi.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_lpi.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_lpi.nii.gz
 
   - name: nib-conform custom shape and voxel size
     description: Conform T2 to custom shape and voxel size
     command: nib-conform --out-shape 96 96 48 --voxel-size 2.0 2.0 2.0 ${t2} test_output/nibabel_out/t2_custom.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_custom.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_custom.nii.gz
 
   - name: nib-conform 1mm isotropic
     description: Conform T2 to 1mm isotropic voxels
     command: nib-conform --voxel-size 1.0 1.0 1.0 ${t2} test_output/nibabel_out/t2_1mm_iso.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_1mm_iso.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_1mm_iso.nii.gz
 
   # ==========================================================================
   # NIBABEL - nib-convert (Image format conversion)
@@ -448,43 +448,43 @@ tests:
     description: Convert T2 to float32 data type
     command: nib-convert --out-dtype float32 ${t2} test_output/nibabel_out/t2_float32.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_float32.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_float32.nii.gz
 
   - name: nib-convert to uint8
     description: Convert T2 to uint8 data type
     command: nib-convert --out-dtype uint8 ${t2} test_output/nibabel_out/t2_uint8.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_uint8.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_uint8.nii.gz
 
   - name: nib-convert to int16
     description: Convert T2 to int16 data type
     command: nib-convert --out-dtype int16 ${t2} test_output/nibabel_out/t2_int16.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_int16.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_int16.nii.gz
 
   - name: nib-convert to int32
     description: Convert T2 to int32 data type
     command: nib-convert --out-dtype int32 ${t2} test_output/nibabel_out/t2_int32.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_int32.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_int32.nii.gz
 
   - name: nib-convert to float64
     description: Convert T2 to float64 data type
     command: nib-convert --out-dtype float64 ${t2} test_output/nibabel_out/t2_float64.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_float64.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_float64.nii.gz
 
   - name: nib-convert BOLD to float32
     description: Convert BOLD to float32 data type
     command: nib-convert --out-dtype float32 ${bold} test_output/nibabel_out/bold_float32.nii.gz -f
     validate:
-      - output_exists: test_output/nibabel_out/bold_float32.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_float32.nii.gz
 
   - name: nib-convert to uncompressed nii
     description: Convert T2 to uncompressed NIfTI format
     command: nib-convert ${t2} test_output/nibabel_out/t2_uncompressed.nii -f
     validate:
-      - output_exists: test_output/nibabel_out/t2_uncompressed.nii
+      - output_exists: ${output_dir}/nibabel_out/t2_uncompressed.nii
 
   - name: nib-convert verify float32 type
     description: Verify converted image has float32 type
@@ -571,7 +571,7 @@ tests:
       nib-ls -s test_output/nibabel_out/t2_brain_roi.nii.gz && \
       nib-nifti-dx test_output/nibabel_out/t2_brain_roi.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_brain_roi.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_brain_roi.nii.gz
 
   - name: Image reorientation pipeline
     description: Conform image and verify orientation
@@ -580,7 +580,7 @@ tests:
       nib-ls test_output/nibabel_out/t2_ras_pipe.nii.gz && \
       nib-nifti-dx test_output/nibabel_out/t2_ras_pipe.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_ras_pipe.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_ras_pipe.nii.gz
 
   - name: BOLD preprocessing ROI workflow
     description: Extract temporal and spatial subset from BOLD data
@@ -588,7 +588,7 @@ tests:
       nib-roi -t 50:100 ${bold} test_output/nibabel_out/bold_subset.nii.gz && \
       nib-ls -s test_output/nibabel_out/bold_subset.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_subset.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_subset.nii.gz
 
   - name: Format conversion pipeline
     description: Convert and verify data type changes
@@ -596,7 +596,7 @@ tests:
       nib-convert --out-dtype float32 ${t2} test_output/nibabel_out/t2_f32_pipe.nii.gz -f && \
       nib-ls test_output/nibabel_out/t2_f32_pipe.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_f32_pipe.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_f32_pipe.nii.gz
     expected_output_contains: "float32"
 
   - name: Isotropic resampling pipeline
@@ -605,7 +605,7 @@ tests:
       nib-conform --voxel-size 1.0 1.0 1.0 ${t2} test_output/nibabel_out/t2_1mm_pipe.nii.gz -f && \
       nib-ls test_output/nibabel_out/t2_1mm_pipe.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/t2_1mm_pipe.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/t2_1mm_pipe.nii.gz
     expected_output_contains: "1.00x1.00x1.00"
 
   - name: Complete BOLD temporal extraction workflow
@@ -616,9 +616,9 @@ tests:
       nib-roi -t 250:300 ${bold} test_output/nibabel_out/bold_late.nii.gz && \
       nib-ls test_output/nibabel_out/bold_early.nii.gz test_output/nibabel_out/bold_mid.nii.gz test_output/nibabel_out/bold_late.nii.gz
     validate:
-      - output_exists: test_output/nibabel_out/bold_early.nii.gz
-      - output_exists: test_output/nibabel_out/bold_mid.nii.gz
-      - output_exists: test_output/nibabel_out/bold_late.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_early.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_mid.nii.gz
+      - output_exists: ${output_dir}/nibabel_out/bold_late.nii.gz
 
   # ==========================================================================
   # PYTHON SCRIPTING INTEGRATION

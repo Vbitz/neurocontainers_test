@@ -728,41 +728,41 @@ tests:
     command: Rscript -e "write.csv(mtcars, 'test_output/mtcars.csv'); d <- read.csv('test_output/mtcars.csv'); print(nrow(d))"
     expected_output_contains: "32"
     validate:
-      - output_exists: test_output/mtcars.csv
+      - output_exists: ${output_dir}/mtcars.csv
 
   - name: RDS save and load
     description: Test saving and loading RDS files
     command: Rscript -e "saveRDS(iris, 'test_output/iris.rds'); d <- readRDS('test_output/iris.rds'); print(nrow(d))"
     expected_output_contains: "150"
     validate:
-      - output_exists: test_output/iris.rds
+      - output_exists: ${output_dir}/iris.rds
 
   - name: PNG graphics output
     description: Test PNG graphics device
     command: Rscript -e "png('test_output/plot.png'); plot(1:10); dev.off(); print('done')"
     expected_output_contains: "done"
     validate:
-      - output_exists: test_output/plot.png
+      - output_exists: ${output_dir}/plot.png
 
   - name: PDF graphics output
     description: Test PDF graphics device
     command: Rscript -e "pdf('test_output/plot.pdf'); plot(1:10); dev.off(); print('done')"
     expected_output_contains: "done"
     validate:
-      - output_exists: test_output/plot.pdf
+      - output_exists: ${output_dir}/plot.pdf
 
   - name: ggplot2 save
     description: Test ggplot2 ggsave functionality
     command: Rscript -e "library(ggplot2); p <- ggplot(mtcars, aes(wt, mpg)) + geom_point(); ggsave('test_output/ggplot.png', p, width=6, height=4)"
     validate:
-      - output_exists: test_output/ggplot.png
+      - output_exists: ${output_dir}/ggplot.png
 
   - name: JSON write
     description: Test JSON file output
     command: Rscript -e "library(jsonlite); write_json(list(a=1, b=2), 'test_output/data.json'); print('done')"
     expected_output_contains: "done"
     validate:
-      - output_exists: test_output/data.json
+      - output_exists: ${output_dir}/data.json
 
   # ==========================================================================
   # DATA ANALYSIS WORKFLOWS

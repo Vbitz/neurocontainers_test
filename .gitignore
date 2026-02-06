@@ -2,3 +2,6 @@ ds*/
 test_*/
 containers
 __pycache__/
+results/
+test_results.jsonl
+work/

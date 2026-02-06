@@ -133,84 +133,84 @@ tests:
     description: Run bet2 on T1w image with default settings
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain
     validate:
-      - output_exists: test_output/t1w_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_brain.nii.gz
 
   - name: bet2 with mask output
     description: Run bet2 with binary mask output
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_mask -m
     validate:
-      - output_exists: test_output/t1w_brain_mask.nii.gz
-      - output_exists: test_output/t1w_brain_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask_mask.nii.gz
 
   - name: bet2 with fractional threshold 0.3
     description: Run bet2 with lower threshold for larger brain estimate
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_f03 -f 0.3
     validate:
-      - output_exists: test_output/t1w_brain_f03.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_f03.nii.gz
 
   - name: bet2 with fractional threshold 0.7
     description: Run bet2 with higher threshold for smaller brain estimate
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_f07 -f 0.7
     validate:
-      - output_exists: test_output/t1w_brain_f07.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_f07.nii.gz
 
   - name: bet2 with outline
     description: Run bet2 with brain surface outline output
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_outline -o
     validate:
-      - output_exists: test_output/t1w_brain_outline.nii.gz
-      - output_exists: test_output/t1w_brain_outline_overlay.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_outline.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_outline_overlay.nii.gz
 
   - name: bet2 with skull estimation
     description: Run bet2 with approximate skull image output
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_skull -s
     validate:
-      - output_exists: test_output/t1w_brain_skull.nii.gz
-      - output_exists: test_output/t1w_brain_skull_skull.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_skull.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_skull_skull.nii.gz
 
   - name: bet2 mask only no brain output
     description: Run bet2 with only mask output, no brain image
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_maskonly -m -n
     validate:
-      - output_exists: test_output/t1w_maskonly_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_maskonly_mask.nii.gz
 
   - name: bet2 with mesh output
     description: Run bet2 with VTK mesh output
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_mesh -e
     validate:
-      - output_exists: test_output/t1w_brain_mesh.nii.gz
-      - output_exists: test_output/t1w_brain_mesh_mesh.vtk
+      - output_exists: ${output_dir}/t1w_brain_mesh.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mesh_mesh.vtk
 
   - name: bet2 with gradient
     description: Run bet2 with vertical gradient adjustment
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_grad -g 0.1
     validate:
-      - output_exists: test_output/t1w_brain_grad.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_grad.nii.gz
 
   - name: bet2 with smoothness factor
     description: Run bet2 with adjusted smoothness
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_smooth -w 0.5
     validate:
-      - output_exists: test_output/t1w_brain_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_smooth.nii.gz
 
   - name: bet2 with thresholding
     description: Run bet2 with thresholding applied
     command: /bet2/bin/bet2 ${t1w} test_output/t1w_brain_thr -t
     validate:
-      - output_exists: test_output/t1w_brain_thr.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_thr.nii.gz
 
   - name: bet2 on inplane T2
     description: Run bet2 on T2-weighted image
     command: /bet2/bin/bet2 ${t2} test_output/t2_brain
     validate:
-      - output_exists: test_output/t2_brain.nii.gz
+      - output_exists: ${output_dir}/t2_brain.nii.gz
 
   - name: bet2 on T2 with mask
     description: Run bet2 on T2-weighted image with mask output
     command: /bet2/bin/bet2 ${t2} test_output/t2_brain_mask -m
     validate:
-      - output_exists: test_output/t2_brain_mask.nii.gz
-      - output_exists: test_output/t2_brain_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t2_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t2_brain_mask_mask.nii.gz
 
   # ==========================================================================
   # DCM2NIIX (DICOM TO NIFTI CONVERSION)
@@ -350,7 +350,7 @@ new_img.to_filename('test_output/synthetic_phase.nii.gz')
 print('Synthetic phase created')
 "
     validate:
-      - output_exists: test_output/synthetic_phase.nii.gz
+      - output_exists: ${output_dir}/synthetic_phase.nii.gz
 
   - name: Create mask from bet2 output
     description: Ensure mask is available for tgv_qsm tests
@@ -360,7 +360,7 @@ print('Synthetic phase created')
       fi
       ls test_output/t1w_brain_mask_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_brain_mask_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_brain_mask_mask.nii.gz
 
   - name: tgv_qsm basic reconstruction
     description: Run tgv_qsm with minimal iterations for testing
@@ -379,7 +379,7 @@ print('Synthetic phase created')
         --ignore-orientation \
         -v
     validate:
-      - output_exists: test_output/qsm_basic_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_basic_qsm_recon000.nii.gz
 
   - name: tgv_qsm with rescale phase
     description: Run tgv_qsm with phase rescaling option
@@ -398,7 +398,7 @@ print('Synthetic phase created')
         --ignore-orientation \
         -s
     validate:
-      - output_exists: test_output/qsm_rescale_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_rescale_qsm_recon000.nii.gz
 
   - name: tgv_qsm with custom alpha
     description: Run tgv_qsm with custom regularization parameters
@@ -417,7 +417,7 @@ print('Synthetic phase created')
         -o test_output/qsm_alpha \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_alpha_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_alpha_qsm_recon000.nii.gz
 
   - name: tgv_qsm with factors
     description: Run tgv_qsm with scaling factors for regularization
@@ -436,9 +436,9 @@ print('Synthetic phase created')
         -o test_output/qsm_factors \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_factors_qsm_recon000.nii.gz
-      - output_exists: test_output/qsm_factors_qsm_recon001.nii.gz
-      - output_exists: test_output/qsm_factors_qsm_recon002.nii.gz
+      - output_exists: ${output_dir}/qsm_factors_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_factors_qsm_recon001.nii.gz
+      - output_exists: ${output_dir}/qsm_factors_qsm_recon002.nii.gz
 
   - name: tgv_qsm with more iterations
     description: Run tgv_qsm with multiple iteration counts
@@ -456,8 +456,8 @@ print('Synthetic phase created')
         -o test_output/qsm_iter \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_iter_qsm_recon000.nii.gz
-      - output_exists: test_output/qsm_iter_qsm_recon001.nii.gz
+      - output_exists: ${output_dir}/qsm_iter_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_iter_qsm_recon001.nii.gz
 
   - name: tgv_qsm with laplacian save
     description: Run tgv_qsm saving initial laplacian
@@ -476,7 +476,7 @@ print('Synthetic phase created')
         --save-laplacian \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_lap_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_lap_qsm_recon000.nii.gz
 
   - name: tgv_qsm with physical output
     description: Run tgv_qsm with physical space output (no resampling back)
@@ -495,7 +495,7 @@ print('Synthetic phase created')
         --output-physical \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_phys_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_phys_qsm_recon000.nii.gz
 
   - name: tgv_qsm 1.5T field strength
     description: Run tgv_qsm with 1.5T field strength
@@ -513,7 +513,7 @@ print('Synthetic phase created')
         -o test_output/qsm_15t \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_15t_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_15t_qsm_recon000.nii.gz
 
   - name: tgv_qsm 7T field strength
     description: Run tgv_qsm with 7T field strength
@@ -531,7 +531,7 @@ print('Synthetic phase created')
         -o test_output/qsm_7t \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_7t_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_7t_qsm_recon000.nii.gz
 
   - name: tgv_qsm no erosions
     description: Run tgv_qsm without mask erosions
@@ -549,7 +549,7 @@ print('Synthetic phase created')
         -o test_output/qsm_noero \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_noero_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_noero_qsm_recon000.nii.gz
 
   - name: tgv_qsm many erosions
     description: Run tgv_qsm with more mask erosions
@@ -567,7 +567,7 @@ print('Synthetic phase created')
         -o test_output/qsm_manyero \
         --ignore-orientation
     validate:
-      - output_exists: test_output/qsm_manyero_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/qsm_manyero_qsm_recon000.nii.gz
 
   # ==========================================================================
   # INTEGRATION / PIPELINE TESTS
@@ -576,8 +576,8 @@ print('Synthetic phase created')
     description: First step of QSM pipeline - extract brain from magnitude
     command: /bet2/bin/bet2 ${t1w} test_output/pipeline_magnitude_bet -m -f 0.4
     validate:
-      - output_exists: test_output/pipeline_magnitude_bet.nii.gz
-      - output_exists: test_output/pipeline_magnitude_bet_mask.nii.gz
+      - output_exists: ${output_dir}/pipeline_magnitude_bet.nii.gz
+      - output_exists: ${output_dir}/pipeline_magnitude_bet_mask.nii.gz
 
   - name: Full QSM pipeline - create phase
     description: Second step - create synthetic phase for testing
@@ -594,7 +594,7 @@ new_img = nib.Nifti1Image(data, img.affine, img.header)
 new_img.to_filename('test_output/pipeline_phase.nii.gz')
 "
     validate:
-      - output_exists: test_output/pipeline_phase.nii.gz
+      - output_exists: ${output_dir}/pipeline_phase.nii.gz
 
   - name: Full QSM pipeline - QSM reconstruction
     description: Final step - run tgv_qsm reconstruction
@@ -611,7 +611,7 @@ new_img.to_filename('test_output/pipeline_phase.nii.gz')
         --ignore-orientation \
         -v
     validate:
-      - output_exists: test_output/pipeline_qsm_qsm_recon000.nii.gz
+      - output_exists: ${output_dir}/pipeline_qsm_qsm_recon000.nii.gz
 
   - name: Inspect QSM output with nib-ls
     description: Use nibabel to inspect QSM reconstruction output

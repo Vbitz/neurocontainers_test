@@ -741,7 +741,7 @@ tests:
       print('ASCII save/load test passed')
       "
     validate:
-      - output_exists: test_output/test_data.txt
+      - output_exists: ${output_dir}/test_data.txt
     expected_output_contains: "ASCII save/load test passed"
 
   - name: Test fileio save and load
@@ -757,7 +757,7 @@ tests:
       print('fileio save/load test passed')
       "
     validate:
-      - output_exists: test_output/test_generic.txt
+      - output_exists: ${output_dir}/test_generic.txt
     expected_output_contains: "fileio save/load test passed"
 
   # ==========================================================================
@@ -865,10 +865,10 @@ tests:
       print('Data workflow test passed')
       "
     validate:
-      - output_exists: test_output/cov_train.txt
-      - output_exists: test_output/resp_train.txt
-      - output_exists: test_output/cov_test.txt
-      - output_exists: test_output/resp_test.txt
+      - output_exists: ${output_dir}/cov_train.txt
+      - output_exists: ${output_dir}/resp_train.txt
+      - output_exists: ${output_dir}/cov_test.txt
+      - output_exists: ${output_dir}/resp_test.txt
     expected_output_contains: "Data workflow test passed"
 
 cleanup:

@@ -87,7 +87,7 @@ tests:
     description: Run the main Robinson et al. corticothalamic model (EIRS - Excitatory, Inhibitory, Reticular, Relay)
     command: nftsim -i ${eirs_corticothalamic} -o test_output/eirs-corticothalamic.output
     validate:
-      - output_exists: test_output/eirs-corticothalamic.output
+      - output_exists: ${output_dir}/eirs-corticothalamic.output
 
   - name: Verify EIRS output contains time series
     description: Check that the output contains simulation time series data
@@ -99,37 +99,37 @@ tests:
     description: Run EIRS model with burst dynamics configuration
     command: nftsim -i ${eirs_burst} -o test_output/eirs-burst.output
     validate:
-      - output_exists: test_output/eirs-burst.output
+      - output_exists: ${output_dir}/eirs-burst.output
 
   - name: EIRS AERP simulation
     description: Run EIRS model for Auditory Evoked Response Potential simulation
     command: nftsim -i ${eirs_aerp} -o test_output/eirs-aerp.output
     validate:
-      - output_exists: test_output/eirs-aerp.output
+      - output_exists: ${output_dir}/eirs-aerp.output
 
   - name: EIRS TMS simulation
     description: Run EIRS model with TMS (Transcranial Magnetic Stimulation) configuration
     command: nftsim -i ${eirs_tms} -o test_output/eirs-tms.output
     validate:
-      - output_exists: test_output/eirs-tms.output
+      - output_exists: ${output_dir}/eirs-tms.output
 
   - name: EIRS coupling ramp
     description: Run EIRS model with ramp coupling dynamics
     command: nftsim -i ${eirs_coupling_ramp} -o test_output/eirs-coupling-ramp.output
     validate:
-      - output_exists: test_output/eirs-coupling-ramp.output
+      - output_exists: ${output_dir}/eirs-coupling-ramp.output
 
   - name: EIRS dendrite integral
     description: Run EIRS model with dendrite integral dynamics
     command: nftsim -i ${eirs_dendrite_integral} -o test_output/eirs-dendrite-integral.output
     validate:
-      - output_exists: test_output/eirs-dendrite-integral.output
+      - output_exists: ${output_dir}/eirs-dendrite-integral.output
 
   - name: EMIRS simulation
     description: Run EMIRS model (Extended EIRS with additional population)
     command: nftsim -i ${emirs} -o test_output/emirs.output
     validate:
-      - output_exists: test_output/emirs.output
+      - output_exists: ${output_dir}/emirs.output
 
   # ==========================================================================
   # CORTICAL MODEL SIMULATIONS
@@ -138,31 +138,31 @@ tests:
     description: Run single excitatory population cortical model with wave propagator
     command: nftsim -i ${e_cortical} -o test_output/e-cortical.output
     validate:
-      - output_exists: test_output/e-cortical.output
+      - output_exists: ${output_dir}/e-cortical.output
 
   - name: EI cortical simulation
     description: Run excitatory-inhibitory cortical model on rectangular sheet
     command: nftsim -i ${ei_cortical} -o test_output/ei-cortical.output
     validate:
-      - output_exists: test_output/ei-cortical.output
+      - output_exists: ${output_dir}/ei-cortical.output
 
   - name: E coupling matrix
     description: Run excitatory model with coupling matrix configuration
     command: nftsim -i ${e_coupling_matrix} -o test_output/e-coupling-matrix.output
     validate:
-      - output_exists: test_output/e-coupling-matrix.output
+      - output_exists: ${output_dir}/e-coupling-matrix.output
 
   - name: E ERPs simulation
     description: Run excitatory model for Event-Related Potentials
     command: nftsim -i ${e_erps} -o test_output/e-erps.output
     validate:
-      - output_exists: test_output/e-erps.output
+      - output_exists: ${output_dir}/e-erps.output
 
   - name: E ERPs all nodes
     description: Run excitatory model for ERPs with all node output
     command: nftsim -i ${e_erps_all_nodes} -o test_output/e-erps-all-nodes.output
     validate:
-      - output_exists: test_output/e-erps-all-nodes.output
+      - output_exists: ${output_dir}/e-erps-all-nodes.output
 
   # ==========================================================================
   # STIMULUS CONFIGURATIONS
@@ -171,13 +171,13 @@ tests:
     description: Run simulation with superimposed pulse stimuli (PulseRect and PulseSigmoid)
     command: nftsim -i ${stimuli_only} -o test_output/stimuli-only.output
     validate:
-      - output_exists: test_output/stimuli-only.output
+      - output_exists: ${output_dir}/stimuli-only.output
 
   - name: White noise stimulus test
     description: Run simulation with white noise stimulus configuration
     command: nftsim -i ${stimulus_test_white} -o test_output/stimulus-test-white.output
     validate:
-      - output_exists: test_output/stimulus-test-white.output
+      - output_exists: ${output_dir}/stimulus-test-white.output
 
   # ==========================================================================
   # COUPLING TESTS
@@ -186,13 +186,13 @@ tests:
     description: Test coupling map configuration
     command: nftsim -i ${test_coupling_map} -o test_output/test-coupling-map.output
     validate:
-      - output_exists: test_output/test-coupling-map.output
+      - output_exists: ${output_dir}/test-coupling-map.output
 
   - name: Coupling ramp test
     description: Test coupling ramp configuration
     command: nftsim -i ${test_coupling_ramp} -o test_output/test-coupling-ramp.output
     validate:
-      - output_exists: test_output/test-coupling-ramp.output
+      - output_exists: ${output_dir}/test-coupling-ramp.output
 
   # ==========================================================================
   # TIME VALIDATION
@@ -201,7 +201,7 @@ tests:
     description: Test time stepping and validation configuration
     command: nftsim -i ${test_time_validation} -o test_output/test-time-validation.output
     validate:
-      - output_exists: test_output/test-time-validation.output
+      - output_exists: ${output_dir}/test-time-validation.output
 
   # ==========================================================================
   # PLASTICITY SIMULATIONS
@@ -210,55 +210,55 @@ tests:
     description: Run Bienenstock-Cooper-Munro plasticity model
     command: nftsim -i ${plasticity_bcm} -o test_output/plasticity-bcm.output
     validate:
-      - output_exists: test_output/plasticity-bcm.output
+      - output_exists: ${output_dir}/plasticity-bcm.output
 
   - name: Bihemispheric plasticity
     description: Run bihemispheric plasticity model
     command: nftsim -i ${plasticity_bihemispheric} -o test_output/plasticity-bihemispheric.output
     validate:
-      - output_exists: test_output/plasticity-bihemispheric.output
+      - output_exists: ${output_dir}/plasticity-bihemispheric.output
 
   - name: EIRS BCM plasticity
     description: Run EIRS model with BCM plasticity
     command: nftsim -i ${plasticity_eirs_bcm} -o test_output/plasticity-eirs-bcm.output
     validate:
-      - output_exists: test_output/plasticity-eirs-bcm.output
+      - output_exists: ${output_dir}/plasticity-eirs-bcm.output
 
   - name: Marcus plasticity
     description: Run Marcus plasticity configuration
     command: nftsim -i ${plasticity_marcus} -o test_output/plasticity-marcus.output
     validate:
-      - output_exists: test_output/plasticity-marcus.output
+      - output_exists: ${output_dir}/plasticity-marcus.output
 
   - name: Network plasticity
     description: Run network plasticity model
     command: nftsim -i ${plasticity_network} -o test_output/plasticity-network.output
     validate:
-      - output_exists: test_output/plasticity-network.output
+      - output_exists: ${output_dir}/plasticity-network.output
 
   - name: PAS plasticity
     description: Run Paired Associative Stimulation plasticity model
     command: nftsim -i ${plasticity_pas} -o test_output/plasticity-pas.output
     validate:
-      - output_exists: test_output/plasticity-pas.output
+      - output_exists: ${output_dir}/plasticity-pas.output
 
   - name: Basic plasticity
     description: Run basic plasticity configuration
     command: nftsim -i ${plasticity_plasticity} -o test_output/plasticity-plasticity.output
     validate:
-      - output_exists: test_output/plasticity-plasticity.output
+      - output_exists: ${output_dir}/plasticity-plasticity.output
 
   - name: rTMS plasticity
     description: Run repetitive TMS plasticity model
     command: nftsim -i ${plasticity_rtms} -o test_output/plasticity-rtms.output
     validate:
-      - output_exists: test_output/plasticity-rtms.output
+      - output_exists: ${output_dir}/plasticity-rtms.output
 
   - name: TBS plasticity
     description: Run Theta Burst Stimulation plasticity model
     command: nftsim -i ${plasticity_tbs} -o test_output/plasticity-tbs.output
     validate:
-      - output_exists: test_output/plasticity-tbs.output
+      - output_exists: ${output_dir}/plasticity-tbs.output
 
   # ==========================================================================
   # TMS SIMULATIONS
@@ -267,19 +267,19 @@ tests:
     description: Run TMS-evoked potentials bihemispheric model
     command: nftsim -i ${tms_teps_bi} -o test_output/tms-teps-bi.output
     validate:
-      - output_exists: test_output/tms-teps-bi.output
+      - output_exists: ${output_dir}/tms-teps-bi.output
 
   - name: TEPs GABA-B
     description: Run TMS-evoked potentials with GABA-B dynamics
     command: nftsim -i ${tms_teps_gabab} -o test_output/tms-teps-gabab.output
     validate:
-      - output_exists: test_output/tms-teps-gabab.output
+      - output_exists: ${output_dir}/tms-teps-gabab.output
 
   - name: TEPs monohemispheric
     description: Run TMS-evoked potentials monohemispheric model
     command: nftsim -i ${tms_teps_mono} -o test_output/tms-teps-mono.output
     validate:
-      - output_exists: test_output/tms-teps-mono.output
+      - output_exists: ${output_dir}/tms-teps-mono.output
 
   # ==========================================================================
   # PUBLISHED CONFIGURATIONS (Abeysuriya et al. 2014)
@@ -288,13 +288,13 @@ tests:
     description: Run configuration from Abeysuriya et al. (2014) - Sleep spindle harmonics Figure 1
     command: nftsim -i ${abeysuriya_figure1} -o test_output/abeysuriya-figure1.output
     validate:
-      - output_exists: test_output/abeysuriya-figure1.output
+      - output_exists: ${output_dir}/abeysuriya-figure1.output
 
   - name: Abeysuriya 2014 Figure 2
     description: Run configuration from Abeysuriya et al. (2014) - Sleep spindle harmonics Figure 2
     command: nftsim -i ${abeysuriya_figure2} -o test_output/abeysuriya-figure2.output
     validate:
-      - output_exists: test_output/abeysuriya-figure2.output
+      - output_exists: ${output_dir}/abeysuriya-figure2.output
 
   # ==========================================================================
   # VERBOSE OUTPUT MODE

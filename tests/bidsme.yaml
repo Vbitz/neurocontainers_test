@@ -447,7 +447,7 @@ tests:
     description: Convert T2 image to float32 datatype
     command: nib-convert --out-dtype float32 ${t2} test_output/bidsme/t2_float32.nii.gz
     validate:
-      - output_exists: test_output/bidsme/t2_float32.nii.gz
+      - output_exists: ${output_dir}/bidsme/t2_float32.nii.gz
 
   - name: nib-conform T2 image
     description: Conform T2 image to standard orientation

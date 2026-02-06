@@ -482,7 +482,7 @@ tests:
       curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/ || echo "failed"
       pkill -f "serve.*3002" 2>/dev/null || true
     expected_output_contains: "200"
-    timeout: 10000
+    timeout: 10
 
   - name: Web server serves index.html
     description: Test that serve returns HTML content
@@ -492,7 +492,7 @@ tests:
       curl -s http://localhost:3003/ | head -1 || echo "failed"
       pkill -f "serve.*3003" 2>/dev/null || true
     expected_output_contains: "<!DOCTYPE html>"
-    timeout: 10000
+    timeout: 10
 
   - name: Web server serves favicon
     description: Test that serve returns favicon
@@ -502,7 +502,7 @@ tests:
       curl -s -o /dev/null -w "%{http_code}" http://localhost:3004/favicon.ico || echo "failed"
       pkill -f "serve.*3004" 2>/dev/null || true
     expected_output_contains: "200"
-    timeout: 10000
+    timeout: 10
 
   - name: Web server serves manifest.json
     description: Test that serve returns manifest.json
@@ -512,7 +512,7 @@ tests:
       curl -s -o /dev/null -w "%{http_code}" http://localhost:3005/manifest.json || echo "failed"
       pkill -f "serve.*3005" 2>/dev/null || true
     expected_output_contains: "200"
-    timeout: 10000
+    timeout: 10
 
   - name: Web server serves schema files
     description: Test that serve returns schema index
@@ -522,7 +522,7 @@ tests:
       curl -s http://localhost:3006/schemas/index.json | head -1 || echo "failed"
       pkill -f "serve.*3006" 2>/dev/null || true
     expected_output_contains: "["
-    timeout: 10000
+    timeout: 10
 
   - name: Web server serves validation functions
     description: Test that serve returns validation function
@@ -532,7 +532,7 @@ tests:
       curl -s -o /dev/null -w "%{http_code}" http://localhost:3007/validation-functions/validate_echo_count.json || echo "failed"
       pkill -f "serve.*3007" 2>/dev/null || true
     expected_output_contains: "200"
-    timeout: 10000
+    timeout: 10
 
   - name: Web server single page mode works
     description: Test that SPA routing redirects to index.html
@@ -542,7 +542,7 @@ tests:
       curl -s -o /dev/null -w "%{http_code}" http://localhost:3008/nonexistent/path || echo "failed"
       pkill -f "serve.*3008" 2>/dev/null || true
     expected_output_contains: "200"
-    timeout: 10000
+    timeout: 10
 
   # ==========================================================================
   # SCHEMA CONTENT VALIDATION
@@ -651,13 +651,13 @@ tests:
     description: Copy a schema file to test output directory
     command: cp /opt/dicompare/dist/schemas/hcp_schema.json test_output/
     validate:
-      - output_exists: test_output/hcp_schema.json
+      - output_exists: ${output_dir}/hcp_schema.json
 
   - name: Export validation function to test_output
     description: Copy a validation function file to test output directory
     command: cp /opt/dicompare/dist/validation-functions/validate_echo_count.json test_output/
     validate:
-      - output_exists: test_output/validate_echo_count.json
+      - output_exists: ${output_dir}/validate_echo_count.json
 
   - name: Exported schema is readable
     description: Verify exported schema can be read

@@ -111,34 +111,34 @@ tests:
     description: Perform brain extraction on T1-weighted image
     command: bet ${t1w} test_output/t1w_bet -f 0.5 -m
     validate:
-      - output_exists: test_output/t1w_bet.nii.gz
-      - output_exists: test_output/t1w_bet_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_bet.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_mask.nii.gz
 
   - name: BET brain extraction with skull
     description: Perform brain extraction with skull approximation
     command: bet ${t1w} test_output/t1w_bet_skull -f 0.4 -s
     validate:
-      - output_exists: test_output/t1w_bet_skull.nii.gz
-      - output_exists: test_output/t1w_bet_skull_skull.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_skull.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_skull_skull.nii.gz
 
   - name: BET brain extraction with outline
     description: Perform brain extraction with surface outline
     command: bet ${t1w} test_output/t1w_bet_outline -f 0.5 -o
     validate:
-      - output_exists: test_output/t1w_bet_outline.nii.gz
-      - output_exists: test_output/t1w_bet_outline_overlay.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_outline.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_outline_overlay.nii.gz
 
   - name: BET brain extraction aggressive
     description: Perform aggressive brain extraction (smaller mask)
     command: bet ${t1w} test_output/t1w_bet_aggressive -f 0.7
     validate:
-      - output_exists: test_output/t1w_bet_aggressive.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_aggressive.nii.gz
 
   - name: BET brain extraction conservative
     description: Perform conservative brain extraction (larger mask)
     command: bet ${t1w} test_output/t1w_bet_conservative -f 0.3
     validate:
-      - output_exists: test_output/t1w_bet_conservative.nii.gz
+      - output_exists: ${output_dir}/t1w_bet_conservative.nii.gz
 
   # ==========================================================================
   # ANTs - N4 BIAS FIELD CORRECTION
@@ -152,27 +152,27 @@ tests:
     description: Apply N4 bias field correction to T1w image
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/t1w_n4.nii.gz
     validate:
-      - output_exists: test_output/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/t1w_n4.nii.gz
 
   - name: N4BiasFieldCorrection with bias field output
     description: Apply N4 correction and output bias field
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -o [test_output/t1w_n4_bf.nii.gz,test_output/t1w_biasfield.nii.gz]
     validate:
-      - output_exists: test_output/t1w_n4_bf.nii.gz
-      - output_exists: test_output/t1w_biasfield.nii.gz
+      - output_exists: ${output_dir}/t1w_n4_bf.nii.gz
+      - output_exists: ${output_dir}/t1w_biasfield.nii.gz
 
   - name: N4BiasFieldCorrection with mask
     description: Apply N4 correction using BET mask
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -x test_output/t1w_bet_mask.nii.gz -o test_output/t1w_n4_masked.nii.gz
     depends_on: BET brain extraction on T1w
     validate:
-      - output_exists: test_output/t1w_n4_masked.nii.gz
+      - output_exists: ${output_dir}/t1w_n4_masked.nii.gz
 
   - name: N4BiasFieldCorrection custom parameters
     description: Apply N4 correction with custom convergence and B-spline parameters
     command: N4BiasFieldCorrection -d 3 -i ${t1w} -c [50x50x50,0.0001] -b [200] -o test_output/t1w_n4_custom.nii.gz
     validate:
-      - output_exists: test_output/t1w_n4_custom.nii.gz
+      - output_exists: ${output_dir}/t1w_n4_custom.nii.gz
 
   # ==========================================================================
   # ANTs - IMAGE REGISTRATION
@@ -193,8 +193,8 @@ tests:
         -s 2x1x0vox \
         -o [test_output/t2_to_t1_rigid_,test_output/t2_to_t1_rigid.nii.gz]
     validate:
-      - output_exists: test_output/t2_to_t1_rigid_0GenericAffine.mat
-      - output_exists: test_output/t2_to_t1_rigid.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1_rigid_0GenericAffine.mat
+      - output_exists: ${output_dir}/t2_to_t1_rigid.nii.gz
 
   - name: antsRegistration affine
     description: Perform affine registration between T1w and T2
@@ -207,8 +207,8 @@ tests:
         -s 2x1x0vox \
         -o [test_output/t2_to_t1_affine_,test_output/t2_to_t1_affine.nii.gz]
     validate:
-      - output_exists: test_output/t2_to_t1_affine_0GenericAffine.mat
-      - output_exists: test_output/t2_to_t1_affine.nii.gz
+      - output_exists: ${output_dir}/t2_to_t1_affine_0GenericAffine.mat
+      - output_exists: ${output_dir}/t2_to_t1_affine.nii.gz
 
   # ==========================================================================
   # ANTs - APPLY TRANSFORMS
@@ -229,7 +229,7 @@ tests:
         -n Linear
     depends_on: antsRegistration rigid
     validate:
-      - output_exists: test_output/t2_warped_linear.nii.gz
+      - output_exists: ${output_dir}/t2_warped_linear.nii.gz
 
   - name: antsApplyTransforms nearest neighbor
     description: Apply transform with nearest neighbor interpolation (for masks)
@@ -242,7 +242,7 @@ tests:
         -n NearestNeighbor
     depends_on: [BET brain extraction on T1w, antsRegistration rigid]
     validate:
-      - output_exists: test_output/mask_warped_nn.nii.gz
+      - output_exists: ${output_dir}/mask_warped_nn.nii.gz
 
   # ==========================================================================
   # ANTs - IMAGE MATH AND PROCESSING
@@ -257,19 +257,19 @@ tests:
     command: ImageMath 3 test_output/t1w_masked_math.nii.gz m ${t1w} test_output/t1w_bet_mask.nii.gz
     depends_on: BET brain extraction on T1w
     validate:
-      - output_exists: test_output/t1w_masked_math.nii.gz
+      - output_exists: ${output_dir}/t1w_masked_math.nii.gz
 
   - name: ImageMath Gaussian smoothing
     description: Apply Gaussian smoothing to image
     command: ImageMath 3 test_output/t1w_smooth_math.nii.gz G ${t1w} 2
     validate:
-      - output_exists: test_output/t1w_smooth_math.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth_math.nii.gz
 
   - name: ImageMath normalize
     description: Normalize image intensities
     command: ImageMath 3 test_output/t1w_normalized.nii.gz Normalize ${t1w}
     validate:
-      - output_exists: test_output/t1w_normalized.nii.gz
+      - output_exists: ${output_dir}/t1w_normalized.nii.gz
 
   # ==========================================================================
   # ANTs - DENOISING
@@ -283,14 +283,14 @@ tests:
     description: Apply denoising to T1w image
     command: DenoiseImage -d 3 -i ${t1w} -o test_output/t1w_denoised.nii.gz
     validate:
-      - output_exists: test_output/t1w_denoised.nii.gz
+      - output_exists: ${output_dir}/t1w_denoised.nii.gz
 
   - name: DenoiseImage with noise image
     description: Apply denoising and output noise estimate
     command: DenoiseImage -d 3 -i ${t1w} -o [test_output/t1w_denoised2.nii.gz,test_output/t1w_noise.nii.gz]
     validate:
-      - output_exists: test_output/t1w_denoised2.nii.gz
-      - output_exists: test_output/t1w_noise.nii.gz
+      - output_exists: ${output_dir}/t1w_denoised2.nii.gz
+      - output_exists: ${output_dir}/t1w_noise.nii.gz
 
   # ==========================================================================
   # ANTs - ATROPOS SEGMENTATION
@@ -311,7 +311,7 @@ tests:
         -o [test_output/t1w_atropos_seg.nii.gz,test_output/t1w_atropos_prob%02d.nii.gz]
     depends_on: BET brain extraction on T1w
     validate:
-      - output_exists: test_output/t1w_atropos_seg.nii.gz
+      - output_exists: ${output_dir}/t1w_atropos_seg.nii.gz
 
   # ==========================================================================
   # ANTs - OTHER UTILITIES
@@ -326,7 +326,7 @@ tests:
     command: CopyImageHeaderInformation ${t1w} test_output/t1w_denoised.nii.gz test_output/t1w_header_copied.nii.gz 1 1 1
     depends_on: DenoiseImage basic
     validate:
-      - output_exists: test_output/t1w_header_copied.nii.gz
+      - output_exists: ${output_dir}/t1w_header_copied.nii.gz
 
   - name: CreateImage help
     description: Verify CreateImage utility is available
@@ -342,7 +342,7 @@ tests:
     description: Average multiple images together
     command: AverageImages 3 test_output/t1_t2_average.nii.gz 0 ${t1w} ${t2}
     validate:
-      - output_exists: test_output/t1_t2_average.nii.gz
+      - output_exists: ${output_dir}/t1_t2_average.nii.gz
 
   # ==========================================================================
   # NEXTQSM (DEEP LEARNING QSM)
@@ -510,10 +510,10 @@ tests:
       N4BiasFieldCorrection -d 3 -i test_output/t1w_pipeline_denoised.nii.gz -o test_output/t1w_pipeline_n4.nii.gz && \
       bet test_output/t1w_pipeline_n4.nii.gz test_output/t1w_pipeline_brain -f 0.5 -m
     validate:
-      - output_exists: test_output/t1w_pipeline_denoised.nii.gz
-      - output_exists: test_output/t1w_pipeline_n4.nii.gz
-      - output_exists: test_output/t1w_pipeline_brain.nii.gz
-      - output_exists: test_output/t1w_pipeline_brain_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_pipeline_denoised.nii.gz
+      - output_exists: ${output_dir}/t1w_pipeline_n4.nii.gz
+      - output_exists: ${output_dir}/t1w_pipeline_brain.nii.gz
+      - output_exists: ${output_dir}/t1w_pipeline_brain_mask.nii.gz
 
   - name: Multi-modal registration pipeline
     description: Register T2 to T1w space with mask propagation
@@ -533,9 +533,9 @@ tests:
         -n NearestNeighbor
     depends_on: BET brain extraction on T1w
     validate:
-      - output_exists: test_output/multimodal_reg_0GenericAffine.mat
-      - output_exists: test_output/multimodal_t2_in_t1.nii.gz
-      - output_exists: test_output/multimodal_mask_in_t2.nii.gz
+      - output_exists: ${output_dir}/multimodal_reg_0GenericAffine.mat
+      - output_exists: ${output_dir}/multimodal_t2_in_t1.nii.gz
+      - output_exists: ${output_dir}/multimodal_mask_in_t2.nii.gz
 
   # ==========================================================================
   # CONTAINER METADATA

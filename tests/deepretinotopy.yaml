@@ -439,32 +439,32 @@ tests:
     description: Convert T1w to MGZ format
     command: mri_convert ${t1w} test_output/t1w.mgz
     validate:
-      - output_exists: test_output/t1w.mgz
+      - output_exists: ${output_dir}/t1w.mgz
 
   - name: mri_convert back to NIfTI
     description: Convert MGZ back to NIfTI
     command: mri_convert test_output/t1w.mgz test_output/t1w_from_mgz.nii.gz
     depends_on: mri_convert format test
     validate:
-      - output_exists: test_output/t1w_from_mgz.nii.gz
+      - output_exists: ${output_dir}/t1w_from_mgz.nii.gz
 
   - name: mri_binarize threshold
     description: Create binary mask from T1w with threshold
     command: mri_binarize --i ${t1w} --min 100 --o test_output/t1w_mask.nii.gz
     validate:
-      - output_exists: test_output/t1w_mask.nii.gz
+      - output_exists: ${output_dir}/t1w_mask.nii.gz
 
   - name: mri_convert resample
     description: Resample T1w to 2mm isotropic
     command: mri_convert -vs 2 2 2 ${t1w} test_output/t1w_2mm.nii.gz
     validate:
-      - output_exists: test_output/t1w_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_2mm.nii.gz
 
   - name: mri_convert orientation
     description: Reorient T1w to RAS orientation
     command: mri_convert --out_orientation RAS ${t1w} test_output/t1w_ras.nii.gz
     validate:
-      - output_exists: test_output/t1w_ras.nii.gz
+      - output_exists: ${output_dir}/t1w_ras.nii.gz
 
   # ===========================================================================
   # WORKBENCH VOLUME OPERATIONS WITH TEST DATA
@@ -478,61 +478,61 @@ tests:
     description: Create a blank volume file
     command: wb_command -volume-create 64 64 32 test_output/blank_volume.nii.gz -sform 1 0 0 0 0 1 0 0 0 0 1 0
     validate:
-      - output_exists: test_output/blank_volume.nii.gz
+      - output_exists: ${output_dir}/blank_volume.nii.gz
 
   - name: wb_command volume-math add constant
     description: Add constant to volume using wb_command
     command: wb_command -volume-math "x + 100" test_output/t1w_plus100.nii.gz -var x ${t1w}
     validate:
-      - output_exists: test_output/t1w_plus100.nii.gz
+      - output_exists: ${output_dir}/t1w_plus100.nii.gz
 
   - name: wb_command volume-math multiply
     description: Multiply volume by constant
     command: wb_command -volume-math "x * 2" test_output/t1w_times2.nii.gz -var x ${t1w}
     validate:
-      - output_exists: test_output/t1w_times2.nii.gz
+      - output_exists: ${output_dir}/t1w_times2.nii.gz
 
   - name: wb_command volume-math threshold
     description: Threshold volume using expression
     command: wb_command -volume-math "x > 100" test_output/t1w_thr100_wb.nii.gz -var x ${t1w}
     validate:
-      - output_exists: test_output/t1w_thr100_wb.nii.gz
+      - output_exists: ${output_dir}/t1w_thr100_wb.nii.gz
 
   - name: wb_command volume-smoothing
     description: Smooth T1w volume with 2mm FWHM
     command: wb_command -volume-smoothing ${t1w} 2 test_output/t1w_smooth_wb.nii.gz
     validate:
-      - output_exists: test_output/t1w_smooth_wb.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth_wb.nii.gz
 
   - name: wb_command volume-reduce mean
     description: Calculate temporal mean of BOLD using wb_command
     command: wb_command -volume-reduce ${bold} MEAN test_output/bold_mean_wb.nii.gz
     validate:
-      - output_exists: test_output/bold_mean_wb.nii.gz
+      - output_exists: ${output_dir}/bold_mean_wb.nii.gz
 
   - name: wb_command volume-reduce stdev
     description: Calculate temporal standard deviation of BOLD
     command: wb_command -volume-reduce ${bold} STDEV test_output/bold_std_wb.nii.gz
     validate:
-      - output_exists: test_output/bold_std_wb.nii.gz
+      - output_exists: ${output_dir}/bold_std_wb.nii.gz
 
   - name: wb_command volume-reduce max
     description: Calculate temporal maximum of BOLD
     command: wb_command -volume-reduce ${bold} MAX test_output/bold_max_wb.nii.gz
     validate:
-      - output_exists: test_output/bold_max_wb.nii.gz
+      - output_exists: ${output_dir}/bold_max_wb.nii.gz
 
   - name: wb_command volume-reduce min
     description: Calculate temporal minimum of BOLD
     command: wb_command -volume-reduce ${bold} MIN test_output/bold_min_wb.nii.gz
     validate:
-      - output_exists: test_output/bold_min_wb.nii.gz
+      - output_exists: ${output_dir}/bold_min_wb.nii.gz
 
   - name: wb_command volume-gradient
     description: Calculate volume gradient magnitude
     command: wb_command -volume-gradient ${t1w} test_output/t1w_gradient_wb.nii.gz
     validate:
-      - output_exists: test_output/t1w_gradient_wb.nii.gz
+      - output_exists: ${output_dir}/t1w_gradient_wb.nii.gz
 
   - name: wb_command volume-dilate
     description: Dilate volume
@@ -540,20 +540,20 @@ tests:
       wb_command -volume-math "x > 100" test_output/t1w_bin_for_dilate.nii.gz -var x ${t1w} && \
       wb_command -volume-dilate test_output/t1w_bin_for_dilate.nii.gz 2 NEAREST test_output/t1w_dilated_wb.nii.gz
     validate:
-      - output_exists: test_output/t1w_dilated_wb.nii.gz
+      - output_exists: ${output_dir}/t1w_dilated_wb.nii.gz
 
   - name: wb_command volume-erode
     description: Erode volume
     command: wb_command -volume-erode test_output/t1w_bin_for_dilate.nii.gz 2 test_output/t1w_eroded_wb.nii.gz
     depends_on: wb_command volume-dilate
     validate:
-      - output_exists: test_output/t1w_eroded_wb.nii.gz
+      - output_exists: ${output_dir}/t1w_eroded_wb.nii.gz
 
   - name: wb_command volume-merge
     description: Merge two volumes
     command: wb_command -volume-merge test_output/t1w_merged.nii.gz -volume ${t1w} -volume ${t2}
     validate:
-      - output_exists: test_output/t1w_merged.nii.gz
+      - output_exists: ${output_dir}/t1w_merged.nii.gz
 
   # ===========================================================================
   # PYTHON DATA PROCESSING TESTS
@@ -599,7 +599,7 @@ tests:
       "
     expected_output_contains: "Saved smoothed image"
     validate:
-      - output_exists: test_output/t1w_scipy_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_scipy_smooth.nii.gz
 
   - name: PyTorch tensor operations
     description: Convert image to PyTorch tensor
@@ -834,7 +834,7 @@ tests:
     description: Create a test sphere surface using wb_command
     command: wb_command -surface-create-sphere 1000 test_output/test_sphere.surf.gii
     validate:
-      - output_exists: test_output/test_sphere.surf.gii
+      - output_exists: ${output_dir}/test_sphere.surf.gii
 
   - name: Surface information check
     description: Verify created sphere surface
@@ -847,14 +847,14 @@ tests:
     command: wb_command -surface-curvature test_output/test_sphere.surf.gii -mean test_output/sphere_curvature.func.gii
     depends_on: Create test surface sphere
     validate:
-      - output_exists: test_output/sphere_curvature.func.gii
+      - output_exists: ${output_dir}/sphere_curvature.func.gii
 
   - name: Metric smoothing on sphere
     description: Smooth curvature metric on sphere surface
     command: wb_command -metric-smoothing test_output/test_sphere.surf.gii test_output/sphere_curvature.func.gii 5 test_output/sphere_curvature_smooth.func.gii
     depends_on: Surface curvature calculation
     validate:
-      - output_exists: test_output/sphere_curvature_smooth.func.gii
+      - output_exists: ${output_dir}/sphere_curvature_smooth.func.gii
 
   - name: Metric statistics
     description: Calculate statistics on metric file

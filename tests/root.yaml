@@ -321,14 +321,14 @@ tests:
     command: "root -b -l -q -e 'TFile f(\"test_output/test_hist.root\",\"RECREATE\"); TH1F h(\"h1\",\"histogram\",100,-5,5); h.FillRandom(\"gaus\",10000); h.Write(); f.Close(); cout << \"File created\" << endl;' 2>&1"
     expected_output_contains: "File created"
     validate:
-      - output_exists: test_output/test_hist.root
+      - output_exists: ${output_dir}/test_hist.root
 
   - name: Create ROOT file with tree
     description: Create a ROOT file containing a TTree
     command: "root -b -l -q -e 'TFile f(\"test_output/test_tree.root\",\"RECREATE\"); TTree t(\"tree\",\"sample tree\"); float x,y; t.Branch(\"x\",&x,\"x/F\"); t.Branch(\"y\",&y,\"y/F\"); for(int i=0;i<1000;i++){x=gRandom->Gaus(); y=gRandom->Gaus(); t.Fill();} t.Write(); f.Close(); cout << \"File created\" << endl;' 2>&1"
     expected_output_contains: "File created"
     validate:
-      - output_exists: test_output/test_tree.root
+      - output_exists: ${output_dir}/test_tree.root
 
   - name: Read histogram from file
     description: Read a histogram from a ROOT file
@@ -388,7 +388,7 @@ tests:
       hadd -f test_output/merged.root test_output/merge1.root test_output/merge2.root 2>&1
     expected_output_contains: "merged.root"
     validate:
-      - output_exists: test_output/merged.root
+      - output_exists: ${output_dir}/merged.root
 
   - name: rooteventselector help
     description: Test rooteventselector utility is available
@@ -552,14 +552,14 @@ tests:
     command: "root -b -l -q -e 'TCanvas c(\"c\",\"c\",800,600); TH1F h(\"h\",\"histogram\",100,-5,5); h.FillRandom(\"gaus\",10000); h.Draw(); c.SaveAs(\"test_output/hist.png\"); cout << \"Saved\" << endl;' 2>&1"
     expected_output_contains: "Saved"
     validate:
-      - output_exists: test_output/hist.png
+      - output_exists: ${output_dir}/hist.png
 
   - name: Save histogram to PDF
     description: Test saving histogram as PDF
     command: "root -b -l -q -e 'TCanvas c(\"c\",\"c\",800,600); TH1F h(\"h\",\"histogram\",100,-5,5); h.FillRandom(\"gaus\",10000); h.Draw(); c.SaveAs(\"test_output/hist.pdf\"); cout << \"Saved\" << endl;' 2>&1"
     expected_output_contains: "Saved"
     validate:
-      - output_exists: test_output/hist.pdf
+      - output_exists: ${output_dir}/hist.pdf
 
   # ==========================================================================
   # ADVANCED DATA STRUCTURES
@@ -587,7 +587,7 @@ tests:
     command: "root -b -l -q -e 'TFile f(\"test_output/multi_branch.root\",\"RECREATE\"); TTree t(\"t\",\"tree\"); int i; float x; double y; t.Branch(\"i\",&i); t.Branch(\"x\",&x); t.Branch(\"y\",&y); for(i=0;i<100;i++){x=i*0.1;y=i*0.01;t.Fill();} t.Write(); f.Close(); cout << \"Created\" << endl;' 2>&1"
     expected_output_contains: "Created"
     validate:
-      - output_exists: test_output/multi_branch.root
+      - output_exists: ${output_dir}/multi_branch.root
 
   - name: TTree Draw histogram
     description: Test TTree Draw to create histogram

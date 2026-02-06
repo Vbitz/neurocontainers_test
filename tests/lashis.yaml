@@ -256,7 +256,7 @@ tests:
     description: Run N4BiasFieldCorrection on test T1w image
     command: /opt/ants-2.3.0/N4BiasFieldCorrection -d 3 -i ${t1w} -o test_output/t1w_n4.nii.gz -s 4 -c [50x50x50,0.0] 2>&1
     validate:
-      - output_exists: test_output/t1w_n4.nii.gz
+      - output_exists: ${output_dir}/t1w_n4.nii.gz
 
   # ==========================================================================
   # ANTs DENOISING
@@ -275,7 +275,7 @@ tests:
     description: Run DenoiseImage on test T1w image
     command: /opt/ants-2.3.0/DenoiseImage -d 3 -i ${t1w} -o test_output/t1w_denoised.nii.gz -s 2 2>&1
     validate:
-      - output_exists: test_output/t1w_denoised.nii.gz
+      - output_exists: ${output_dir}/t1w_denoised.nii.gz
 
   # ==========================================================================
   # ANTs SEGMENTATION (Atropos)
@@ -371,13 +371,13 @@ tests:
     description: Test ImageMath multiply operation
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_doubled.nii.gz m ${t1w} 2 2>&1
     validate:
-      - output_exists: test_output/t1w_doubled.nii.gz
+      - output_exists: ${output_dir}/t1w_doubled.nii.gz
 
   - name: ImageMath Gaussian smoothing
     description: Test ImageMath Gaussian smoothing
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_smooth.nii.gz G ${t1w} 2 2>&1
     validate:
-      - output_exists: test_output/t1w_smooth.nii.gz
+      - output_exists: ${output_dir}/t1w_smooth.nii.gz
 
   - name: PrintHeader usage
     description: Verify PrintHeader displays usage
@@ -421,13 +421,13 @@ tests:
     description: Test basic threshold operation
     command: /opt/ants-2.3.0/ThresholdImage 3 ${t1w} test_output/t1w_thresh.nii.gz 100 10000 1 0 2>&1
     validate:
-      - output_exists: test_output/t1w_thresh.nii.gz
+      - output_exists: ${output_dir}/t1w_thresh.nii.gz
 
   - name: ThresholdImage Otsu thresholding
     description: Test Otsu automatic thresholding
     command: /opt/ants-2.3.0/ThresholdImage 3 ${t1w} test_output/t1w_otsu.nii.gz Otsu 3 2>&1
     validate:
-      - output_exists: test_output/t1w_otsu.nii.gz
+      - output_exists: ${output_dir}/t1w_otsu.nii.gz
 
   # ==========================================================================
   # ANTs IMAGE CONVERSION
@@ -464,7 +464,7 @@ tests:
     description: Test resampling to 2mm isotropic
     command: /opt/ants-2.3.0/ResampleImageBySpacing 3 ${t1w} test_output/t1w_2mm.nii.gz 2 2 2 2>&1
     validate:
-      - output_exists: test_output/t1w_2mm.nii.gz
+      - output_exists: ${output_dir}/t1w_2mm.nii.gz
 
   # ==========================================================================
   # ANTs IMAGE AVERAGING
@@ -573,28 +573,28 @@ tests:
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_dilated.nii.gz MD test_output/t1w_otsu.nii.gz 2 2>&1
     depends_on: ThresholdImage Otsu thresholding
     validate:
-      - output_exists: test_output/t1w_dilated.nii.gz
+      - output_exists: ${output_dir}/t1w_dilated.nii.gz
 
   - name: ImageMath morphological erosion
     description: Test morphological erosion
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_eroded.nii.gz ME test_output/t1w_otsu.nii.gz 2 2>&1
     depends_on: ThresholdImage Otsu thresholding
     validate:
-      - output_exists: test_output/t1w_eroded.nii.gz
+      - output_exists: ${output_dir}/t1w_eroded.nii.gz
 
   - name: ImageMath morphological opening
     description: Test morphological opening
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_opened.nii.gz MO test_output/t1w_otsu.nii.gz 2 2>&1
     depends_on: ThresholdImage Otsu thresholding
     validate:
-      - output_exists: test_output/t1w_opened.nii.gz
+      - output_exists: ${output_dir}/t1w_opened.nii.gz
 
   - name: ImageMath morphological closing
     description: Test morphological closing
     command: /opt/ants-2.3.0/ImageMath 3 test_output/t1w_closed.nii.gz MC test_output/t1w_otsu.nii.gz 2 2>&1
     depends_on: ThresholdImage Otsu thresholding
     validate:
-      - output_exists: test_output/t1w_closed.nii.gz
+      - output_exists: ${output_dir}/t1w_closed.nii.gz
 
   # ==========================================================================
   # ANTs SMOOTHING
@@ -608,7 +608,7 @@ tests:
     description: Test image smoothing
     command: /opt/ants-2.3.0/SmoothImage 3 ${t1w} 2 test_output/t1w_smoothed.nii.gz 2>&1
     validate:
-      - output_exists: test_output/t1w_smoothed.nii.gz
+      - output_exists: ${output_dir}/t1w_smoothed.nii.gz
 
   # ==========================================================================
   # ANTs EXTRACTION TOOLS

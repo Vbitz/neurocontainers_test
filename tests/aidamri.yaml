@@ -138,26 +138,26 @@ tests:
     description: Run brain extraction on T2 image
     command: /opt/fsl-5.0.11/bin/bet ${t2} test_output/aidamri/fsl_tests/t2_brain.nii.gz -f 0.3 -R
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_brain.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_brain.nii.gz
 
   - name: BET with mask output
     description: Run brain extraction with binary mask
     command: /opt/fsl-5.0.11/bin/bet ${t2} test_output/aidamri/fsl_tests/t2_brain_mask -f 0.3 -m
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_brain_mask.nii.gz
-      - output_exists: test_output/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_brain_mask.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz
 
   - name: BET with skull output
     description: Run brain extraction with skull estimate
     command: /opt/fsl-5.0.11/bin/bet ${t2} test_output/aidamri/fsl_tests/t2_brain_skull -f 0.3 -s
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_brain_skull.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_brain_skull.nii.gz
 
   - name: BET for 4D fMRI data
     description: Run brain extraction optimized for fMRI
     command: /opt/fsl-5.0.11/bin/bet ${bold} test_output/aidamri/fsl_tests/bold_brain -F
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_brain.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_brain.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FLIRT (LINEAR REGISTRATION)
@@ -173,22 +173,22 @@ tests:
       /opt/fsl-5.0.11/bin/fslmaths ${bold} -Tmean test_output/aidamri/fsl_tests/bold_mean.nii.gz && \
       /opt/fsl-5.0.11/bin/flirt -in ${t2} -ref test_output/aidamri/fsl_tests/bold_mean.nii.gz -out test_output/aidamri/fsl_tests/t2_to_bold.nii.gz -omat test_output/aidamri/fsl_tests/t2_to_bold.mat -dof 6
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_to_bold.nii.gz
-      - output_exists: test_output/aidamri/fsl_tests/t2_to_bold.mat
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_to_bold.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_to_bold.mat
 
   - name: FLIRT affine registration
     description: Register with 12 DOF affine transformation
     command: /opt/fsl-5.0.11/bin/flirt -in ${t2} -ref test_output/aidamri/fsl_tests/bold_mean.nii.gz -out test_output/aidamri/fsl_tests/t2_to_bold_affine.nii.gz -omat test_output/aidamri/fsl_tests/t2_to_bold_affine.mat -dof 12
     depends_on: FLIRT basic registration
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_to_bold_affine.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_to_bold_affine.nii.gz
 
   - name: FLIRT apply transform
     description: Apply pre-computed transformation matrix
     command: /opt/fsl-5.0.11/bin/flirt -in ${t2} -ref test_output/aidamri/fsl_tests/bold_mean.nii.gz -out test_output/aidamri/fsl_tests/t2_applied.nii.gz -init test_output/aidamri/fsl_tests/t2_to_bold.mat -applyxfm
     depends_on: FLIRT basic registration
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_applied.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_applied.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLMATHS (IMAGE CALCULATOR)
@@ -202,71 +202,71 @@ tests:
     description: Calculate temporal mean of 4D data
     command: /opt/fsl-5.0.11/bin/fslmaths ${bold} -Tmean test_output/aidamri/fsl_tests/bold_Tmean.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_Tmean.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_Tmean.nii.gz
 
   - name: fslmaths temporal std
     description: Calculate temporal standard deviation
     command: /opt/fsl-5.0.11/bin/fslmaths ${bold} -Tstd test_output/aidamri/fsl_tests/bold_Tstd.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_Tstd.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_Tstd.nii.gz
 
   - name: fslmaths threshold
     description: Apply intensity threshold
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -thr 100 test_output/aidamri/fsl_tests/t2_thr100.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_thr100.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_thr100.nii.gz
 
   - name: fslmaths binarize
     description: Binarize image
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -thr 100 -bin test_output/aidamri/fsl_tests/t2_bin.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_bin.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_bin.nii.gz
 
   - name: fslmaths masking
     description: Apply mask to image
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -mas test_output/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz test_output/aidamri/fsl_tests/t2_masked.nii.gz
     depends_on: BET with mask output
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_masked.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_masked.nii.gz
 
   - name: fslmaths smoothing
     description: Apply Gaussian smoothing
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -s 2 test_output/aidamri/fsl_tests/t2_smooth.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_smooth.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_smooth.nii.gz
 
   - name: fslmaths erosion
     description: Morphological erosion on mask
     command: /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz -ero test_output/aidamri/fsl_tests/mask_ero.nii.gz
     depends_on: BET with mask output
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/mask_ero.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/mask_ero.nii.gz
 
   - name: fslmaths dilation
     description: Morphological dilation on mask
     command: /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz -dilM test_output/aidamri/fsl_tests/mask_dilM.nii.gz
     depends_on: BET with mask output
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/mask_dilM.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/mask_dilM.nii.gz
 
   - name: fslmaths fill holes
     description: Fill holes in binary mask
     command: /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/fsl_tests/t2_brain_mask_mask.nii.gz -fillh test_output/aidamri/fsl_tests/mask_fillh.nii.gz
     depends_on: BET with mask output
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/mask_fillh.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/mask_fillh.nii.gz
 
   - name: fslmaths arithmetic operations
     description: Test arithmetic operations (add, sub, mul, div)
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -add 100 -sub 50 -mul 2 -div 2 test_output/aidamri/fsl_tests/t2_arith.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_arith.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_arith.nii.gz
 
   - name: fslmaths intensity normalization
     description: Normalize image intensity
     command: /opt/fsl-5.0.11/bin/fslmaths ${t2} -inm 1000 test_output/aidamri/fsl_tests/t2_inm.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_inm.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_inm.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLSTATS
@@ -298,13 +298,13 @@ tests:
     description: Extract spatial ROI from image
     command: /opt/fsl-5.0.11/bin/fslroi ${t2} test_output/aidamri/fsl_tests/t2_roi.nii.gz 20 80 20 80 5 20
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_roi.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_roi.nii.gz
 
   - name: fslroi temporal crop
     description: Extract temporal subset from 4D
     command: /opt/fsl-5.0.11/bin/fslroi ${bold} test_output/aidamri/fsl_tests/bold_roi.nii.gz 0 -1 0 -1 0 -1 10 50
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_roi.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_roi.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLSPLIT AND FSLMERGE
@@ -313,14 +313,14 @@ tests:
     description: Split 4D into 3D volumes
     command: /opt/fsl-5.0.11/bin/fslsplit ${bold} test_output/aidamri/fsl_tests/bold_split -t
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_split0000.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_split0000.nii.gz
 
   - name: fslmerge temporal
     description: Merge 3D volumes into 4D
     command: /opt/fsl-5.0.11/bin/fslmerge -t test_output/aidamri/fsl_tests/bold_merged.nii.gz test_output/aidamri/fsl_tests/bold_split0000.nii.gz test_output/aidamri/fsl_tests/bold_split0001.nii.gz test_output/aidamri/fsl_tests/bold_split0002.nii.gz
     depends_on: fslsplit temporal
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_merged.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_merged.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLREORIENT2STD
@@ -329,7 +329,7 @@ tests:
     description: Reorient image to standard orientation
     command: /opt/fsl-5.0.11/bin/fslreorient2std ${t2} test_output/aidamri/fsl_tests/t2_reorient.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_reorient.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_reorient.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - FSLHD AND FSLINFO
@@ -354,7 +354,7 @@ tests:
       /opt/fsl-5.0.11/bin/fslcpgeom ${t2} test_output/aidamri/fsl_tests/t2_bin_geom.nii.gz
     depends_on: fslmaths binarize
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_bin_geom.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_bin_geom.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - MCFLIRT (MOTION CORRECTION)
@@ -368,8 +368,8 @@ tests:
     description: Run motion correction on fMRI
     command: /opt/fsl-5.0.11/bin/mcflirt -in ${bold} -out test_output/aidamri/fsl_tests/bold_mcf -plots
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_mcf.nii.gz
-      - output_exists: test_output/aidamri/fsl_tests/bold_mcf.par
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_mcf.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_mcf.par
 
   # ==========================================================================
   # FSL TOOLS - SUSAN (SMOOTHING)
@@ -378,7 +378,7 @@ tests:
     description: Apply SUSAN noise reduction
     command: /opt/fsl-5.0.11/bin/susan ${t2} 100 2 3 1 0 test_output/aidamri/fsl_tests/t2_susan.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/t2_susan.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/t2_susan.nii.gz
 
   # ==========================================================================
   # FSL TOOLS - SLICETIMER
@@ -497,7 +497,7 @@ tests:
     description: Extract affine transformation matrix
     command: /opt/miniconda-latest/bin/python3 -c "import nibabel as nib; import numpy as np; img = nib.load('${t2}'); np.savetxt('test_output/aidamri/t2_affine.txt', img.affine); print('Saved affine matrix')"
     validate:
-      - output_exists: test_output/aidamri/t2_affine.txt
+      - output_exists: ${output_dir}/aidamri/t2_affine.txt
 
   - name: Calculate image statistics with Python
     description: Calculate mean, std, min, max using nibabel
@@ -518,7 +518,7 @@ tests:
       print('Mask saved')
       EOF
     validate:
-      - output_exists: test_output/aidamri/t2_mask_py.nii.gz
+      - output_exists: ${output_dir}/aidamri/t2_mask_py.nii.gz
 
   - name: Extract 3D volume from 4D with Python
     description: Extract single volume from 4D fMRI
@@ -534,7 +534,7 @@ tests:
       print('Volume extracted')
       EOF
     validate:
-      - output_exists: test_output/aidamri/bold_vol0.nii.gz
+      - output_exists: ${output_dir}/aidamri/bold_vol0.nii.gz
 
   # ==========================================================================
   # NIPYPE INTERFACE TESTS
@@ -558,7 +558,7 @@ tests:
       print('BET completed:', result.outputs.out_file)
       EOF
     validate:
-      - output_exists: test_output/aidamri/preprocessing/t2_nipype_bet.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_nipype_bet.nii.gz
 
   - name: Nipype FLIRT interface
     description: Test nipype FLIRT interface
@@ -576,8 +576,8 @@ tests:
       EOF
     depends_on: fslmaths temporal mean
     validate:
-      - output_exists: test_output/aidamri/preprocessing/t2_nipype_flirt.nii.gz
-      - output_exists: test_output/aidamri/preprocessing/t2_nipype_flirt.mat
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_nipype_flirt.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_nipype_flirt.mat
 
   - name: Nipype MCFLIRT interface
     description: Test nipype MCFLIRT interface
@@ -592,7 +592,7 @@ tests:
       print('MCFLIRT completed')
       EOF
     validate:
-      - output_exists: test_output/aidamri/preprocessing/bold_nipype_mcf.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/bold_nipype_mcf.nii.gz
 
   # ==========================================================================
   # DSI STUDIO INTEGRATION
@@ -617,7 +617,7 @@ tests:
       /opt/fsl-5.0.11/bin/fslmaths ${bold} -Tstd test_output/aidamri/fsl_tests/bold_std_tsnr.nii.gz && \
       /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/fsl_tests/bold_mean_tsnr.nii.gz -div test_output/aidamri/fsl_tests/bold_std_tsnr.nii.gz test_output/aidamri/fsl_tests/bold_tsnr.nii.gz
     validate:
-      - output_exists: test_output/aidamri/fsl_tests/bold_tsnr.nii.gz
+      - output_exists: ${output_dir}/aidamri/fsl_tests/bold_tsnr.nii.gz
 
   - name: Brain extraction and masking pipeline
     description: Full brain extraction and masking workflow
@@ -626,9 +626,9 @@ tests:
       /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/preprocessing/t2_bet_pipeline_mask.nii.gz -dilM -fillh test_output/aidamri/preprocessing/t2_mask_clean.nii.gz && \
       /opt/fsl-5.0.11/bin/fslmaths ${t2} -mas test_output/aidamri/preprocessing/t2_mask_clean.nii.gz test_output/aidamri/preprocessing/t2_brain_clean.nii.gz
     validate:
-      - output_exists: test_output/aidamri/preprocessing/t2_bet_pipeline.nii.gz
-      - output_exists: test_output/aidamri/preprocessing/t2_mask_clean.nii.gz
-      - output_exists: test_output/aidamri/preprocessing/t2_brain_clean.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_bet_pipeline.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_mask_clean.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/t2_brain_clean.nii.gz
 
   - name: fMRI preprocessing pipeline
     description: Basic fMRI preprocessing workflow
@@ -638,7 +638,7 @@ tests:
       /opt/fsl-5.0.11/bin/fslmaths ${bold} -bptf 25 -1 test_output/aidamri/preprocessing/bold_hp.nii.gz && \
       /opt/fsl-5.0.11/bin/fslmaths test_output/aidamri/preprocessing/bold_hp.nii.gz -mas test_output/aidamri/preprocessing/bold_brain_pipe_mask.nii.gz test_output/aidamri/preprocessing/bold_preproc.nii.gz
     validate:
-      - output_exists: test_output/aidamri/preprocessing/bold_preproc.nii.gz
+      - output_exists: ${output_dir}/aidamri/preprocessing/bold_preproc.nii.gz
 
 cleanup:
   script: |
