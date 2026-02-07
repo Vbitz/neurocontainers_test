@@ -340,22 +340,26 @@ tests:
   # ==========================================================================
   - name: ANTsPy available
     description: Verify ANTsPy is installed and importable
-    command: python3 -c "import ants; print(f'ANTsPy version: {ants.__version__}')"
+    command: |
+      python3 -c "import ants; print(f'ANTsPy version: {ants.__version__}')"
     expected_output_contains: "ANTsPy version"
 
   - name: SciPy available
     description: Verify SciPy is installed
-    command: python3 -c "import scipy; print(f'SciPy version: {scipy.__version__}')"
+    command: |
+      python3 -c "import scipy; print(f'SciPy version: {scipy.__version__}')"
     expected_output_contains: "SciPy version"
 
   - name: Nibabel available
     description: Verify nibabel is installed
-    command: python3 -c "import nibabel as nib; print(f'Nibabel version: {nib.__version__}')"
+    command: |
+      python3 -c "import nibabel as nib; print(f'Nibabel version: {nib.__version__}')"
     expected_output_contains: "Nibabel version"
 
   - name: NumPy available
     description: Verify NumPy is installed
-    command: python3 -c "import numpy as np; print(f'NumPy version: {np.__version__}')"
+    command: |
+      python3 -c "import numpy as np; print(f'NumPy version: {np.__version__}')"
     expected_output_contains: "NumPy version"
 
   # ==========================================================================

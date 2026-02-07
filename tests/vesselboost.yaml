@@ -98,22 +98,26 @@ tests:
   # ==========================================================================
   - name: Import torch
     description: Verify PyTorch is available
-    command: python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+    command: |
+      python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
     expected_output_contains: "PyTorch version"
 
   - name: Import numpy
     description: Verify NumPy is available
-    command: python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
+    command: |
+      python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
     expected_output_contains: "NumPy version"
 
   - name: Import nibabel
     description: Verify NiBabel is available for NIfTI file handling
-    command: python -c "import nibabel; print(f'NiBabel version: {nibabel.__version__}')"
+    command: |
+      python -c "import nibabel; print(f'NiBabel version: {nibabel.__version__}')"
     expected_output_contains: "NiBabel version"
 
   - name: Import scipy
     description: Verify SciPy is available
-    command: python -c "import scipy; print(f'SciPy version: {scipy.__version__}')"
+    command: |
+      python -c "import scipy; print(f'SciPy version: {scipy.__version__}')"
     expected_output_contains: "SciPy version"
 
   - name: Import VesselBoost utils

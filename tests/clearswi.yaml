@@ -848,7 +848,8 @@ tests:
   # ==========================================================================
   - name: Handle missing file gracefully
     description: Test error handling when file does not exist
-    command: julia -e 'using CLEARSWI; try readmag("/nonexistent/file.nii"); catch e; println("Error caught: ", typeof(e)); end'
+    command: |
+      julia -e 'using CLEARSWI; try readmag("/nonexistent/file.nii"); catch e; println("Error caught: ", typeof(e)); end'
     expected_output_contains: "Error caught:"
 
 cleanup:

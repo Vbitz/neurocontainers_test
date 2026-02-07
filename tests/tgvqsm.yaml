@@ -339,16 +339,16 @@ tests:
     command: |
       # Use nibabel/python to create a normalized version of T1w as synthetic phase
       python2 -c "
-import nibabel as nib
-import numpy as np
-img = nib.load('${t1w}')
-data = img.get_data().astype(np.float32)
-# Normalize to -pi to pi range (simulating wrapped phase)
-data = (data - data.min()) / (data.max() - data.min()) * 2 * np.pi - np.pi
-new_img = nib.Nifti1Image(data, img.affine, img.header)
-new_img.to_filename('test_output/synthetic_phase.nii.gz')
-print('Synthetic phase created')
-"
+      import nibabel as nib
+      import numpy as np
+      img = nib.load('${t1w}')
+      data = img.get_data().astype(np.float32)
+      # Normalize to -pi to pi range (simulating wrapped phase)
+      data = (data - data.min()) / (data.max() - data.min()) * 2 * np.pi - np.pi
+      new_img = nib.Nifti1Image(data, img.affine, img.header)
+      new_img.to_filename('test_output/synthetic_phase.nii.gz')
+      print('Synthetic phase created')
+      "
     validate:
       - output_exists: ${output_dir}/synthetic_phase.nii.gz
 
@@ -584,15 +584,15 @@ print('Synthetic phase created')
     depends_on: Full QSM pipeline - brain extraction
     command: |
       python2 -c "
-import nibabel as nib
-import numpy as np
-img = nib.load('${t1w}')
-data = img.get_data().astype(np.float32)
-# Create phase-like data
-data = (data - data.min()) / (data.max() - data.min()) * 2 * np.pi - np.pi
-new_img = nib.Nifti1Image(data, img.affine, img.header)
-new_img.to_filename('test_output/pipeline_phase.nii.gz')
-"
+      import nibabel as nib
+      import numpy as np
+      img = nib.load('${t1w}')
+      data = img.get_data().astype(np.float32)
+      # Create phase-like data
+      data = (data - data.min()) / (data.max() - data.min()) * 2 * np.pi - np.pi
+      new_img = nib.Nifti1Image(data, img.affine, img.header)
+      new_img.to_filename('test_output/pipeline_phase.nii.gz')
+      "
     validate:
       - output_exists: ${output_dir}/pipeline_phase.nii.gz
 
@@ -664,27 +664,27 @@ new_img.to_filename('test_output/pipeline_phase.nii.gz')
         echo "Dimension mismatch: input=$input_dim output=$output_dim"
         exit 1
       fi
-    expected_output_contains: "Dimensions match"
+          expected_output_contains: "Dimensions match"
 
-  - name: Verify bet2 mask is binary
+        - name: Verify bet2 mask is binary
     description: Check that bet2 mask contains only 0 and 1 values
     depends_on: bet2 with mask output
     command: |
       python2 -c "
-import nibabel as nib
-import numpy as np
-img = nib.load('test_output/t1w_brain_mask_mask.nii.gz')
-data = img.get_data()
-unique_vals = np.unique(data)
-if len(unique_vals) <= 2 and set(unique_vals).issubset({0, 1}):
-    print('Mask is binary: values = %s' % unique_vals)
-else:
-    print('Mask is not binary: values = %s' % unique_vals)
-    exit(1)
-"
-    expected_output_contains: "Mask is binary"
+      import nibabel as nib
+      import numpy as np
+      img = nib.load('test_output/t1w_brain_mask_mask.nii.gz')
+      data = img.get_data()
+      unique_vals = np.unique(data)
+      if len(unique_vals) <= 2 and set(unique_vals).issubset({0, 1}):
+          print('Mask is binary: values = %s' % unique_vals)
+      else:
+          print('Mask is not binary: values = %s' % unique_vals)
+          exit(1)
+      "
+          expected_output_contains: "Mask is binary"
 
-  - name: Verify QSM output datatype
+        - name: Verify QSM output datatype
     description: Check that QSM output is floating point
     depends_on: tgv_qsm basic reconstruction
     command: nib-ls test_output/qsm_basic_qsm_recon000.nii.gz

@@ -397,27 +397,32 @@ tests:
   # ==========================================================================
   - name: Create rectangle ROI
     description: Create a rectangle ROI via script
-    command: QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createRectangleROI(0, 0, 100, 100, null); println('Rectangle area: ' + roi.getArea())" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createRectangleROI(0, 0, 100, 100, null); println('Rectangle area: ' + roi.getArea())" 2>&1
     expected_output_contains: "Rectangle area: 10000"
 
   - name: Create ellipse ROI
     description: Create an ellipse ROI via script
-    command: QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createEllipseROI(0, 0, 100, 100, null); println('Ellipse created with area: ' + Math.round(roi.getArea()))" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createEllipseROI(0, 0, 100, 100, null); println('Ellipse created with area: ' + Math.round(roi.getArea()))" 2>&1
     expected_output_contains: "Ellipse created"
 
   - name: Create point ROI
     description: Create a point ROI via script
-    command: QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createPointsROI(50, 50, null); println('Point at: ' + roi.getCentroidX() + ', ' + roi.getCentroidY())" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createPointsROI(50, 50, null); println('Point at: ' + roi.getCentroidX() + ', ' + roi.getCentroidY())" 2>&1
     expected_output_contains: "Point at: 50"
 
   - name: Create line ROI
     description: Create a line ROI via script
-    command: QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createLineROI(0, 0, 100, 100, null); println('Line length: ' + Math.round(roi.getLength()))" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createLineROI(0, 0, 100, 100, null); println('Line length: ' + Math.round(roi.getLength()))" 2>&1
     expected_output_contains: "Line length:"
 
   - name: ROI bounding box
     description: Test ROI bounding box calculation
-    command: QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createRectangleROI(10, 20, 30, 40, null); println('Bounds: ' + roi.getBoundsX() + ',' + roi.getBoundsY() + ',' + roi.getBoundsWidth() + ',' + roi.getBoundsHeight())" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.roi.ROIs; def roi = ROIs.createRectangleROI(10, 20, 30, 40, null); println('Bounds: ' + roi.getBoundsX() + ',' + roi.getBoundsY() + ',' + roi.getBoundsWidth() + ',' + roi.getBoundsHeight())" 2>&1
     expected_output_contains: "Bounds: 10"
 
   # ==========================================================================
@@ -425,7 +430,8 @@ tests:
   # ==========================================================================
   - name: Create RGB color
     description: Test ColorTools RGB color creation
-    command: QuPath script --cmd "import qupath.lib.common.ColorTools; def c = ColorTools.packRGB(255, 128, 0); println('Color packed: ' + c)" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.common.ColorTools; def c = ColorTools.packRGB(255, 128, 0); println('Color packed: ' + c)" 2>&1
     expected_output_contains: "Color packed:"
 
   - name: Extract color components
@@ -435,7 +441,8 @@ tests:
 
   - name: Create color with alpha
     description: Test ARGB color creation
-    command: QuPath script --cmd "import qupath.lib.common.ColorTools; def c = ColorTools.packARGB(128, 255, 0, 0); println('ARGB color: ' + c)" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.common.ColorTools; def c = ColorTools.packARGB(128, 255, 0, 0); println('ARGB color: ' + c)" 2>&1
     expected_output_contains: "ARGB color:"
 
   # ==========================================================================
@@ -443,12 +450,14 @@ tests:
   # ==========================================================================
   - name: Create path class
     description: Create a PathClass for classification
-    command: QuPath script --cmd "import qupath.lib.objects.classes.PathClass; def pc = PathClass.fromString('Tumor'); println('PathClass: ' + pc.getName())" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.objects.classes.PathClass; def pc = PathClass.fromString('Tumor'); println('PathClass: ' + pc.getName())" 2>&1
     expected_output_contains: "PathClass: Tumor"
 
   - name: Create derived path class
     description: Create a derived PathClass
-    command: QuPath script --cmd "import qupath.lib.objects.classes.PathClass; def parent = PathClass.fromString('Tumor'); def child = PathClass.fromString('Tumor: Positive'); println('Derived: ' + child.getName())" 2>&1
+    command: |
+      QuPath script --cmd "import qupath.lib.objects.classes.PathClass; def parent = PathClass.fromString('Tumor'); def child = PathClass.fromString('Tumor: Positive'); println('Derived: ' + child.getName())" 2>&1
     expected_output_contains: "Positive"
 
   # ==========================================================================
@@ -562,27 +571,32 @@ tests:
   # ==========================================================================
   - name: Get Java version via script
     description: Retrieve Java version through QuPath script
-    command: QuPath script --cmd "println 'Java: ' + System.getProperty('java.version')" 2>&1
+    command: |
+      QuPath script --cmd "println 'Java: ' + System.getProperty('java.version')" 2>&1
     expected_output_contains: "Java:"
 
   - name: Get OS info via script
     description: Retrieve OS information through QuPath script
-    command: QuPath script --cmd "println 'OS: ' + System.getProperty('os.name') + ' ' + System.getProperty('os.version')" 2>&1
+    command: |
+      QuPath script --cmd "println 'OS: ' + System.getProperty('os.name') + ' ' + System.getProperty('os.version')" 2>&1
     expected_output_contains: "OS:"
 
   - name: Get available processors via script
     description: Check available processors
-    command: QuPath script --cmd "println 'CPUs: ' + Runtime.getRuntime().availableProcessors()" 2>&1
+    command: |
+      QuPath script --cmd "println 'CPUs: ' + Runtime.getRuntime().availableProcessors()" 2>&1
     expected_output_contains: "CPUs:"
 
   - name: Get max memory via script
     description: Check max memory available
-    command: QuPath script --cmd "println 'Max memory: ' + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + ' MB'" 2>&1
+    command: |
+      QuPath script --cmd "println 'Max memory: ' + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + ' MB'" 2>&1
     expected_output_contains: "Max memory:"
 
   - name: Get working directory via script
     description: Check current working directory
-    command: QuPath script --cmd "println 'CWD: ' + System.getProperty('user.dir')" 2>&1
+    command: |
+      QuPath script --cmd "println 'CWD: ' + System.getProperty('user.dir')" 2>&1
     expected_output_contains: "CWD:"
 
   # ==========================================================================
@@ -633,12 +647,14 @@ tests:
   # ==========================================================================
   - name: Get current date via script
     description: Test date operations in Groovy
-    command: QuPath script --cmd "import java.time.LocalDate; println('Date: ' + LocalDate.now())" 2>&1
+    command: |
+      QuPath script --cmd "import java.time.LocalDate; println('Date: ' + LocalDate.now())" 2>&1
     expected_output_contains: "Date:"
 
   - name: Get current time via script
     description: Test time operations in Groovy
-    command: QuPath script --cmd "import java.time.LocalTime; println('Time: ' + LocalTime.now().getHour() + ':' + LocalTime.now().getMinute())" 2>&1
+    command: |
+      QuPath script --cmd "import java.time.LocalTime; println('Time: ' + LocalTime.now().getHour() + ':' + LocalTime.now().getMinute())" 2>&1
     expected_output_contains: "Time:"
 
   - name: Format date via script
@@ -661,12 +677,14 @@ tests:
 
   - name: Random number generation via script
     description: Test random number generation
-    command: QuPath script --cmd "def r = new Random(42); println('Random: ' + r.nextDouble())" 2>&1
+    command: |
+      QuPath script --cmd "def r = new Random(42); println('Random: ' + r.nextDouble())" 2>&1
     expected_output_contains: "Random:"
 
   - name: Statistical calculation via script
     description: Calculate mean and standard deviation
-    command: QuPath script --cmd "def data = [1,2,3,4,5]; def mean = data.sum() / data.size(); println('Mean: ' + mean)" 2>&1
+    command: |
+      QuPath script --cmd "def data = [1,2,3,4,5]; def mean = data.sum() / data.size(); println('Mean: ' + mean)" 2>&1
     expected_output_contains: "Mean: 3"
 
   # ==========================================================================

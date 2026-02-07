@@ -323,12 +323,14 @@ tests:
   # ==========================================================================
   - name: Python nibabel import
     description: Verify nibabel can be imported
-    command: python -c "import nibabel as nib; print(f'nibabel version: {nib.__version__}')"
+    command: |
+      python -c "import nibabel as nib; print(f'nibabel version: {nib.__version__}')"
     expected_output_contains: "nibabel version"
 
   - name: Python nibabel load image
     description: Load and inspect image with nibabel
-    command: python -c "import nibabel as nib; img = nib.load('${t1w}'); print(f'Shape: {img.shape}, Dtype: {img.get_data_dtype()}')"
+    command: |
+      python -c "import nibabel as nib; img = nib.load('${t1w}'); print(f'Shape: {img.shape}, Dtype: {img.get_data_dtype()}')"
     expected_output_contains: "Shape"
 
   - name: Python pydeface import
@@ -338,12 +340,14 @@ tests:
 
   - name: Python nipype import
     description: Verify nipype can be imported (pydeface dependency)
-    command: python -c "import nipype; print(f'nipype version: {nipype.__version__}')"
+    command: |
+      python -c "import nipype; print(f'nipype version: {nipype.__version__}')"
     expected_output_contains: "nipype version"
 
   - name: Python numpy import
     description: Verify numpy can be imported
-    command: python -c "import numpy as np; print(f'numpy version: {np.__version__}')"
+    command: |
+      python -c "import numpy as np; print(f'numpy version: {np.__version__}')"
     expected_output_contains: "numpy version"
 
   # ==========================================================================

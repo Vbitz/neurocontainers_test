@@ -184,67 +184,64 @@ def run_single_test(
         if env_setup:
             env_setup = substitute_variables(env_setup, variables)
 
-        # Build full command with apptainer
-        if container_path:
-            # Prepare bind mounts
-            binds = [
-                f"{work_dir}:{work_dir}",
-            ]
+        # Write command to temporary script file (avoids all shell quoting issues)
+        script_path = work_dir / f".test_{os.getpid()}_{int(time.time()*1e6)}.sh"
+        try:
+            with open(script_path, 'w') as f:
+                f.write("#!/usr/bin/env bash\n")
+                if env_setup:
+                    f.write(f"{env_setup}\n")
+                f.write(f"{command}\n")
+            os.chmod(script_path, 0o755)
+        except OSError as e:
+            return TestResult(
+                name=name, passed=False, duration=time.time() - start_time,
+                start_time=start_timestamp, message=f"Failed to create test script: {e}",
+            )
 
-            # Add test data directory if it exists
-            for key, value in variables.items():
-                if key not in ["output_dir"] and "/" in str(value):
-                    parent = Path(value).parent
-                    if parent.exists() and str(parent) not in str(binds):
-                        binds.append(f"{parent}:{parent}")
+        try:
+            if container_path:
+                binds = set()
+                binds.add(f"{work_dir}:{work_dir}")
+                for key, value in variables.items():
+                    if key not in ["output_dir"] and "/" in str(value):
+                        parent = Path(value).parent
+                        if parent.exists():
+                            binds.add(f"{parent}:{parent}")
 
-            bind_args = " ".join(f"-B {b}" for b in set(binds))
-
-            if env_setup:
-                full_command = f"apptainer exec {bind_args} {container_path} bash -c '{env_setup} && {command}'"
+                cmd_list = ["apptainer", "exec", "--writable-tmpfs"]
+                for b in binds:
+                    cmd_list.extend(["-B", b])
+                cmd_list.extend([str(container_path), "bash", str(script_path)])
             else:
-                full_command = f"apptainer exec {bind_args} {container_path} bash -c '{command}'"
-        else:
-            if env_setup:
-                full_command = f"bash -c '{env_setup} && {command}'"
-            else:
-                full_command = f"bash -c '{command}'"
+                cmd_list = ["bash", str(script_path)]
 
-        # Get timeout
-        timeout = test.get("timeout", default_timeout)
+            timeout = test.get("timeout", default_timeout)
 
-        # Run command
-        result = subprocess.run(
-            full_command,
-            shell=True,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            cwd=work_dir,
-        )
+            result = subprocess.run(
+                cmd_list,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                cwd=work_dir,
+            )
 
-        duration = time.time() - start_time
-        stdout = result.stdout
-        stderr = result.stderr
-        exit_code = result.returncode
+            duration = time.time() - start_time
+            stdout = result.stdout
+            stderr = result.stderr
+            exit_code = result.returncode
+        finally:
+            try:
+                script_path.unlink(missing_ok=True)
+            except OSError:
+                pass
 
-        # Check expected exit code
-        expected_exit_code = test.get("expected_exit_code")
+        # Check expected exit code (default: expect success)
+        expected_exit_code = test.get("expected_exit_code", 0)
         expected_exit_code_not = test.get("expected_exit_code_not")
 
-        if expected_exit_code is not None:
-            if exit_code != expected_exit_code:
-                return TestResult(
-                    name=name,
-                    passed=False,
-                    duration=duration,
-                    start_time=start_timestamp,
-                    message=f"Expected exit code {expected_exit_code}, got {exit_code}",
-                    stdout=stdout,
-                    stderr=stderr,
-                    exit_code=exit_code,
-                )
-        elif expected_exit_code_not is not None:
+        if expected_exit_code_not is not None:
+            # expected_exit_code_not takes precedence when explicitly set
             if exit_code == expected_exit_code_not:
                 return TestResult(
                     name=name,
@@ -256,6 +253,17 @@ def run_single_test(
                     stderr=stderr,
                     exit_code=exit_code,
                 )
+        elif exit_code != expected_exit_code:
+            return TestResult(
+                name=name,
+                passed=False,
+                duration=duration,
+                start_time=start_timestamp,
+                message=f"Expected exit code {expected_exit_code}, got {exit_code}",
+                stdout=stdout,
+                stderr=stderr,
+                exit_code=exit_code,
+            )
 
         # Check expected output
         expected_output = test.get("expected_output_contains")
@@ -345,6 +353,55 @@ def run_single_test(
         )
 
 
+def _run_container_health_check(
+    container_path: Path, work_dir: Path, variables: dict[str, str]
+) -> TestResult:
+    """Quick check that the container can execute a basic command."""
+    from datetime import datetime
+
+    start = time.time()
+
+    binds = set()
+    binds.add(f"{work_dir}:{work_dir}")
+
+    cmd_list = ["apptainer", "exec", "--writable-tmpfs"]
+    for b in binds:
+        cmd_list.extend(["-B", b])
+    cmd_list.extend([str(container_path), "true"])
+
+    try:
+        result = subprocess.run(
+            cmd_list, capture_output=True, text=True, timeout=30, cwd=work_dir
+        )
+        if result.returncode == 0:
+            return TestResult(
+                name="Container health check",
+                passed=True,
+                duration=time.time() - start,
+                start_time=datetime.now().isoformat(),
+                message="OK",
+                exit_code=0,
+            )
+        else:
+            return TestResult(
+                name="Container health check",
+                passed=False,
+                duration=time.time() - start,
+                start_time=datetime.now().isoformat(),
+                message=f"Container cannot execute commands (exit {result.returncode}): {result.stderr[:500]}",
+                exit_code=result.returncode,
+                stderr=result.stderr,
+            )
+    except Exception as e:
+        return TestResult(
+            name="Container health check",
+            passed=False,
+            duration=time.time() - start,
+            start_time=datetime.now().isoformat(),
+            message=f"Container health check error: {e}",
+        )
+
+
 def run_test_suite(
     yaml_path: Path,
     containers_dir: Path,
@@ -399,6 +456,13 @@ def run_test_suite(
     # Get global env setup
     global_env_setup = config.get("env_setup")
 
+    # Clean output directory before running suite
+    if "output_dir" in variables:
+        output_dir = Path(variables["output_dir"])
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
     # Run setup script
     setup = config.get("setup", {})
     setup_script = setup.get("script", "")
@@ -425,6 +489,52 @@ def run_test_suite(
                     message=f"Setup failed: {e.stderr.decode() if e.stderr else str(e)}",
                 )],
             )
+
+    # Container health check
+    health_result = _run_container_health_check(container_path, work_dir, variables)
+    if not health_result.passed:
+        # Get and filter tests to know how many to skip
+        tests = config.get("tests", [])
+        if test_filter:
+            pattern = re.compile(test_filter, re.IGNORECASE)
+            tests = [t for t in tests if pattern.search(t.get("name", ""))]
+
+        skip_results = [health_result]
+        for test in tests:
+            skip_result = TestResult(
+                name=test.get("name", "Unnamed test"),
+                passed=False,
+                duration=0,
+                start_time=health_result.start_time,
+                message="Skipped: container health check failed",
+            )
+            skip_results.append(skip_result)
+
+        # Report results via callback/queue so they appear in JSONL output
+        for r in skip_results:
+            if on_test_complete is not None:
+                on_test_complete(suite_name, container_name, r)
+            if result_queue is not None:
+                result_queue.put({
+                    "suite": suite_name,
+                    "container": container_name,
+                    "test": r.name,
+                    "passed": r.passed,
+                    "start_time": r.start_time,
+                    "duration": r.duration,
+                    "message": r.message,
+                    "exit_code": r.exit_code,
+                    "stdout": r.stdout,
+                    "stderr": r.stderr,
+                })
+
+        return TestSuiteResult(
+            name=suite_name,
+            container=container_name,
+            total=len(skip_results),
+            failed=len(skip_results),
+            results=skip_results,
+        )
 
     # Get and filter tests
     tests = config.get("tests", [])
@@ -557,6 +667,13 @@ def prepare_tests_from_yaml(
     # Get global env setup
     global_env_setup = config.get("env_setup")
 
+    # Clean output directory before running suite
+    if "output_dir" in variables:
+        output_dir = Path(variables["output_dir"])
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
     # Run setup script
     setup = config.get("setup", {})
     setup_script = setup.get("script", "")
@@ -572,6 +689,11 @@ def prepare_tests_from_yaml(
             )
         except subprocess.CalledProcessError as e:
             return [], f"Setup failed: {e.stderr.decode() if e.stderr else str(e)}"
+
+    # Container health check
+    health_result = _run_container_health_check(container_path, work_dir, variables)
+    if not health_result.passed:
+        return [], f"Container health check failed: {health_result.message}"
 
     # Get and filter tests
     tests = config.get("tests", [])

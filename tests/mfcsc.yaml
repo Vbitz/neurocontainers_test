@@ -123,7 +123,8 @@ tests:
   # ==========================================================================
   - name: Error on missing arguments
     description: Verify appropriate error when no arguments provided
-    command: mfcsc 2>&1; echo "Exit code: $?"
+    command: |
+      mfcsc 2>&1; echo "Exit code: $?"
     expected_output_contains: "not enough input arguments"
 
   - name: Verify FC test data exists

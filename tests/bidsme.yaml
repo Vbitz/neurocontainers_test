@@ -412,27 +412,32 @@ tests:
 
   - name: Python nibabel load T2 image
     description: Verify nibabel can load test image
-    command: python3 -c "import nibabel as nib; img = nib.load('${t2}'); print(f'Shape: {img.shape}')"
+    command: |
+      python3 -c "import nibabel as nib; img = nib.load('${t2}'); print(f'Shape: {img.shape}')"
     expected_output_contains: "Shape:"
 
   - name: Python nibabel load BOLD image
     description: Verify nibabel can load 4D BOLD image
-    command: python3 -c "import nibabel as nib; img = nib.load('${bold}'); print(f'Shape: {img.shape}, 4D: {len(img.shape) == 4}')"
+    command: |
+      python3 -c "import nibabel as nib; img = nib.load('${bold}'); print(f'Shape: {img.shape}, 4D: {len(img.shape) == 4}')"
     expected_output_contains: "4D: True"
 
   - name: Python numpy import
     description: Verify numpy is available
-    command: python3 -c "import numpy as np; print(f'NumPy version: {np.__version__}')"
+    command: |
+      python3 -c "import numpy as np; print(f'NumPy version: {np.__version__}')"
     expected_output_contains: "NumPy version:"
 
   - name: Python pandas import
     description: Verify pandas is available for TSV handling
-    command: python3 -c "import pandas as pd; print(f'Pandas version: {pd.__version__}')"
+    command: |
+      python3 -c "import pandas as pd; print(f'Pandas version: {pd.__version__}')"
     expected_output_contains: "Pandas version:"
 
   - name: Python read events TSV
     description: Verify pandas can read events TSV file
-    command: python3 -c "import pandas as pd; df = pd.read_csv('${bold_events}', sep='\t'); print(f'Events: {len(df)} rows, columns: {list(df.columns)}')"
+    command: |
+      python3 -c "import pandas as pd; df = pd.read_csv('${bold_events}', sep='\t'); print(f'Events: {len(df)} rows, columns: {list(df.columns)}')"
     expected_output_contains: "Events:"
 
   - name: Python yaml import
@@ -540,7 +545,8 @@ tests:
 
   - name: MNE Python import
     description: Verify MNE-Python can be imported
-    command: python3 -c "import mne; print(f'MNE version: {mne.__version__}')" 2>&1
+    command: |
+      python3 -c "import mne; print(f'MNE version: {mne.__version__}')" 2>&1
     expected_output_contains: "MNE version:"
 
   # ==========================================================================

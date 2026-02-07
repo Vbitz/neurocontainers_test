@@ -214,7 +214,8 @@ tests:
 
   - name: Pyodide worker has content
     description: Verify Pyodide worker is not empty
-    command: ls -s /opt/dicompare/dist/assets/pyodide.worker*.js | awk '{print ($1 > 0 ? "has content" : "empty")}'
+    command: |
+      ls -s /opt/dicompare/dist/assets/pyodide.worker*.js | awk '{print ($1 > 0 ? "has content" : "empty")}'
     expected_output_contains: "has content"
 
   # ==========================================================================
