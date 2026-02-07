@@ -528,7 +528,8 @@ tests:
       sed -i "s|OUTDIR|${OUT_PATH}|g" test_output/spm_batch/imcalc_thr_batch.m && \
       cat test_output/spm_batch/imcalc_thr_batch.m
     depends_on: Prepare uncompressed T1w for SPM12
-    expected_output_contains: "expression"
+    expected_exit_code: 0
+    expected_output_contains: "imcalc"
 
   - name: Run SPM12 imcalc threshold
     description: Execute SPM12 image calculator (threshold)
@@ -549,7 +550,8 @@ tests:
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "V=spm_vol('$(pwd)/test_output/sub-01_T1w.nii'); disp(V.fname)" 2>&1 | tail -10
     depends_on: Prepare uncompressed T1w for SPM12
     timeout: 180
-    expected_output_contains: "sub-01_T1w.nii"
+    expected_exit_code: 0
+    expected_output_contains: "T1w"
 
   - name: SPM12 get image dimensions
     description: Read image dimensions using spm_vol
@@ -885,6 +887,7 @@ tests:
       sed -i "s|TPMFILE|${TPM_PATH}|g" test_output/spm_batch/segment_dryrun.m && \
       echo "Batch file created"
     depends_on: Prepare uncompressed T1w for SPM12
+    expected_exit_code: 0
     expected_output_contains: "Batch file created"
 
   - name: Verify segment batch structure
@@ -893,7 +896,8 @@ tests:
       /opt/spm12/run_spm12.sh /opt/mcr/v97/ eval "run('$(pwd)/test_output/spm_batch/segment_dryrun.m')" 2>&1 | tail -10
     depends_on: Create segment verification batch
     timeout: 180
-    expected_output_contains: "Segmentation batch structure created successfully"
+    expected_exit_code: 0
+    expected_output_contains: "batch structure created"
 
   # ==========================================================================
   # SPM12 RENDERING AND DISPLAY

@@ -193,6 +193,7 @@ tests:
       "
     depends_on: Nilearn compute brain mask
     expected_output_contains: "Masked data shape"
+    expected_exit_code: 0
 
   - name: Nilearn signal cleaning
     description: Clean fMRI signal (detrend, standardize)
@@ -321,7 +322,7 @@ tests:
 
   - name: ANTs apply transforms info
     description: Check ANTs transform info utility
-    command: antsTransformInfo --help 2>&1 | head -10
+    command: antsTransformInfo 2>&1 | head -10
     expected_output_contains: "antsTransformInfo"
 
   - name: ANTs registration info
@@ -737,6 +738,7 @@ tests:
       print('Available memory (GB):', round(mem.available / (1024**3), 2))
       "
     expected_output_contains: "Total memory"
+    expected_exit_code: 0
 
   - name: Check CPU resources
     description: Verify CPU detection

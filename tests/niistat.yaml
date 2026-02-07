@@ -40,21 +40,25 @@ tests:
     description: Verify Octave is installed and reports version
     command: octave --version 2>&1 | head -1
     expected_output_contains: "GNU Octave"
+    expected_exit_code: 0
 
   - name: Octave basic functionality
     description: Test Octave can execute basic MATLAB commands
     command: octave --no-gui --eval "disp('Hello from Octave'); exit(0);" 2>&1
     expected_output_contains: "Hello from Octave"
+    expected_exit_code: 0
 
   - name: Octave matrix operations
     description: Test Octave matrix computation capabilities
     command: octave --no-gui --eval "A = [1 2; 3 4]; B = inv(A); disp(det(B)); exit(0);" 2>&1
     expected_output_contains: "-0.5"
+    expected_exit_code: 0
 
   - name: Octave statistics package
     description: Verify basic statistics functions work
     command: octave --no-gui --eval "x = [1 2 3 4 5]; disp(mean(x)); disp(std(x)); exit(0);" 2>&1
     expected_output_contains: "3"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SPM12 ENVIRONMENT TESTS
@@ -68,11 +72,13 @@ tests:
     description: Verify SPM12 loads and reports correct version
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); v = spm('Version'); disp(v); exit(0);" 2>&1
     expected_output_contains: "SPM12"
+    expected_exit_code: 0
 
   - name: SPM12 nifti functions available
     description: Test SPM12 NIfTI file handling functions are accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); which spm_vol; exit(0);" 2>&1
     expected_output_contains: "spm_vol"
+    expected_exit_code: 0
 
   - name: SPM12 file_array class
     description: Verify SPM12 file_array class is functional
@@ -83,6 +89,7 @@ tests:
     description: Test SPM matrix/transformation functions
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); M = spm_matrix([0 0 0]); disp(size(M)); exit(0);" 2>&1
     expected_output_contains: "4"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIISTAT INSTALLATION TESTS
@@ -96,21 +103,25 @@ tests:
     description: Test NiiStat main function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which NiiStat; exit(0);" 2>&1
     expected_output_contains: "NiiStat"
+    expected_exit_code: 0
 
   - name: NiiStat core functions available
     description: Verify nii_stat_core function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_stat_core; exit(0);" 2>&1
     expected_output_contains: "nii_stat_core"
+    expected_exit_code: 0
 
   - name: NiiStat ROI functions available
     description: Verify nii_roi_list function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_roi_list; exit(0);" 2>&1
     expected_output_contains: "nii_roi_list"
+    expected_exit_code: 0
 
   - name: NiiStat modality list available
     description: Verify nii_modality_list function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_modality_list; exit(0);" 2>&1
     expected_output_contains: "nii_modality_list"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIISTAT ROI ATLAS TESTS
@@ -118,7 +129,7 @@ tests:
   - name: ROI atlas directory exists
     description: Verify ROI atlas files are present
     command: ls /opt/niistat-1.0.20191216/roi/*.nii 2>&1 | wc -l
-    expected_output_contains: "8"
+    expected_output_contains: "9"
 
   - name: AAL atlas present
     description: Verify AAL (Automated Anatomical Labeling) atlas is available
@@ -167,21 +178,25 @@ tests:
     description: Test nii_roi_list returns available atlases
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); [files, nums] = nii_roi_list(); disp(nums); exit(0);" 2>&1
     expected_output_contains: "aal"
+    expected_exit_code: 0
 
   - name: Modality list function
     description: Test nii_modality_list returns available modalities
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); [files, nums] = nii_modality_list(); disp(nums); exit(0);" 2>&1
     expected_output_contains: "lesion"
+    expected_exit_code: 0
 
   - name: Binary check function
     description: Test nii_isBinary function with binary data
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); [isBin, dat] = nii_isBinary([1 0 1 1]); disp(isBin); exit(0);" 2>&1
     expected_output_contains: "1"
+    expected_exit_code: 0
 
   - name: Binary check function non-binary
     description: Test nii_isBinary function with non-binary data
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); [isBin, dat] = nii_isBinary([1 2 3 4]); disp(isBin); exit(0);" 2>&1
     expected_output_contains: "0"
+    expected_exit_code: 0
 
   # ==========================================================================
   # LIBSVM TESTS
@@ -241,11 +256,13 @@ tests:
     description: Verify xl_glm function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); addpath('/opt/niistat-1.0.20191216/glm'); which xl_glm; exit(0);" 2>&1
     expected_output_contains: "xl_glm"
+    expected_exit_code: 0
 
   - name: SPM T-distribution function
     description: Test spm_Tcdf function for T-distribution
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216/glm'); p = spm_Tcdf(2.0, 10); disp(p); exit(0);" 2>&1
     expected_output_contains: "0.9"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FDR (False Discovery Rate) TESTS
@@ -259,11 +276,13 @@ tests:
     description: Verify fdr_bh function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which fdr_bh; exit(0);" 2>&1
     expected_output_contains: "fdr_bh"
+    expected_exit_code: 0
 
   - name: FDR Benjamini-Hochberg correction
     description: Test FDR correction on p-values
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); pvals = [0.01 0.02 0.03 0.5 0.6]; [h, crit_p] = fdr_bh(pvals, 0.05); disp(sum(h)); exit(0);" 2>&1
     expected_output_contains: "3"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FISHER EXACT TEST
@@ -277,6 +296,7 @@ tests:
     description: Verify fexact function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which fexact; exit(0);" 2>&1
     expected_output_contains: "fexact"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIFTI IMAGE I/O TESTS
@@ -285,11 +305,13 @@ tests:
     description: Test SPM can read NIfTI header
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); hdr = spm_vol('${t1w}'); disp(hdr.dim); exit(0);" 2>&1
     expected_output_contains: "160"
+    expected_exit_code: 0
 
   - name: SPM volume data read
     description: Test SPM can read NIfTI image data
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); hdr = spm_vol('${t1w}'); img = spm_read_vols(hdr); disp(size(img)); exit(0);" 2>&1
     expected_output_contains: "160"
+    expected_exit_code: 0
 
   - name: NIfTI header information
     description: Extract NIfTI header information using SPM
@@ -300,6 +322,7 @@ tests:
     description: Test reading 4D functional data
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); hdr = spm_vol('${bold}'); disp(length(hdr)); exit(0);" 2>&1
     expected_output_contains: "300"
+    expected_exit_code: 0
 
   # ==========================================================================
   # IMAGE PROCESSING FUNCTION TESTS
@@ -308,26 +331,31 @@ tests:
     description: Verify nii_reslice_target function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_reslice_target; exit(0);" 2>&1
     expected_output_contains: "nii_reslice_target"
+    expected_exit_code: 0
 
   - name: NII to MAT conversion function
     description: Verify nii_nii2mat function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_nii2mat; exit(0);" 2>&1
     expected_output_contains: "nii_nii2mat"
+    expected_exit_code: 0
 
   - name: MAT to NII conversion function
     description: Verify nii_mat2nii function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_mat2nii; exit(0);" 2>&1
     expected_output_contains: "nii_mat2nii"
+    expected_exit_code: 0
 
   - name: ROI to stats function
     description: Verify nii_roi2stats function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_roi2stats; exit(0);" 2>&1
     expected_output_contains: "nii_roi2stats"
+    expected_exit_code: 0
 
   - name: NII to ROI function
     description: Verify nii_nii2roi function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_nii2roi; exit(0);" 2>&1
     expected_output_contains: "nii_nii2roi"
+    expected_exit_code: 0
 
   # ==========================================================================
   # STATISTICAL ANALYSIS FUNCTION TESTS
@@ -336,26 +364,31 @@ tests:
     description: Verify nii_stat_svm function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_stat_svm; exit(0);" 2>&1
     expected_output_contains: "nii_stat_svm"
+    expected_exit_code: 0
 
   - name: SVM core function accessible
     description: Verify nii_stat_svm_core function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_stat_svm_core; exit(0);" 2>&1
     expected_output_contains: "nii_stat_svm_core"
+    expected_exit_code: 0
 
   - name: SVR core function accessible
     description: Verify nii_stat_svr_core function for Support Vector Regression
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_stat_svr_core; exit(0);" 2>&1
     expected_output_contains: "nii_stat_svr_core"
+    expected_exit_code: 0
 
   - name: PCA function accessible
     description: Verify nii_pca function for Principal Component Analysis
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_pca; exit(0);" 2>&1
     expected_output_contains: "nii_pca"
+    expected_exit_code: 0
 
   - name: Power analysis function accessible
     description: Verify nii_power function for statistical power analysis
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_power; exit(0);" 2>&1
     expected_output_contains: "nii_power"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DESIGN FILE READING TESTS
@@ -364,21 +397,25 @@ tests:
     description: Verify nii_read_design function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_read_design; exit(0);" 2>&1
     expected_output_contains: "nii_read_design"
+    expected_exit_code: 0
 
   - name: Tab to MAT converter accessible
     description: Verify nii_tab2mat function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_tab2mat; exit(0);" 2>&1
     expected_output_contains: "nii_tab2mat"
+    expected_exit_code: 0
 
   - name: XLS to MAT converter accessible
     description: Verify nii_xls2mat function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_xls2mat; exit(0);" 2>&1
     expected_output_contains: "nii_xls2mat"
+    expected_exit_code: 0
 
   - name: VAL to MAT converter accessible
     description: Verify nii_val2mat function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_val2mat; exit(0);" 2>&1
     expected_output_contains: "nii_val2mat"
+    expected_exit_code: 0
 
   # ==========================================================================
   # VISUALIZATION AND OUTPUT FUNCTIONS
@@ -387,21 +424,25 @@ tests:
     description: Verify nii_plot function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_plot; exit(0);" 2>&1
     expected_output_contains: "nii_plot"
+    expected_exit_code: 0
 
   - name: Power map function accessible
     description: Verify nii_powermap function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_powermap; exit(0);" 2>&1
     expected_output_contains: "nii_powermap"
+    expected_exit_code: 0
 
   - name: Node file save function accessible
     description: Verify nii_save_nodz function for BrainNet Viewer output
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_save_nodz; exit(0);" 2>&1
     expected_output_contains: "nii_save_nodz"
+    expected_exit_code: 0
 
   - name: Array to node conversion accessible
     description: Verify nii_array2node function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_array2node; exit(0);" 2>&1
     expected_output_contains: "nii_array2node"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ROI MANIPULATION FUNCTIONS
@@ -410,26 +451,31 @@ tests:
     description: Verify nii_sphere function for creating spherical ROIs
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_sphere; exit(0);" 2>&1
     expected_output_contains: "nii_sphere"
+    expected_exit_code: 0
 
   - name: Custom ROI function accessible
     description: Verify nii_custom_roi function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_custom_roi; exit(0);" 2>&1
     expected_output_contains: "nii_custom_roi"
+    expected_exit_code: 0
 
   - name: Make ROI function accessible
     description: Verify nii_make_roi function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_make_roi; exit(0);" 2>&1
     expected_output_contains: "nii_make_roi"
+    expected_exit_code: 0
 
   - name: ROI to mm conversion accessible
     description: Verify nii_roi2mm function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_roi2mm; exit(0);" 2>&1
     expected_output_contains: "nii_roi2mm"
+    expected_exit_code: 0
 
   - name: Array to ROI conversion accessible
     description: Verify nii_array2roi function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_array2roi; exit(0);" 2>&1
     expected_output_contains: "nii_array2roi"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DTI/FIBER ANALYSIS FUNCTIONS
@@ -438,6 +484,7 @@ tests:
     description: Verify nii_fiberQA function for DTI quality assessment
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_fiberQA; exit(0);" 2>&1
     expected_output_contains: "nii_fiberQA"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DATA STRUCTURE UTILITY FUNCTIONS
@@ -446,16 +493,19 @@ tests:
     description: Verify nii_mergestruct function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_mergestruct; exit(0);" 2>&1
     expected_output_contains: "nii_mergestruct"
+    expected_exit_code: 0
 
   - name: MAT purge ROIs function accessible
     description: Verify nii_matPurgeRois function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_matPurgeRois; exit(0);" 2>&1
     expected_output_contains: "nii_matPurgeRois"
+    expected_exit_code: 0
 
   - name: MAT version function accessible
     description: Verify nii_matver function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_matver; exit(0);" 2>&1
     expected_output_contains: "nii_matver"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SPM STATISTICAL FUNCTIONS
@@ -464,16 +514,19 @@ tests:
     description: Test SPM normal cumulative distribution function
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); p = spm_Ncdf(1.96); disp(p); exit(0);" 2>&1
     expected_output_contains: "0.97"
+    expected_exit_code: 0
 
   - name: SPM inverse normal CDF available
     description: Test SPM inverse normal CDF function
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); z = spm_invNcdf(0.95); disp(z); exit(0);" 2>&1
     expected_output_contains: "1.64"
+    expected_exit_code: 0
 
   - name: SPM F-distribution CDF available
     description: Test SPM F-distribution function
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); p = spm_Fcdf(4.0, 1, 10); disp(p); exit(0);" 2>&1
     expected_output_contains: "0.9"
+    expected_exit_code: 0
 
   # ==========================================================================
   # IMAGE MANIPULATION TESTS
@@ -587,11 +640,13 @@ tests:
     description: Verify GetROIFilesGivenDirectory function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); addpath('/opt/niistat-1.0.20191216/NiiStatGUI'); which GetROIFilesGivenDirectory; exit(0);" 2>&1
     expected_output_contains: "GetROIFilesGivenDirectory"
+    expected_exit_code: 0
 
   - name: GetROINamesFromFile accessible
     description: Verify GetROINamesFromFile function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); addpath('/opt/niistat-1.0.20191216/NiiStatGUI'); which GetROINamesFromFile; exit(0);" 2>&1
     expected_output_contains: "GetROINamesFromFile"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MAT2ORTHO VISUALIZATION TESTS
@@ -600,6 +655,7 @@ tests:
     description: Verify nii_mat2ortho function for visualization
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_mat2ortho; exit(0);" 2>&1
     expected_output_contains: "nii_mat2ortho"
+    expected_exit_code: 0
 
   # ==========================================================================
   # EXCEL/SPREADSHEET INTERACTION TESTS
@@ -608,11 +664,13 @@ tests:
     description: Verify nii_xl2roi function for Excel-based ROI definition
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_xl2roi; exit(0);" 2>&1
     expected_output_contains: "nii_xl2roi"
+    expected_exit_code: 0
 
   - name: xl_xls2mat function accessible
     description: Verify xl_xls2mat function in glm directory
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); addpath('/opt/niistat-1.0.20191216/glm'); which xl_xls2mat; exit(0);" 2>&1
     expected_output_contains: "xl_xls2mat"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MODALITY TABLE FUNCTION
@@ -621,6 +679,7 @@ tests:
     description: Verify nii_modality_table function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_modality_table; exit(0);" 2>&1
     expected_output_contains: "nii_modality_table"
+    expected_exit_code: 0
 
   # ==========================================================================
   # REPORT GENERATION TESTS
@@ -629,6 +688,7 @@ tests:
     description: Verify nii_nii2matReport function is accessible
     command: octave --no-gui --eval "addpath('/opt/spm12-r7771'); addpath('/opt/niistat-1.0.20191216'); which nii_nii2matReport; exit(0);" 2>&1
     expected_output_contains: "nii_nii2matReport"
+    expected_exit_code: 0
 
   # ==========================================================================
   # INTEGRATION TEST: FULL PIPELINE SETUP

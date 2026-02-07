@@ -195,17 +195,34 @@ tests:
   # ==========================================================================
   - name: nibabel NIfTI reading
     description: Test nibabel can read demo NIfTI file
-    command: "python3 -c \"import nibabel as nib; img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz'); print('Image shape:', img.shape)\""
+    command: |
+      python3 << 'PYEOF'
+      import nibabel as nib
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
+      print("Image shape:", img.shape)
+      PYEOF
     expected_output_contains: "Image shape:"
 
   - name: nibabel get_fdata
     description: Test nibabel data extraction
-    command: "python3 -c \"import nibabel as nib; img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz'); data = img.get_fdata(); print('Data dtype:', data.dtype, 'ndim:', data.ndim)\""
+    command: |
+      python3 << 'PYEOF'
+      import nibabel as nib
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
+      data = img.get_fdata()
+      print("Data dtype:", data.dtype, "ndim:", data.ndim)
+      PYEOF
     expected_output_contains: "ndim: 3"
 
   - name: nibabel affine extraction
     description: Test nibabel affine matrix extraction
-    command: "python3 -c \"import nibabel as nib; img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz'); affine = img.affine; print('Affine shape:', affine.shape)\""
+    command: |
+      python3 << 'PYEOF'
+      import nibabel as nib
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
+      affine = img.affine
+      print("Affine shape:", affine.shape)
+      PYEOF
     expected_output_contains: "Affine shape: (4, 4)"
 
   - name: nibabel NIfTI creation and save
@@ -216,7 +233,13 @@ tests:
 
   - name: nibabel header inspection
     description: Test nibabel header reading
-    command: "python3 -c \"import nibabel as nib; img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz'); hdr = img.header; print('Data type:', hdr.get_data_dtype())\""
+    command: |
+      python3 << 'PYEOF'
+      import nibabel as nib
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
+      hdr = img.header
+      print("Data type:", hdr.get_data_dtype())
+      PYEOF
     expected_output_contains: "Data type:"
 
   # ==========================================================================
@@ -439,15 +462,15 @@ tests:
       from implementations.functions.intensity import IntensityStandardisation
 
       # Load demo data
-      img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz')
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
       data = img.get_fdata()
 
       # Apply intensity standardization
       std = IntensityStandardisation()
       normalized = std((data,))[0]
 
-      print('Original mean:', round(data.mean(), 2), 'std:', round(data.std(), 2))
-      print('Normalized mean:', round(normalized.mean(), 4), 'std:', round(normalized.std(), 4))
+      print("Original mean:", round(data.mean(), 2), "std:", round(data.std(), 2))
+      print("Normalized mean:", round(normalized.mean(), 4), "std:", round(normalized.std(), 4))
       PYEOF
     expected_output_contains: "Normalized mean:"
 
@@ -460,7 +483,7 @@ tests:
       from implementations.functions.segmentation import SimpleThresholding
 
       # Load demo data
-      img = nib.load('/opt/vessel-app/demo_data/img_patch.nii.gz')
+      img = nib.load("/opt/vessel-app/demo_data/img_patch.nii.gz")
       data = img.get_fdata()
 
       # Get threshold values based on data range
@@ -471,8 +494,8 @@ tests:
       thresh = SimpleThresholding(lower=int(lower), upper=int(upper))
       mask = thresh._Function__exec__((data,))[0]
 
-      print('Mask shape:', mask.shape)
-      print('Vessel voxels:', mask.sum())
+      print("Mask shape:", mask.shape)
+      print("Vessel voxels:", mask.sum())
       PYEOF
     expected_output_contains: "Mask shape:"
 
@@ -497,9 +520,9 @@ tests:
           output = model(x)
           pred = output.argmax(dim=1)
 
-      print('Input shape:', tuple(x.shape))
-      print('Output shape:', tuple(output.shape))
-      print('Prediction shape:', tuple(pred.shape))
+      print("Input shape:", tuple(x.shape))
+      print("Output shape:", tuple(output.shape))
+      print("Prediction shape:", tuple(pred.shape))
       PYEOF
     expected_output_contains: "Prediction shape: (1, 32, 32, 32)"
 

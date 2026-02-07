@@ -456,6 +456,7 @@ tests:
     description: Test basic matrix operations
     command: "/opt/conn-22a/run_conn.sh /opt/MCR-2022a/v912 run \"A=randn(10,10);B=A*A';disp(['Size ' num2str(size(B))])\""
     expected_output_contains: "10"
+    expected_exit_code: 0
 
   - name: Correlation computation
     description: Test correlation matrix computation

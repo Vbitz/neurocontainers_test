@@ -520,6 +520,7 @@ tests:
   - name: Convert NIfTI to MINC
     description: Test NIfTI to MINC conversion
     command: /opt/minc/1.9.15/bin/nii2mnc ${t1w} test_output/t1w.mnc
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w.mnc
 

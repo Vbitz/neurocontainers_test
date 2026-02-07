@@ -57,13 +57,13 @@ tests:
 
   - name: DIPY import check
     description: Verify DIPY 1.5.0 is importable
-    command: python3 -c "import dipy; print('dipy', dipy.__version__)"
-    expected_output_contains: "dipy 1.5.0"
+    command: python3 -c "import dipy; print('dipy:', dipy.__version__)"
+    expected_output_contains: "dipy: 1.5.0"
 
   - name: nibabel import check
     description: Verify nibabel 4.0.2 is importable
-    command: python3 -c "import nibabel; print('nibabel', nibabel.__version__)"
-    expected_output_contains: "nibabel 4.0.2"
+    command: python3 -c "import nibabel; print('nibabel:', nibabel.__version__)"
+    expected_output_contains: "nibabel: 4.0.2"
 
   - name: NumPy import check
     description: Verify NumPy is importable
@@ -202,7 +202,7 @@ tests:
   - name: MRtrix3 tckinfo help
     description: Display tckinfo help
     command: tckinfo --help 2>&1
-    expected_output_contains: "Print information"
+    expected_output_contains: "Print out information about a track file"
 
   - name: MRtrix3 tckmap help
     description: Display tckmap help
@@ -319,7 +319,7 @@ tests:
   - name: DIPY dipy_fit_csd help
     description: Display dipy_fit_csd (CSD fitting) help
     command: dipy_fit_csd --help 2>&1
-    expected_output_contains: "Constrained Spherical Deconvolution"
+    expected_output_contains: "Constrained spherical deconvolution"
 
   - name: DIPY dipy_fit_csa help
     description: Display dipy_fit_csa (CSA fitting) help
@@ -329,7 +329,7 @@ tests:
   - name: DIPY dipy_fit_ivim help
     description: Display dipy_fit_ivim (IVIM fitting) help
     command: dipy_fit_ivim --help 2>&1
-    expected_output_contains: "Intravoxel Incoherent Motion"
+    expected_output_contains: "Incoherent Motion"
 
   - name: DIPY dipy_fit_mapmri help
     description: Display dipy_fit_mapmri help
@@ -352,7 +352,7 @@ tests:
   - name: DIPY dipy_denoise_lpca help
     description: Display dipy_denoise_lpca help
     command: dipy_denoise_lpca --help 2>&1
-    expected_output_contains: "Local PCA"
+    expected_output_contains: "LPCA denoising"
 
   - name: DIPY dipy_denoise_patch2self help
     description: Display dipy_denoise_patch2self help
@@ -388,12 +388,12 @@ tests:
   - name: DIPY dipy_align_syn help
     description: Display dipy_align_syn (SyN registration) help
     command: dipy_align_syn --help 2>&1
-    expected_output_contains: "SyN"
+    expected_output_contains: "dipy_align_syn"
 
   - name: DIPY dipy_apply_transform help
     description: Display dipy_apply_transform help
     command: dipy_apply_transform --help 2>&1
-    expected_output_contains: "Apply"
+    expected_output_contains: "dipy_apply_transform"
 
   - name: DIPY dipy_reslice help
     description: Display dipy_reslice help
@@ -416,12 +416,12 @@ tests:
   - name: DIPY dipy_slr help
     description: Display dipy_slr (streamline registration) help
     command: dipy_slr --help 2>&1
-    expected_output_contains: "Streamline-based Linear Registration"
+    expected_output_contains: "Streamline-based linear registration"
 
   - name: DIPY dipy_recobundles help
     description: Display dipy_recobundles help
     command: dipy_recobundles --help 2>&1
-    expected_output_contains: "RecoBundles"
+    expected_output_contains: "Recognize bundles"
 
   # ==========================================================================
   # DIPY - Bundle Analysis (BUAN)
@@ -429,7 +429,7 @@ tests:
   - name: DIPY dipy_buan_lmm help
     description: Display dipy_buan_lmm help
     command: dipy_buan_lmm --help 2>&1
-    expected_output_contains: "BUAN"
+    expected_output_contains: "linear Mixed Models"
 
   - name: DIPY dipy_buan_profiles help
     description: Display dipy_buan_profiles help
@@ -467,7 +467,7 @@ tests:
   - name: nibabel nib-roi help
     description: Display nib-roi help
     command: nib-roi --help 2>&1
-    expected_output_contains: "ROI"
+    expected_output_contains: "region of interest"
 
   - name: nibabel nib-conform help
     description: Display nib-conform help
@@ -510,7 +510,7 @@ tests:
   - name: Read NIfTI header with dipy_info
     description: Use dipy_info to read NIfTI header
     command: dipy_info ${t1w} 2>&1
-    expected_output_contains: "Data shape"
+    expected_output_contains: "Data size"
 
   - name: FSL fslinfo on T1w
     description: Use fslinfo to display NIfTI information

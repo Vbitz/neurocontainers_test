@@ -318,6 +318,7 @@ tests:
       for f in dcm_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_dcm_estimate: True"
 
   - name: Count DCM functions
@@ -506,6 +507,7 @@ tests:
       for f in funcs:
           print(f'{f}:', hasattr(matlab_runtime, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "init: True"
 
   # ==========================================================================
@@ -545,6 +547,7 @@ tests:
       for f in batch_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_jobman: True"
 
   # ==========================================================================
@@ -559,6 +562,7 @@ tests:
       for f in preproc_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_preproc8: True"
 
   # ==========================================================================
@@ -573,6 +577,7 @@ tests:
       for f in conv_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_conv: True"
 
   - name: Check spectral analysis functions
@@ -584,6 +589,7 @@ tests:
       for f in csd_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_csd: True"
 
   # ==========================================================================
@@ -598,6 +604,7 @@ tests:
       for f in viz_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_orthviews: True"
 
   # ==========================================================================
@@ -640,6 +647,7 @@ tests:
       for f in atlas_funcs:
           print(f'{f}:', hasattr(spm, f))
       "
+    expected_exit_code: 0
     expected_output_contains: "spm_atlas: True"
 
   # ==========================================================================

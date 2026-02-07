@@ -146,12 +146,12 @@ tests:
 
   - name: dcm2niix filename format test
     description: Test dcm2niix custom filename pattern
-    command: dcm2niix -f "test_%p_%s" -h 2>&1 | head -5
+    command: dcm2niix -f "test_%p_%s" -h 2>&1 | head -50
     expected_output_contains: "filename"
 
   - name: dcm2niix verbose mode
     description: Test dcm2niix verbose output
-    command: dcm2niix -v 1 -h 2>&1 | head -5
+    command: dcm2niix -v 1 -h 2>&1 | head -50
     expected_output_contains: "dcm2niiX"
 
   # ==========================================================================
@@ -162,7 +162,7 @@ tests:
     command: |
       mkdir -p test_output/mock_dicom && \
       cp ${t1w} test_output/mock_dicom/003_MPRAGE_20230101120000.nii.gz && \
-      echo '{"Modality": "MR", "MagneticFieldStrength": 3, "SeriesDescription": "MPRAGE_T1w", "ImageType": ["ORIGINAL", "PRIMARY", "M", "ND"]}' > test_output/mock_dicom/003_MPRAGE_20230101120000.json && \
+      python3 -c "import json; json.dump(dict(Modality='MR', MagneticFieldStrength=3, SeriesDescription='MPRAGE_T1w', ImageType=['ORIGINAL','PRIMARY','M','ND']), open('test_output/mock_dicom/003_MPRAGE_20230101120000.json','w'))" && \
       echo "Mock T1w data created"
     expected_output_contains: "Mock T1w data created"
     validate:
@@ -173,7 +173,7 @@ tests:
     description: Set up mock BOLD data for dcm2bids testing
     command: |
       cp ${bold} test_output/mock_dicom/004_ep2d_bold_20230101120000.nii.gz && \
-      echo '{"Modality": "MR", "MagneticFieldStrength": 3, "SeriesDescription": "ep2d_bold_task-rest", "RepetitionTime": 2.0, "ImageType": ["ORIGINAL", "PRIMARY", "M", "ND", "MOSAIC"]}' > test_output/mock_dicom/004_ep2d_bold_20230101120000.json && \
+      python3 -c "import json; json.dump(dict(Modality='MR', MagneticFieldStrength=3, SeriesDescription='ep2d_bold_task-rest', RepetitionTime=2.0, ImageType=['ORIGINAL','PRIMARY','M','ND','MOSAIC']), open('test_output/mock_dicom/004_ep2d_bold_20230101120000.json','w'))" && \
       echo "Mock BOLD data created"
     expected_output_contains: "Mock BOLD data created"
     validate:
@@ -184,7 +184,7 @@ tests:
     description: Set up mock T2w data for dcm2bids testing
     command: |
       cp ${t2} test_output/mock_dicom/005_T2_20230101120000.nii.gz && \
-      echo '{"Modality": "MR", "MagneticFieldStrength": 3, "SeriesDescription": "T2_TSE", "EchoTime": 0.1, "ImageType": ["ORIGINAL", "PRIMARY", "M", "ND"]}' > test_output/mock_dicom/005_T2_20230101120000.json && \
+      python3 -c "import json; json.dump(dict(Modality='MR', MagneticFieldStrength=3, SeriesDescription='T2_TSE', EchoTime=0.1, ImageType=['ORIGINAL','PRIMARY','M','ND']), open('test_output/mock_dicom/005_T2_20230101120000.json','w'))" && \
       echo "Mock T2w data created"
     expected_output_contains: "Mock T2w data created"
     validate:
@@ -569,42 +569,42 @@ tests:
   # ==========================================================================
   - name: dcm2niix adjacent DICOM mode
     description: Test dcm2niix adjacent mode flag
-    command: dcm2niix -a y -h 2>&1 | head -5
+    command: dcm2niix -a y -h 2>&1 | head -50
     expected_output_contains: "adjacent"
 
   - name: dcm2niix BIDS anonymize
     description: Test dcm2niix BIDS anonymization flag
-    command: dcm2niix -ba y -h 2>&1 | head -5
+    command: dcm2niix -ba y -h 2>&1 | head -50
     expected_output_contains: "anonymize"
 
   - name: dcm2niix search depth option
     description: Test dcm2niix directory search depth
-    command: dcm2niix -d 3 -h 2>&1 | head -5
+    command: dcm2niix -d 3 -h 2>&1 | head -50
     expected_output_contains: "depth"
 
   - name: dcm2niix merge slices option
     description: Test dcm2niix 2D slice merge option
-    command: dcm2niix -m 2 -h 2>&1 | head -5
+    command: dcm2niix -m 2 -h 2>&1 | head -50
     expected_output_contains: "merge"
 
   - name: dcm2niix lossless scaling option
     description: Test dcm2niix 16-bit integer scaling
-    command: dcm2niix -l o -h 2>&1 | head -5
+    command: dcm2niix -l o -h 2>&1 | head -50
     expected_output_contains: "scale"
 
   - name: dcm2niix Philips scaling option
     description: Test dcm2niix Philips float scaling
-    command: dcm2niix -p y -h 2>&1 | head -5
+    command: dcm2niix -p y -h 2>&1 | head -50
     expected_output_contains: "Philips"
 
   - name: dcm2niix crop 3D acquisitions
     description: Test dcm2niix 3D crop option
-    command: dcm2niix -x n -h 2>&1 | head -5
+    command: dcm2niix -x n -h 2>&1 | head -50
     expected_output_contains: "crop"
 
   - name: dcm2niix export formats
     description: Test dcm2niix alternative export formats
-    command: dcm2niix -e n -h 2>&1 | head -5
+    command: dcm2niix -e n -h 2>&1 | head -50
     expected_output_contains: "export"
 
   # ==========================================================================
@@ -614,6 +614,7 @@ tests:
     description: Verify dcm2bids Python module is importable
     command: python3 -c "import dcm2bids; print(f'dcm2bids {dcm2bids.__version__}')" 2>&1
     expected_output_contains: "dcm2bids"
+    expected_exit_code: 0
 
   - name: Import dcm2bids submodules
     description: Verify dcm2bids submodules are accessible

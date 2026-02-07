@@ -448,6 +448,7 @@ tests:
       gunzip test_output/t2_for_pigz.nii.gz && \
       pigz_mricron -k test_output/t2_for_pigz.nii && \
       ls test_output/t2_for_pigz.nii test_output/t2_for_pigz.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t2_for_pigz.nii.gz
       - output_exists: ${output_dir}/t2_for_pigz.nii
@@ -631,31 +632,31 @@ tests:
   # ==========================================================================
   - name: dcm2niix in PATH
     description: Verify dcm2niix is accessible in PATH
-    command: which dcm2niix
+    command: command -v dcm2niix
     expected_output_contains: "dcm2niix"
 
   - name: MRIcron in PATH
     description: Verify MRIcron is accessible in PATH
-    command: which MRIcron
+    command: command -v MRIcron
     expected_output_contains: "MRIcron"
 
   - name: pigz_mricron in PATH
     description: Verify pigz_mricron is accessible in PATH
-    command: which pigz_mricron
+    command: command -v pigz_mricron
     expected_output_contains: "pigz_mricron"
 
   - name: Resources directory in PATH
     description: Verify Resources directory is in PATH for dcm2niix
     command: echo $PATH | tr ':' '\n' | grep -c mricron
-    expected_output_contains: "2"
+    expected_output_contains: "1"
 
   # ==========================================================================
   # RENDER RESOURCES VALIDATION
   # ==========================================================================
   - name: Render resources exist
     description: Check render resources directory exists
-    command: ls -la /opt/mricron/Resources/render/
-    expected_output_contains: "render"
+    command: test -d /opt/mricron/Resources/render/ && echo "render directory exists"
+    expected_output_contains: "render directory exists"
 
   # ==========================================================================
   # UPDATE CHECK (network dependent)

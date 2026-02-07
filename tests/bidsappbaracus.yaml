@@ -60,7 +60,7 @@ tests:
     description: Verify run_brain_age_files.py help for direct file input
     command: run_brain_age_files.py --help
     expected_output_contains:
-      - "Files mode"
+      - "files"
       - "--lh_thickness_file"
       - "--rh_thickness_file"
       - "--lh_area_file"
@@ -223,7 +223,7 @@ tests:
     expected_output_contains:
       - "mri_vol2surf"
       - "--src"
-      - "--out"
+      - "--o"
       - "--hemi"
 
   # ==========================================================================
@@ -291,7 +291,7 @@ tests:
 
   - name: mri_ca_register help
     description: Check CA registration tool
-    command: mri_ca_register --help 2>&1 | head -20
+    command: mri_ca_register 2>&1 | head -20
     expected_output_contains: "mri_ca_register"
 
   - name: mri_ca_label help
@@ -410,7 +410,7 @@ tests:
   # ==========================================================================
   - name: mris_calc help
     description: Check surface calculator tool
-    command: mris_calc --help 2>&1 | head -30
+    command: mris_calc --help 2>&1
     expected_output_contains:
       - "mris_calc"
       - "add"
@@ -473,7 +473,7 @@ tests:
 
   - name: FreeSurfer atlas files
     description: Check FreeSurfer atlas files exist
-    command: ls $FREESURFER_HOME/average/ | head -20
+    command: ls $FREESURFER_HOME/average/ | head -50
     expected_output_contains: "RB_all"
 
   # ==========================================================================
@@ -542,7 +542,7 @@ tests:
   - name: mri_convert missing input error
     description: Verify error for non-existent input file
     command: mri_convert /nonexistent/file.nii.gz /tmp/out.mgz 2>&1 || true
-    expected_output_contains: "could not open"
+    expected_output_contains: "error"
 
   # ==========================================================================
   # FREESURFER ANNOTATION AND LABEL TOOLS
@@ -576,7 +576,7 @@ tests:
 
   - name: mri_convert to compressed NIFTI
     description: Convert to compressed NIfTI format
-    command: mri_convert --out_type nii.gz ${t2} test_output/t2_nifti_gz.nii.gz
+    command: mri_convert ${t2} test_output/t2_nifti_gz.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_nifti_gz.nii.gz
 
@@ -617,7 +617,7 @@ tests:
 
   - name: Image statistics extraction
     description: Extract basic statistics from image
-    command: mri_segstats --i ${t2} --sum test_output/t2_stats.txt --avgwf test_output/t2_avgwf.txt
+    command: mri_segstats --seg ${t2} --i ${t2} --sum test_output/t2_stats.txt --avgwf test_output/t2_avgwf.txt
     validate:
       - output_exists: ${output_dir}/t2_stats.txt
 

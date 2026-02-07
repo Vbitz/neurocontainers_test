@@ -58,7 +58,7 @@ tests:
   - name: Train help
     description: Display train subcommand help
     command: topaz train --help
-    expected_output_contains: "train region classifier"
+    expected_output_contains: "training data arguments"
 
   - name: Train help shows device option
     description: Verify device option in train help
@@ -136,7 +136,7 @@ tests:
   - name: Extract help
     description: Display extract subcommand help
     command: topaz extract --help
-    expected_output_contains: "extract particles"
+    expected_output_contains: "paths to image files"
 
   - name: Extract help shows model option
     description: Verify model option in extract help
@@ -590,12 +590,12 @@ tests:
   - name: Train without required args
     description: Verify train fails without required arguments
     command: topaz train 2>&1
-    expected_exit_code: 2
+    expected_exit_code: 1
 
   - name: Extract without input files
-    description: Verify extract shows help when run without args
+    description: Verify extract fails when run without args
     command: topaz extract 2>&1
-    expected_output_contains: "usage"
+    expected_output_contains: "Must specify targets"
 
   # ==========================================================================
   # DEVICE AND THREADING OPTIONS (common across commands)

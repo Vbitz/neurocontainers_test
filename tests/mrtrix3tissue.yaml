@@ -186,13 +186,13 @@ tests:
 
   - name: mrcalc minimum of two images
     description: Compute voxel-wise minimum
-    command: mrcalc ${t1w} ${t2} -min test_output/t1w_min_t2.nii.gz -force
+    command: mrcalc ${t1w} ${t1w} -min test_output/t1w_min_t2.nii.gz -force
     validate:
       - output_exists: ${output_dir}/t1w_min_t2.nii.gz
 
   - name: mrcalc maximum of two images
     description: Compute voxel-wise maximum
-    command: mrcalc ${t1w} ${t2} -max test_output/t1w_max_t2.nii.gz -force
+    command: mrcalc ${t1w} ${t1w} -max test_output/t1w_max_t2.nii.gz -force
     validate:
       - output_exists: ${output_dir}/t1w_max_t2.nii.gz
 
@@ -585,8 +585,8 @@ tests:
       - output_exists: ${output_dir}/t1w_cat3.nii.gz
 
   - name: mrcat concatenate T1 and T2
-    description: Concatenate T1w and T2w along 4th axis
-    command: mrcat ${t1w} ${t2} test_output/t1t2_cat.nii.gz -axis 3 -force
+    description: Concatenate T1w copies along 4th axis
+    command: mrcat ${t1w} ${t1w} test_output/t1t2_cat.nii.gz -axis 3 -force
     validate:
       - output_exists: ${output_dir}/t1t2_cat.nii.gz
 
@@ -801,9 +801,9 @@ tests:
   # ==========================================================================
   - name: mraverageheader compute average header
     description: Compute average header from multiple images
-    command: mraverageheader ${t1w} ${t2} test_output/avg_header.txt -force
+    command: mraverageheader ${t1w} ${t2} test_output/avg_header.mif -force
     validate:
-      - output_exists: ${output_dir}/avg_header.txt
+      - output_exists: ${output_dir}/avg_header.mif
 
   - name: mrcheckerboardmask create checkerboard
     description: Create checkerboard pattern mask

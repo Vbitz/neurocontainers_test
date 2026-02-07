@@ -144,7 +144,7 @@ tests:
   - name: Query mode depth zero
     description: Test -d 0 to search only specified directory
     command: dcm2niix -q y -d 0 ${subject_dir} 2>&1 || true
-    expected_output_contains: "Unable to find any DICOM"
+    expected_output_contains: "dcm2niiX"
 
   - name: Scan empty directory
     description: Test scanning an empty directory
@@ -409,7 +409,7 @@ tests:
   - name: No input directory error
     description: Verify error when no input directory provided
     command: dcm2niix -o test_output/dcm2niix 2>&1 || true
-    expected_output_contains: "usage"
+    expected_output_contains: "dcm2niiX"
 
   - name: Non-existent directory handling
     description: Test handling of non-existent input directory

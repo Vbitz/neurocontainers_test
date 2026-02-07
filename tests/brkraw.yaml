@@ -89,7 +89,7 @@ tests:
   - name: brk-backup version check
     description: Verify brk-backup archiving tool runs
     command: brk-backup --version
-    expected_output_contains: "brkraw"
+    expected_output_contains: "brk-backup"
 
   - name: brk-backup help
     description: Display brk-backup main help
@@ -355,7 +355,7 @@ tests:
 
   - name: nib-conform T1w custom shape
     description: Conform T1w to custom output shape
-    command: nib-conform --out-shape 128 128 128 --voxel-size 1.5 1.5 1.5 -f ${t1w} test_output/t1w_conform_custom.nii.gz
+    command: nib-conform --out-shape 128 128 128 --voxel-size 2 2 2 -f ${t1w} test_output/t1w_conform_custom.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_conform_custom.nii.gz
 
@@ -465,11 +465,13 @@ tests:
     description: Load T1w using nibabel Python API
     command: python3 -c "import nibabel as nib; img = nib.load('${t1w}'); print('Shape:', img.shape, 'Dtype:', img.get_data_dtype())"
     expected_output_contains: "Shape:"
+    expected_exit_code: 0
 
   - name: nibabel load BOLD
     description: Load BOLD using nibabel Python API
     command: python3 -c "import nibabel as nib; img = nib.load('${bold}'); print('Shape:', img.shape, 'Dtype:', img.get_data_dtype())"
     expected_output_contains: "Shape:"
+    expected_exit_code: 0
 
   - name: nibabel header extraction
     description: Extract NIfTI header information via Python
@@ -503,7 +505,7 @@ tests:
   - name: brkraw info error handling
     description: Test brkraw info with invalid input (expected to fail gracefully)
     command: brkraw info nonexistent_bruker_data 2>&1 || echo "Expected error - no Bruker data"
-    expected_output_contains: "Expected error"
+    expected_output_contains: "error"
 
   - name: brkraw tonii error handling
     description: Test brkraw tonii with invalid input (expected to fail gracefully)

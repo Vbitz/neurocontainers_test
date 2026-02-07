@@ -108,42 +108,42 @@ tests:
   # ==========================================================================
   - name: Test T1w image exists
     description: Verify bundled T1w test image is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/sub-test.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/sub-test.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: Test T2w image exists
     description: Verify bundled T2w test image is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/test_T2w.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/test_T2w.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 3T template exists
     description: Verify 3T template is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/templates/3T_template.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/templates/3T_template.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 7T template exists
     description: Verify 7T template is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/templates/7T_template.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/templates/7T_template.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 3T bounding box exists
     description: Verify 3T bounding box is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/templates/3T_box.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/templates/3T_box.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 7T bounding box exists
     description: Verify 7T bounding box is present
-    command: python -c "import os; print('exists' if os.path.exists('/OSHy/templates/7T_box.nii.gz') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.exists(''/OSHy/templates/7T_box.nii.gz'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 3T atlases directory exists
     description: Verify 3T atlases directory is present
-    command: python -c "import os; print('exists' if os.path.isdir('/OSHy/atlases/3T') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.isdir(''/OSHy/atlases/3T'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 7T atlases directory exists
     description: Verify 7T atlases directory is present
-    command: python -c "import os; print('exists' if os.path.isdir('/OSHy/atlases/7T') else 'missing')"
+    command: 'python -c "import os; print(''exists'' if os.path.isdir(''/OSHy/atlases/7T'') else ''missing'')"'
     expected_output_contains: "exists"
 
   - name: 3T atlas count
@@ -259,53 +259,62 @@ tests:
 
   - name: ANTsPy denoise function
     description: Test ANTsPy denoising
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); result=ants.denoise_image(img); print('Denoising works')"
+    command: 'python -c "import ants; img=ants.image_read(''/OSHy/sub-test.nii.gz''); result=ants.denoise_image(img); print(''Denoising works'')"'
     expected_output_contains: "Denoising works"
 
   - name: ANTsPy registration function exists
     description: Verify registration function is available
-    command: python -c "import ants; print('registration' if hasattr(ants, 'registration') else 'missing')"
+    command: 'python -c "import ants; print(''registration'' if hasattr(ants, ''registration'') else ''missing'')"'
     expected_output_contains: "registration"
+    expected_exit_code: 0
 
   - name: ANTsPy apply_transforms function exists
     description: Verify apply_transforms function is available
-    command: python -c "import ants; print('apply_transforms' if hasattr(ants, 'apply_transforms') else 'missing')"
+    command: 'python -c "import ants; print(''apply_transforms'' if hasattr(ants, ''apply_transforms'') else ''missing'')"'
     expected_output_contains: "apply_transforms"
+    expected_exit_code: 0
 
   - name: ANTsPy threshold_image function exists
     description: Verify threshold_image function is available
-    command: python -c "import ants; print('threshold_image' if hasattr(ants, 'threshold_image') else 'missing')"
+    command: 'python -c "import ants; print(''threshold_image'' if hasattr(ants, ''threshold_image'') else ''missing'')"'
     expected_output_contains: "threshold_image"
+    expected_exit_code: 0
 
   - name: ANTsPy crop_image function exists
     description: Verify crop_image function is available
-    command: python -c "import ants; print('crop_image' if hasattr(ants, 'crop_image') else 'missing')"
+    command: 'python -c "import ants; print(''crop_image'' if hasattr(ants, ''crop_image'') else ''missing'')"'
     expected_output_contains: "crop_image"
+    expected_exit_code: 0
 
   - name: ANTsPy resample_image_to_target function exists
     description: Verify resample function is available
-    command: python -c "import ants; print('resample' if hasattr(ants, 'resample_image_to_target') else 'missing')"
+    command: 'python -c "import ants; print(''resample'' if hasattr(ants, ''resample_image_to_target'') else ''missing'')"'
     expected_output_contains: "resample"
+    expected_exit_code: 0
 
   - name: ANTsPy plot function exists
     description: Verify plot function is available for mosaics
-    command: python -c "import ants; print('plot' if hasattr(ants, 'plot') else 'missing')"
+    command: 'python -c "import ants; print(''plot'' if hasattr(ants, ''plot'') else ''missing'')"'
     expected_output_contains: "plot"
+    expected_exit_code: 0
 
   - name: ANTsPy n4_bias_field_correction function exists
     description: Verify N4 bias correction is available
-    command: python -c "import ants; print('n4' if hasattr(ants, 'n4_bias_field_correction') else 'missing')"
+    command: 'python -c "import ants; print(''n4'' if hasattr(ants, ''n4_bias_field_correction'') else ''missing'')"'
     expected_output_contains: "n4"
+    expected_exit_code: 0
 
   - name: ANTsPy atropos function exists
     description: Verify Atropos segmentation is available
-    command: python -c "import ants; print('atropos' if hasattr(ants, 'atropos') else 'missing')"
+    command: 'python -c "import ants; print(''atropos'' if hasattr(ants, ''atropos'') else ''missing'')"'
     expected_output_contains: "atropos"
+    expected_exit_code: 0
 
   - name: ANTsPy joint_label_fusion function exists
     description: Verify Joint Label Fusion is available in ANTsPy
-    command: python -c "import ants; print('jlf' if hasattr(ants, 'joint_label_fusion') else 'missing')"
+    command: 'python -c "import ants; print(''jlf'' if hasattr(ants, ''joint_label_fusion'') else ''missing'')"'
     expected_output_contains: "jlf"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIBABEL AND OTHER PYTHON PACKAGES
@@ -580,27 +589,27 @@ tests:
   # ==========================================================================
   - name: OSHy module import
     description: Test importing OSHy module
-    command: python -c "import sys; sys.path.insert(0, '/OSHy'); from OSHy import Target_img, OSHy_data, convert_to_bool; print('OSHy module imported')"
+    command: 'python -c "import sys; sys.path.insert(0, ''/OSHy''); from OSHy import Target_img, OSHy_data, convert_to_bool; print(''OSHy module imported'')"'
     expected_output_contains: "OSHy module imported"
 
   - name: convert_to_bool True
     description: Test convert_to_bool with True string
-    command: python -c "import sys; sys.path.insert(0, '/OSHy'); from OSHy import convert_to_bool; print(convert_to_bool('True'))"
+    command: 'python -c "import sys; sys.path.insert(0, ''/OSHy''); from OSHy import convert_to_bool; print(convert_to_bool(''True''))"'
     expected_output_contains: "True"
 
   - name: convert_to_bool False
     description: Test convert_to_bool with False string
-    command: python -c "import sys; sys.path.insert(0, '/OSHy'); from OSHy import convert_to_bool; print(convert_to_bool('False'))"
+    command: 'python -c "import sys; sys.path.insert(0, ''/OSHy''); from OSHy import convert_to_bool; print(convert_to_bool(''False''))"'
     expected_output_contains: "False"
 
   - name: convert_to_bool case insensitive
     description: Test convert_to_bool case insensitivity
-    command: python -c "import sys; sys.path.insert(0, '/OSHy'); from OSHy import convert_to_bool; print(convert_to_bool('TRUE'), convert_to_bool('false'))"
+    command: 'python -c "import sys; sys.path.insert(0, ''/OSHy''); from OSHy import convert_to_bool; print(convert_to_bool(''TRUE''), convert_to_bool(''false''))"'
     expected_output_contains: "True False"
 
   - name: OSHy_data class instantiation
     description: Test creating OSHy_data object
-    command: python -c "import sys; sys.path.insert(0, '/OSHy'); from OSHy import OSHy_data; data=OSHy_data('3', 'T1w', False, True); print('OSHy_data created')"
+    command: 'python -c "import sys; sys.path.insert(0, ''/OSHy''); from OSHy import OSHy_data; data=OSHy_data(''3'', ''T1w'', False, True); print(''OSHy_data created'')"'
     expected_output_contains: "OSHy_data created"
 
   - name: OSHy_data get_template

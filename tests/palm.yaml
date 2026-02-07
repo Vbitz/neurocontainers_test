@@ -230,14 +230,14 @@ tests:
   # ==========================================================================
   - name: Basic input loading
     description: Test loading a NIfTI file as input
-    command: palm -i ${t1w} -o test_output/palm/basic_input -n 5 -ee 2>&1
+    command: palm -i ${t1w} -noniiclass -o test_output/palm/basic_input -n 5 -ee 2>&1
     expected_output_contains: "Reading input"
     validate:
       - output_exists: ${output_dir}/palm/basic_input_elapsed.csv
 
   - name: Multiple inputs
     description: Test loading multiple NIfTI files
-    command: palm -i ${t1w} -i ${t2} -o test_output/palm/multi_input -n 5 -ee 2>&1
+    command: palm -i ${t1w} -i ${t2} -noniiclass -o test_output/palm/multi_input -n 5 -ee 2>&1
     expected_output_contains: "Reading input"
 
   # ==========================================================================
@@ -246,7 +246,7 @@ tests:
   - name: One-sample t-test
     description: Basic one-sample t-test with permutations
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_onesample.csv \
            -t test_output/palm/designs/contrast_onesample.csv \
            -o test_output/palm/onesample \
@@ -260,7 +260,7 @@ tests:
   - name: One-sample with demean
     description: One-sample test with demeaning
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_onesample.csv \
            -t test_output/palm/designs/contrast_onesample.csv \
            -o test_output/palm/onesample_demean \
@@ -275,7 +275,7 @@ tests:
   - name: Two-sample t-test (unpaired)
     description: Two-group comparison with exchangeable errors
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/twosample \
@@ -288,7 +288,7 @@ tests:
   - name: Two-sample with variance groups
     description: Two-group comparison allowing heteroscedasticity
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -vg test_output/palm/designs/vg_groups.csv \
@@ -301,7 +301,7 @@ tests:
   - name: Two-sample with auto variance groups
     description: Two-group comparison with automatic VG detection
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -vg auto \
@@ -317,7 +317,7 @@ tests:
   - name: Two-tailed t-test
     description: Two-tailed inference using -twotail option
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/twotail \
@@ -332,7 +332,7 @@ tests:
   - name: Sign-flipping test
     description: Test with independent symmetric errors (sign-flipping)
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_onesample.csv \
            -t test_output/palm/designs/contrast_onesample.csv \
            -o test_output/palm/signflip \
@@ -344,7 +344,7 @@ tests:
   - name: Combined EE and ISE
     description: Test with both exchangeable and independent symmetric errors
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/ee_ise \
@@ -359,7 +359,7 @@ tests:
   - name: F-test
     description: F-contrast test
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -f test_output/palm/designs/contrast_f.csv \
@@ -373,7 +373,7 @@ tests:
   - name: F-test only
     description: Run only F-contrasts, not t-contrasts
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -f test_output/palm/designs/contrast_f.csv \
@@ -389,7 +389,7 @@ tests:
   - name: Within-block permutation
     description: Permutation within exchangeability blocks
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -eb test_output/palm/designs/eb_groups.csv \
@@ -402,7 +402,7 @@ tests:
   - name: Whole-block permutation
     description: Permutation of whole exchangeability blocks
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -eb test_output/palm/designs/eb_groups.csv \
@@ -418,7 +418,7 @@ tests:
   - name: Pearson correlation
     description: Compute Pearson correlation coefficient
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/pearson \
@@ -433,7 +433,7 @@ tests:
   - name: TFCE inference
     description: Basic TFCE with default parameters
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/tfce \
@@ -446,7 +446,7 @@ tests:
   - name: TFCE with custom parameters
     description: TFCE with custom H, E, C parameters
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/tfce_custom \
@@ -459,7 +459,7 @@ tests:
   - name: TFCE 2D parameters
     description: TFCE with 2D preset (for surface/TBSS data)
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/tfce_2d \
@@ -474,7 +474,7 @@ tests:
   - name: Cluster extent inference
     description: Cluster-based inference with extent statistic
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/cluster_extent \
@@ -486,7 +486,7 @@ tests:
   - name: Cluster mass inference
     description: Cluster-based inference with mass statistic
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/cluster_mass \
@@ -501,7 +501,7 @@ tests:
   - name: FDR correction
     description: Produce FDR-adjusted p-values
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/fdr \
@@ -517,7 +517,7 @@ tests:
   - name: Correction over contrasts
     description: FWER correction over multiple contrasts
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_twotail.csv \
            -o test_output/palm/corrcon \
@@ -532,7 +532,7 @@ tests:
   - name: Negative binomial acceleration
     description: Acceleration using negative binomial approximation
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/accel_negbin \
@@ -544,7 +544,7 @@ tests:
   - name: Tail approximation acceleration
     description: Acceleration using tail approximation with GPD
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/accel_tail \
@@ -556,7 +556,7 @@ tests:
   - name: Gamma approximation acceleration
     description: Acceleration using gamma distribution approximation
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/accel_gamma \
@@ -568,7 +568,7 @@ tests:
   - name: No permutation approximation
     description: Compute permutation p-values without permutations
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/accel_noperm \
@@ -583,7 +583,7 @@ tests:
   - name: Save 1-p values
     description: Output (1-p) instead of p-values
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/save1p \
@@ -595,7 +595,7 @@ tests:
   - name: Log p-values
     description: Output -log(p) values
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/logp \
@@ -607,7 +607,7 @@ tests:
   - name: Z-statistic conversion
     description: Convert statistics to z-scores
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/zstat \
@@ -619,7 +619,7 @@ tests:
   - name: Save DOF
     description: Save degrees of freedom file
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/savedof \
@@ -631,7 +631,7 @@ tests:
   - name: Save GLM outputs
     description: Save COPEs, VARCOPEs, and Cohen's d
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/saveglm \
@@ -644,7 +644,7 @@ tests:
   - name: Save effective mask
     description: Save masks used for each modality
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/savemask \
@@ -656,7 +656,7 @@ tests:
   - name: Save permutation metrics
     description: Save CSV with permutation metrics
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/metrics \
@@ -668,7 +668,7 @@ tests:
   - name: Save parametric p-values
     description: Save uncorrected parametric p-values
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/parametric \
@@ -683,7 +683,7 @@ tests:
   - name: Fixed seed for reproducibility
     description: Run with fixed random seed
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/seed42 \
@@ -698,7 +698,7 @@ tests:
   - name: Exhaustive permutations
     description: Run all possible permutations (for small sample)
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/exhaustive \
@@ -714,7 +714,7 @@ tests:
   - name: Freedman-Lane method
     description: Permutation using Freedman-Lane regression method
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/rmethod_fl \
@@ -726,7 +726,7 @@ tests:
   - name: Dekker method
     description: Permutation using Dekker regression method
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/rmethod_dekker \
@@ -738,7 +738,7 @@ tests:
   - name: ter Braak method
     description: Permutation using ter Braak regression method
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/rmethod_terbraak \
@@ -753,7 +753,7 @@ tests:
   - name: Inverse normal transformation
     description: Apply inverse-normal transformation to data
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/inormal \
@@ -765,7 +765,7 @@ tests:
   - name: Inverse normal Blom method
     description: Inverse-normal transformation using Blom method
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/inormal_blom \
@@ -780,7 +780,7 @@ tests:
   - name: Quiet mode
     description: Run without progress output
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/quiet \
@@ -792,7 +792,7 @@ tests:
   - name: No uncorrected output
     description: Skip saving uncorrected p-values
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/nouncorr \
@@ -807,7 +807,7 @@ tests:
   - name: Guttman partition method
     description: Use Guttman partitioning for permutations
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/pmethodp_guttman \
@@ -819,7 +819,7 @@ tests:
   - name: Beckmann partition method
     description: Use Beckmann partitioning for permutations
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_regression_centered.csv \
            -t test_output/palm/designs/contrast_regression.csv \
            -o test_output/palm/pmethodp_beckmann \
@@ -834,7 +834,7 @@ tests:
   - name: Single precision
     description: Use single precision for inputs
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/precision_single \
@@ -846,7 +846,7 @@ tests:
   - name: Double precision
     description: Use double precision for inputs
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/precision_double \
@@ -861,7 +861,7 @@ tests:
   - name: TFCE with FDR
     description: Combined TFCE and FDR correction
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/tfce_fdr \
@@ -873,7 +873,7 @@ tests:
   - name: Full analysis pipeline
     description: Comprehensive analysis with multiple corrections
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_twotail.csv \
            -o test_output/palm/full_analysis \
@@ -891,7 +891,7 @@ tests:
   - name: Synchronized permutations
     description: Force synchronized permutations across modalities
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/syncperms \
@@ -906,7 +906,7 @@ tests:
   - name: Verbose filenames
     description: Use lengthy filenames even for single modality/contrast
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/verbose \
@@ -921,7 +921,7 @@ tests:
   - name: Save maximum statistic distribution
     description: Save distribution of maximum statistic
     command: |
-      palm -i ${t1w} \
+      palm -i ${t1w} -noniiclass \
            -d test_output/palm/designs/design_simple.csv \
            -t test_output/palm/designs/contrast_ttest.csv \
            -o test_output/palm/savemax \

@@ -27,21 +27,25 @@ tests:
     description: Verify nipype module imports and reports version
     command: python -c "import nipype; print('nipype version:', nipype.__version__)"
     expected_output_contains: "1.8.3"
+    expected_exit_code: 0
 
   - name: Import nipype.pipeline
     description: Test import of pipeline module
     command: python -c "from nipype.pipeline import Workflow, Node, MapNode, JoinNode; print('Pipeline imports successful')"
     expected_output_contains: "successful"
+    expected_exit_code: 0
 
   - name: Import nipype.interfaces
     description: Test import of interfaces module
     command: python -c "from nipype import interfaces; print('Interfaces imports successful')"
     expected_output_contains: "successful"
+    expected_exit_code: 0
 
   - name: Import nipype.algorithms
     description: Test import of algorithms module
     command: python -c "import nipype.algorithms.confounds; import nipype.algorithms.metrics; print('Algorithms imports successful')"
     expected_output_contains: "successful"
+    expected_exit_code: 0
 
   # ==========================================================================
   # WORKFLOW CREATION AND CONFIGURATION
@@ -56,6 +60,7 @@ tests:
       print('Base dir:', wf.base_dir)
       "
     expected_output_contains: "test_workflow"
+    expected_exit_code: 0
 
   - name: Create workflow with Node
     description: Test creating a workflow with nodes
@@ -70,6 +75,7 @@ tests:
       print('Number of nodes:', len(wf.list_node_names()))
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Create MapNode
     description: Test MapNode creation for iterating over inputs
@@ -87,6 +93,7 @@ tests:
       print('MapNode created successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Create JoinNode
     description: Test JoinNode creation for joining parallel outputs
@@ -103,6 +110,7 @@ tests:
       print('JoinNode created successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Workflow connect method
     description: Test connecting nodes in a workflow
@@ -117,6 +125,7 @@ tests:
       print('Nodes connected successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Workflow configuration
     description: Test workflow configuration options
@@ -130,6 +139,7 @@ tests:
       print('Workflow configuration set successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   # ==========================================================================
   # UTILITY INTERFACES
@@ -146,6 +156,7 @@ tests:
       print('IdentityInterface created with fields:', ['a', 'b', 'c'])
       "
     expected_output_contains: "IdentityInterface created"
+    expected_exit_code: 0
 
   - name: Function interface
     description: Test Function interface for custom Python functions
@@ -161,6 +172,7 @@ tests:
       print('Function result:', result.outputs.sum)
       "
     expected_output_contains: "8"
+    expected_exit_code: 0
 
   - name: Merge interface
     description: Test Merge interface for combining inputs
@@ -173,6 +185,7 @@ tests:
       print('Merge interface configured successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Select interface
     description: Test Select interface for choosing from a list
@@ -186,6 +199,7 @@ tests:
       print('Selected items:', result.outputs.out)
       "
     expected_output_contains: "['b', 'd']"
+    expected_exit_code: 0
 
   - name: Split interface
     description: Test Split interface for splitting lists
@@ -199,6 +213,7 @@ tests:
       print('Split outputs:', result.outputs.out1, result.outputs.out2)
       "
     expected_output_contains: "[1, 2]"
+    expected_exit_code: 0
 
   - name: Rename interface
     description: Test Rename interface for file renaming
@@ -212,6 +227,7 @@ tests:
       print('Rename interface configured:', rename.inputs.format_string)
       "
     expected_output_contains: "renamed_%(subject)s"
+    expected_exit_code: 0
 
   # ==========================================================================
   # IO INTERFACES
@@ -227,6 +243,7 @@ tests:
       print('DataGrabber configured with template:', dg.inputs.template)
       "
     expected_output_contains: "*.nii.gz"
+    expected_exit_code: 0
 
   - name: SelectFiles interface
     description: Test SelectFiles for template-based file selection
@@ -242,6 +259,7 @@ tests:
       print('Anat template:', templates['anat'])
       "
     expected_output_contains: "T1w.nii.gz"
+    expected_exit_code: 0
 
   - name: DataSink interface
     description: Test DataSink for output organization
@@ -254,6 +272,7 @@ tests:
       print('DataSink configured with base:', ds.inputs.base_directory)
       "
     expected_output_contains: "test_output/results"
+    expected_exit_code: 0
 
   - name: BIDSDataGrabber interface
     description: Test BIDSDataGrabber for BIDS datasets
@@ -265,6 +284,7 @@ tests:
       print('BIDSDataGrabber configured for:', bg.inputs.base_dir)
       "
     expected_output_contains: "ds000001"
+    expected_exit_code: 0
 
   - name: JSONFileSink interface
     description: Test JSONFileSink for JSON output
@@ -277,6 +297,7 @@ tests:
       print('JSONFileSink configured for output')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FSL INTERFACES
@@ -293,6 +314,7 @@ tests:
       print('FSL MCFLIRT available:', hasattr(fsl, 'MCFLIRT'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: FSL BET interface setup
     description: Test FSL BET brain extraction interface
@@ -309,6 +331,7 @@ tests:
       print('Mask:', bet.inputs.mask)
       "
     expected_output_contains: "BET interface configured"
+    expected_exit_code: 0
 
   - name: FSL FLIRT interface setup
     description: Test FSL FLIRT registration interface
@@ -325,6 +348,7 @@ tests:
       print('Cost:', flirt.inputs.cost)
       "
     expected_output_contains: "corratio"
+    expected_exit_code: 0
 
   - name: FSL MCFLIRT interface setup
     description: Test FSL MCFLIRT motion correction interface
@@ -340,6 +364,7 @@ tests:
       print('Ref vol:', mc.inputs.ref_vol)
       "
     expected_output_contains: "MCFLIRT interface configured"
+    expected_exit_code: 0
 
   - name: FSL FAST interface setup
     description: Test FSL FAST tissue segmentation interface
@@ -354,6 +379,7 @@ tests:
       print('Number of classes:', fast.inputs.number_classes)
       "
     expected_output_contains: "3"
+    expected_exit_code: 0
 
   - name: FSL SliceTimer interface setup
     description: Test FSL SliceTimer for slice timing correction
@@ -368,6 +394,7 @@ tests:
       print('TR:', st.inputs.time_repetition)
       "
     expected_output_contains: "2.0"
+    expected_exit_code: 0
 
   - name: FSL ImageMaths interface setup
     description: Test FSL ImageMaths for image calculations
@@ -381,6 +408,7 @@ tests:
       print('ImageMaths configured with:', im.inputs.op_string)
       "
     expected_output_contains: "-thr 100"
+    expected_exit_code: 0
 
   - name: FSL SUSAN interface setup
     description: Test FSL SUSAN smoothing interface
@@ -395,6 +423,7 @@ tests:
       print('FWHM:', susan.inputs.fwhm)
       "
     expected_output_contains: "6.0"
+    expected_exit_code: 0
 
   - name: FSL Smooth interface setup
     description: Test FSL Smooth interface
@@ -407,6 +436,7 @@ tests:
       print('Smooth interface configured with FWHM:', sm.inputs.fwhm)
       "
     expected_output_contains: "5.0"
+    expected_exit_code: 0
 
   - name: FSL Threshold interface setup
     description: Test FSL Threshold interface
@@ -419,6 +449,7 @@ tests:
       print('Threshold interface configured:', th.inputs.thresh)
       "
     expected_output_contains: "100"
+    expected_exit_code: 0
 
   # ==========================================================================
   # AFNI INTERFACES
@@ -435,6 +466,7 @@ tests:
       print('AFNI BlurInMask available:', hasattr(afni, 'BlurInMask'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: AFNI Despike interface setup
     description: Test AFNI Despike interface
@@ -448,6 +480,7 @@ tests:
       print('Output type:', ds.inputs.outputtype)
       "
     expected_output_contains: "NIFTI_GZ"
+    expected_exit_code: 0
 
   - name: AFNI Allineate interface setup
     description: Test AFNI Allineate registration interface
@@ -462,6 +495,7 @@ tests:
       print('Warp type:', al.inputs.warp_type)
       "
     expected_output_contains: "affine_general"
+    expected_exit_code: 0
 
   - name: AFNI Automask interface setup
     description: Test AFNI Automask for brain masking
@@ -475,6 +509,7 @@ tests:
       print('Dilate:', am.inputs.dilate)
       "
     expected_output_contains: "1"
+    expected_exit_code: 0
 
   - name: AFNI Bandpass interface setup
     description: Test AFNI Bandpass temporal filtering
@@ -491,6 +526,7 @@ tests:
       print('Highpass:', bp.inputs.highpass)
       "
     expected_output_contains: "0.1"
+    expected_exit_code: 0
 
   - name: AFNI BlurInMask interface setup
     description: Test AFNI BlurInMask for masked smoothing
@@ -505,6 +541,7 @@ tests:
       print('FWHM:', bim.inputs.fwhm)
       "
     expected_output_contains: "6.0"
+    expected_exit_code: 0
 
   - name: AFNI Detrend interface setup
     description: Test AFNI Detrend for detrending
@@ -517,6 +554,7 @@ tests:
       print('Detrend interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SPM INTERFACES
@@ -533,6 +571,7 @@ tests:
       print('SPM NewSegment available:', hasattr(spm, 'NewSegment'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: SPM Smooth interface setup
     description: Test SPM Smooth interface
@@ -546,6 +585,7 @@ tests:
       print('FWHM:', sm.inputs.fwhm)
       "
     expected_output_contains: "[6, 6, 6]"
+    expected_exit_code: 0
 
   - name: SPM Realign interface setup
     description: Test SPM Realign motion correction interface
@@ -559,6 +599,7 @@ tests:
       print('Register to mean:', rl.inputs.register_to_mean)
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: SPM Coregister interface setup
     description: Test SPM Coregister interface
@@ -573,6 +614,7 @@ tests:
       print('Cost function:', coreg.inputs.cost_function)
       "
     expected_output_contains: "nmi"
+    expected_exit_code: 0
 
   - name: SPM Normalize12 interface setup
     description: Test SPM Normalize12 interface
@@ -586,6 +628,7 @@ tests:
       print('Voxel sizes:', norm.inputs.write_voxel_sizes)
       "
     expected_output_contains: "[2, 2, 2]"
+    expected_exit_code: 0
 
   - name: SPM SliceTiming interface setup
     description: Test SPM SliceTiming interface
@@ -601,6 +644,7 @@ tests:
       print('Num slices:', st.inputs.num_slices)
       "
     expected_output_contains: "40"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ANTs INTERFACES
@@ -617,6 +661,7 @@ tests:
       print('ANTs CorticalThickness available:', hasattr(ants, 'CorticalThickness'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: ANTs Registration interface setup
     description: Test ANTs Registration interface
@@ -632,6 +677,7 @@ tests:
       print('Transforms:', reg.inputs.transforms)
       "
     expected_output_contains: "['Rigid', 'Affine']"
+    expected_exit_code: 0
 
   - name: ANTs N4BiasFieldCorrection interface setup
     description: Test ANTs N4BiasFieldCorrection interface
@@ -646,6 +692,7 @@ tests:
       print('Iterations:', n4.inputs.n_iterations)
       "
     expected_output_contains: "[50, 50, 50, 50]"
+    expected_exit_code: 0
 
   - name: ANTs ApplyTransforms interface setup
     description: Test ANTs ApplyTransforms interface
@@ -661,6 +708,7 @@ tests:
       print('Interpolation:', at.inputs.interpolation)
       "
     expected_output_contains: "Linear"
+    expected_exit_code: 0
 
   - name: ANTs DenoiseImage interface setup
     description: Test ANTs DenoiseImage interface
@@ -674,6 +722,7 @@ tests:
       print('Dimension:', dn.inputs.dimension)
       "
     expected_output_contains: "3"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FREESURFER INTERFACES
@@ -690,6 +739,7 @@ tests:
       print('FS ApplyVolTransform available:', hasattr(fs, 'ApplyVolTransform'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: FreeSurfer Binarize interface setup
     description: Test FreeSurfer Binarize interface
@@ -703,6 +753,7 @@ tests:
       print('Match labels:', binarize.inputs.match)
       "
     expected_output_contains: "[41, 42]"
+    expected_exit_code: 0
 
   - name: FreeSurfer MRIConvert interface setup
     description: Test FreeSurfer MRIConvert interface
@@ -717,6 +768,7 @@ tests:
       print('Output type:', mc.inputs.out_type)
       "
     expected_output_contains: "niigz"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MRTRIX3 INTERFACES
@@ -732,6 +784,7 @@ tests:
       print('MRtrix3 FitTensor available:', hasattr(mrtrix3, 'FitTensor'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   - name: MRtrix3 MRConvert interface setup
     description: Test MRtrix3 MRConvert interface
@@ -744,6 +797,7 @@ tests:
       print('MRtrix3 MRConvert interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DIPY INTERFACES
@@ -759,6 +813,7 @@ tests:
       print('DIPY TrackDensityMap available:', hasattr(dipy, 'TrackDensityMap'))
       " 2>&1 | grep -v "We advise"
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ALGORITHMS - CONFOUNDS
@@ -775,6 +830,7 @@ tests:
       print('Regress poly:', tsnr.inputs.regress_poly)
       "
     expected_output_contains: "2"
+    expected_exit_code: 0
 
   - name: CompCor algorithm
     description: Test CompCor algorithm interface
@@ -789,6 +845,7 @@ tests:
       print('Num components:', cc.inputs.num_components)
       "
     expected_output_contains: "5"
+    expected_exit_code: 0
 
   - name: ACompCor algorithm
     description: Test ACompCor (anatomical CompCor) interface
@@ -802,6 +859,7 @@ tests:
       print('ACompCor interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: TCompCor algorithm
     description: Test TCompCor (temporal CompCor) interface
@@ -816,6 +874,7 @@ tests:
       print('Percentile threshold:', tcc.inputs.percentile_threshold)
       "
     expected_output_contains: "0.02"
+    expected_exit_code: 0
 
   - name: FramewiseDisplacement algorithm
     description: Test FramewiseDisplacement motion metric
@@ -830,6 +889,7 @@ tests:
       print('Radius:', fd.inputs.radius)
       "
     expected_output_contains: "50"
+    expected_exit_code: 0
 
   - name: ComputeDVARS algorithm
     description: Test ComputeDVARS metric interface
@@ -842,6 +902,7 @@ tests:
       print('ComputeDVARS interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ALGORITHMS - METRICS
@@ -857,6 +918,7 @@ tests:
       print('Overlap metric interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: Distance metric algorithm
     description: Test Distance metric interface
@@ -871,6 +933,7 @@ tests:
       print('Method:', dist.inputs.method)
       "
     expected_output_contains: "eucl_min"
+    expected_exit_code: 0
 
   - name: FuzzyOverlap metric algorithm
     description: Test FuzzyOverlap for probabilistic maps
@@ -883,6 +946,7 @@ tests:
       print('FuzzyOverlap metric interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: Similarity metric algorithm
     description: Test Similarity metric interface
@@ -897,6 +961,7 @@ tests:
       print('Metric:', sim.inputs.metric)
       "
     expected_output_contains: "cc"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ALGORITHMS - MISC
@@ -911,6 +976,7 @@ tests:
       print('Gunzip interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: Gzip algorithm
     description: Test Gzip compression interface
@@ -922,6 +988,7 @@ tests:
       print('Gzip interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: CalculateMedian algorithm
     description: Test CalculateMedian interface
@@ -933,6 +1000,7 @@ tests:
       print('CalculateMedian interface configured')
       "
     expected_output_contains: "configured"
+    expected_exit_code: 0
 
   - name: AddNoise algorithm
     description: Test AddNoise interface
@@ -946,6 +1014,7 @@ tests:
       print('SNR:', noise.inputs.snr)
       "
     expected_output_contains: "20"
+    expected_exit_code: 0
 
   # ==========================================================================
   # ALGORITHMS - RAPIDART
@@ -966,6 +1035,7 @@ tests:
       print('Z-intensity threshold:', ad.inputs.zintensity_threshold)
       "
     expected_output_contains: "3.0"
+    expected_exit_code: 0
 
   # ==========================================================================
   # IMAGE INTERFACES
@@ -982,6 +1052,7 @@ tests:
       print('Orientation:', reorient.inputs.orientation)
       "
     expected_output_contains: "RAS"
+    expected_exit_code: 0
 
   - name: Rescale image interface
     description: Test Rescale image interface
@@ -995,6 +1066,7 @@ tests:
       print('Percentile:', rescale.inputs.percentile)
       "
     expected_output_contains: "99.9"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DCM2NII INTERFACES
@@ -1013,6 +1085,7 @@ tests:
       print('BIDS format:', d2n.inputs.bids_format)
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIFTYREG INTERFACES
@@ -1027,6 +1100,7 @@ tests:
       print('NiftyReg RegResample available:', hasattr(niftyreg, 'RegResample'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   # ==========================================================================
   # CAMINO INTERFACES
@@ -1041,6 +1115,7 @@ tests:
       print('Camino ProcStreamlines available:', hasattr(camino, 'ProcStreamlines'))
       "
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   # ==========================================================================
   # WORKFLOW EXECUTION TESTS
@@ -1070,6 +1145,7 @@ tests:
       print('Input: 5, Output:', double_node.result.outputs.result)
       "
     expected_output_contains: "Output: 10"
+    expected_exit_code: 0
 
   - name: Multi-node workflow execution
     description: Test workflow with multiple connected nodes
@@ -1101,6 +1177,7 @@ tests:
           print(f'{node.name}: {node.result.outputs.result}')
       "
     expected_output_contains: "30"
+    expected_exit_code: 0
 
   - name: Workflow graph export
     description: Test exporting workflow as graph
@@ -1128,6 +1205,7 @@ tests:
           print('Graph dotfile created')
       "
     expected_output_contains: "Workflow graph exported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIPYPE UTILITY FUNCTIONS
@@ -1142,6 +1220,7 @@ tests:
       print('Nipype logging configured successfully')
       "
     expected_output_contains: "successfully"
+    expected_exit_code: 0
 
   - name: Nipype config settings
     description: Test nipype configuration settings
@@ -1155,6 +1234,7 @@ tests:
       print('crashfile_format:', config.get('execution', 'crashfile_format'))
       "
     expected_output_contains: "true"
+    expected_exit_code: 0
 
   - name: Nipype isdefined utility
     description: Test isdefined utility function
@@ -1166,6 +1246,7 @@ tests:
       print('isdefined(Undefined):', isdefined(Undefined))
       "
     expected_output_contains: "False"
+    expected_exit_code: 0
 
   - name: Nipype TraitedSpec
     description: Test TraitedSpec for custom interface creation
@@ -1184,6 +1265,7 @@ tests:
       print('Default threshold:', MyInputSpec().threshold)
       "
     expected_output_contains: "0.5"
+    expected_exit_code: 0
 
 cleanup:
   script: |

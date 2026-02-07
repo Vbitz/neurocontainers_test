@@ -469,7 +469,7 @@ tests:
   - name: vmtkpolyballmodeller help
     description: Display vmtkpolyballmodeller options
     command: vmtkpolyballmodeller --help 2>&1
-    expected_output_contains: "Centerlines"
+    expected_output_contains: "polyball"
 
   # ==========================================================================
   # REGISTRATION AND TRANSFORMATION TOOLS HELP
@@ -593,7 +593,7 @@ tests:
   - name: vmtkactivetubes help
     description: Display vmtkactivetubes options
     command: vmtkactivetubes --help 2>&1
-    expected_output_contains: "Centerlines"
+    expected_output_contains: "centerlines"
 
   - name: vmtkpotentialfit help
     description: Display vmtkpotentialfit options
@@ -770,7 +770,7 @@ tests:
   - name: vmtkcenterlineimage help
     description: Display vmtkcenterlineimage options
     command: vmtkcenterlineimage --help 2>&1
-    expected_output_contains: "Centerlines"
+    expected_output_contains: "centerline"
 
   - name: vmtkcenterlinemodeller help
     description: Display vmtkcenterlinemodeller options
@@ -783,7 +783,7 @@ tests:
   - name: vmtklevelsetsegmentation help
     description: Display vmtklevelsetsegmentation options
     command: vmtklevelsetsegmentation --help 2>&1
-    expected_output_contains: "level set"
+    expected_output_contains: "level"
 
   # ==========================================================================
   # RENDERER TOOLS HELP
@@ -839,7 +839,7 @@ tests:
   - name: vmtkbranchpatching help
     description: Display vmtkbranchpatching options
     command: vmtkbranchpatching --help 2>&1
-    expected_output_contains: "Centerlines"
+    expected_output_contains: "Surface"
 
   - name: vmtkpointsplitextractor help
     description: Display vmtkpointsplitextractor options

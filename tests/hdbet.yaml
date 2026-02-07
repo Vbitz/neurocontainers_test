@@ -324,6 +324,7 @@ tests:
         img = nib.load('test_output/t1w_nifti_check.nii.gz'); \
         print(f'Valid NIfTI: shape={img.shape}, dtype={img.get_data_dtype()}')"
     expected_output_contains: "Valid NIfTI"
+    expected_exit_code: 0
     timeout: 600
 
   - name: Verify no NaN values in output
@@ -366,6 +367,7 @@ tests:
         assert 800 < brain_volume_ml < 2000, f'Brain volume {brain_volume_ml} mL outside expected range'; \
         print('Brain volume within expected range (800-2000 mL)')"
     expected_output_contains: "Brain volume within expected range"
+    expected_exit_code: 0
     timeout: 600
 
 cleanup:

@@ -129,12 +129,12 @@ tests:
   - name: spec2nii auto subcommand help
     description: Display auto identification help
     command: spec2nii auto --help 2>&1
-    expected_output_contains: "automatic identification"
+    expected_output_contains: "file to convert"
 
   - name: spec2nii dump subcommand help
     description: Display header dump help
     command: spec2nii dump --help 2>&1
-    expected_output_contains: "headers"
+    expected_output_contains: "NIfTI-MRS"
 
   # ==========================================================================
   # BIDS-VALIDATOR
@@ -512,32 +512,32 @@ tests:
   # ==========================================================================
   - name: Read NIfTI header T1w
     description: Read T1w image header using nibabel
-    command: python -c "import nibabel as nib; img = nib.load('${t1w}'); print(img.header['dim'])" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${t1w}\"); print(img.header[\"dim\"])" 2>&1
     expected_output_contains: "["
 
   - name: Read NIfTI header BOLD
     description: Read BOLD image header using nibabel
-    command: python -c "import nibabel as nib; img = nib.load('${bold}'); print(img.header['dim'])" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${bold}\"); print(img.header[\"dim\"])" 2>&1
     expected_output_contains: "["
 
   - name: Check T1w dimensions
     description: Verify T1w image is 3D
-    command: python -c "import nibabel as nib; img = nib.load('${t1w}'); print('3D' if len(img.shape) == 3 else 'NOT_3D')" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${t1w}\"); print(\"3D\" if len(img.shape) == 3 else \"NOT_3D\")" 2>&1
     expected_output_contains: "3D"
 
   - name: Check BOLD dimensions
     description: Verify BOLD image is 4D
-    command: python -c "import nibabel as nib; img = nib.load('${bold}'); print('4D' if len(img.shape) == 4 else 'NOT_4D')" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${bold}\"); print(\"4D\" if len(img.shape) == 4 else \"NOT_4D\")" 2>&1
     expected_output_contains: "4D"
 
   - name: Get T1w voxel sizes
     description: Extract voxel dimensions from T1w header
-    command: python -c "import nibabel as nib; img = nib.load('${t1w}'); print(img.header.get_zooms())" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${t1w}\"); print(img.header.get_zooms())" 2>&1
     expected_output_contains: "("
 
   - name: Get BOLD TR
     description: Extract TR from BOLD image header
-    command: python -c "import nibabel as nib; img = nib.load('${bold}'); zooms = img.header.get_zooms(); print(f'TR={zooms[3]:.1f}s' if len(zooms) > 3 else 'NO_TR')" 2>&1
+    command: python -c "import nibabel as nib; img = nib.load(\"${bold}\"); zooms = img.header.get_zooms(); print(\"TR=%.1fs\" % zooms[3] if len(zooms) > 3 else \"NO_TR\")" 2>&1
     expected_output_contains: "TR"
 
   # ==========================================================================
@@ -545,17 +545,17 @@ tests:
   # ==========================================================================
   - name: Read events TSV
     description: Read events file using pandas
-    command: python -c "import pandas as pd; df = pd.read_csv('${events}', sep='\t'); print(df.columns.tolist())" 2>&1
+    command: python -c "import pandas as pd; df = pd.read_csv(\"${events}\", sep=\"\t\"); print(df.columns.tolist())" 2>&1
     expected_output_contains: "onset"
 
   - name: Check events columns
     description: Verify required BIDS events columns
-    command: python -c "import pandas as pd; df = pd.read_csv('${events}', sep='\t'); print('OK' if 'onset' in df.columns and 'duration' in df.columns else 'MISSING')" 2>&1
+    command: python -c "import pandas as pd; df = pd.read_csv(\"${events}\", sep=\"\t\"); print(\"OK\" if \"onset\" in df.columns and \"duration\" in df.columns else \"MISSING\")" 2>&1
     expected_output_contains: "OK"
 
   - name: Count events
     description: Count number of events in events file
-    command: "python -c \"import pandas as pd; df = pd.read_csv('${events}', sep='\\t'); print(f'Events: {len(df)}')\" 2>&1"
+    command: python -c "import pandas as pd; df = pd.read_csv(\"${events}\", sep=\"\t\"); print(\"Events:\", len(df))" 2>&1
     expected_output_contains: "Events:"
 
   # ==========================================================================

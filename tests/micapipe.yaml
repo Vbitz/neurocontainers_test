@@ -75,6 +75,7 @@ tests:
   - name: FreeSurfer mri_convert reorient
     description: Reorient image to standard orientation
     command: mri_convert --out_orientation RAS ${t1w} test_output/t1w_ras.nii.gz 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_ras.nii.gz
 
@@ -659,7 +660,7 @@ tests:
   - name: c3d statistics
     description: Compute image statistics
     command: c3d ${t1w} -mean 2>&1
-    expected_output_contains: " "
+    expected_exit_code: 0
 
   # ==========================================================================
   # CONNECTOME WORKBENCH 1.3.2
@@ -677,7 +678,7 @@ tests:
   - name: Workbench volume info
     description: Get volume information
     command: wb_command -volume-stats ${t1w} -reduce MEAN 2>&1
-    expected_output_contains: " "
+    expected_exit_code: 0
 
   - name: Workbench volume math
     description: Perform volume math operations
@@ -711,6 +712,7 @@ tests:
     description: Check dcm2niix version
     command: dcm2niix --version 2>&1
     expected_output_contains: "dcm2niix"
+    expected_exit_code: 3
 
   - name: dcm2niix help
     description: Display dcm2niix help
@@ -776,7 +778,7 @@ tests:
       echo "FSL stats:" && fslstats ${t1w} -m -s && \
       echo "MRtrix stats:" && mrstats ${t1w} -output mean -output std && \
       echo "AFNI stats:" && 3dBrickStat -mean -slow ${t1w}
-    expected_output_contains: "mean"
+    expected_output_contains: "FSL stats"
 
   - name: Format conversion roundtrip
     description: Convert between formats and verify

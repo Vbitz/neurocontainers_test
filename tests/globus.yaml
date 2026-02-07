@@ -24,9 +24,9 @@ tests:
     expected_output_contains: "Usage"
 
   - name: Version flag display
-    description: Verify -version flag shows help with version option
+    description: Verify -version flag shows version information
     command: globusconnectpersonal -version 2>&1 | head -3
-    expected_output_contains: "Usage"
+    expected_output_contains: "Globus"
 
   - name: Help shows GUI mode
     description: Verify help includes GUI mode documentation

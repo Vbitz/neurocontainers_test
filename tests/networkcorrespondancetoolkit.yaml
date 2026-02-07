@@ -243,7 +243,7 @@ tests:
   - name: Scipy statistical functions
     description: Test scipy.stats for statistical analysis
     command: |
-      python3 -c "
+      python3 << 'PYEOF'
       from scipy import stats
       import numpy as np
       import nibabel as nib
@@ -255,7 +255,7 @@ tests:
       print('Kurtosis:', stats.kurtosis(data))
       mode_result = stats.mode(data.astype(int), keepdims=True)
       print('Mode:', mode_result.mode[0])
-      "
+      PYEOF
     expected_output_contains: "Skewness:"
 
   - name: Scipy spatial distance
@@ -538,7 +538,7 @@ tests:
   - name: Pandas DataFrame operations
     description: Test pandas DataFrame creation and manipulation
     command: |
-      python3 -c "
+      python3 << 'PYEOF'
       import pandas as pd
       import numpy as np
       # Create sample network correspondence results
@@ -551,7 +551,7 @@ tests:
       df = pd.DataFrame(data)
       print(df.to_string())
       df.to_csv('test_output/network_results.csv', index=False)
-      "
+      PYEOF
     validate:
       - output_exists: ${output_dir}/network_results.csv
 
@@ -1098,7 +1098,7 @@ tests:
   - name: Handle missing file gracefully
     description: Test error handling for missing files
     command: |
-      python3 -c "
+      python3 << 'PYEOF'
       import nibabel as nib
       try:
           img = nib.load('nonexistent_file.nii.gz')
@@ -1106,9 +1106,10 @@ tests:
       except FileNotFoundError:
           print('Correctly raised FileNotFoundError')
       except Exception as e:
-          print(f'Raised exception: {type(e).__name__}')
-      "
-    expected_output_contains: "Raised exception:"
+          print('Raised exception: ' + type(e).__name__)
+      PYEOF
+    expected_exit_code: 0
+    expected_output_contains: "Correctly raised"
 
   - name: Handle invalid config gracefully
     description: Test error handling for invalid configuration

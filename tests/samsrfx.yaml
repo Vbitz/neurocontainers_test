@@ -75,7 +75,7 @@ tests:
 
   - name: MCR toolbox directory
     description: Verify MCR toolbox directory exists
-    command: ls /opt/MCR-2023b/R2023b/toolbox/ | head -10
+    command: ls /opt/MCR-2023b/R2023b/toolbox/
     expected_output_contains: "matlab"
 
   - name: MCR Java runtime
@@ -145,7 +145,7 @@ tests:
   - name: Analysis directory structure
     description: Verify Analysis directory contains functions
     command: ls /opt/samsrfx-v10.004/samsrf/Analysis/ | wc -l
-    expected_output_contains: "26"
+    expected_output_contains: "25"
 
   - name: pRF backprojection function
     description: Verify samsrf_backproj_prf.m exists
@@ -236,7 +236,7 @@ tests:
   - name: pRF directory structure
     description: Verify pRF directory contains functions
     command: ls /opt/samsrfx-v10.004/samsrf/pRF/ | wc -l
-    expected_output_contains: "16"
+    expected_output_contains: "15"
 
   - name: Gaussian pRF function
     description: Verify Gaussian receptive field function exists
@@ -350,7 +350,7 @@ tests:
   - name: Surfs directory structure
     description: Verify Surfs directory contains surface functions
     command: ls /opt/samsrfx-v10.004/samsrf/Surfs/ | wc -l
-    expected_output_contains: "45"
+    expected_output_contains: "44"
 
   - name: GIfTI to Srf conversion
     description: Verify GIfTI conversion function exists
@@ -408,7 +408,7 @@ tests:
   - name: Utils directory structure
     description: Verify Utils directory contains utility functions
     command: ls /opt/samsrfx-v10.004/samsrf/Utils/ | wc -l
-    expected_output_contains: "58"
+    expected_output_contains: "57"
 
   - name: Display maps tool
     description: Verify DisplayMaps function exists

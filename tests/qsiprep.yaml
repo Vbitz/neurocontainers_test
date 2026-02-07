@@ -43,7 +43,7 @@ tests:
   - name: QSIPrep help
     description: Verify qsiprep help is accessible
     command: qsiprep --help 2>&1 | head -20
-    expected_output_contains: "bids_dir"
+    expected_output_contains: "qsiprep"
 
   # ==========================================================================
   # MRTRIX3 TOOLS - Core diffusion processing suite
@@ -51,7 +51,7 @@ tests:
   - name: MRtrix3 version (mrinfo)
     description: Verify MRtrix3 mrinfo tool runs
     command: mrinfo --version 2>&1 | head -1
-    expected_output_contains: "MRtrix3"
+    expected_output_contains: "mrinfo"
 
   - name: MRtrix3 image info
     description: Display NIfTI header information using mrinfo
@@ -135,13 +135,13 @@ tests:
     validate:
       - output_exists: ${output_dir}/mask_median.nii.gz
 
-  - name: MRtrix3 mask filter - fill holes
-    description: Test maskfilter for filling holes in mask
+  - name: MRtrix3 mask filter - clean
+    description: Test maskfilter for cleaning small mask components
     command: |
       mrthreshold ${t1w} - -force 2>/dev/null | \
-      maskfilter - fill test_output/mask_filled.nii.gz -force 2>&1
+      maskfilter - clean test_output/mask_cleaned.nii.gz -force 2>&1
     validate:
-      - output_exists: ${output_dir}/mask_filled.nii.gz
+      - output_exists: ${output_dir}/mask_cleaned.nii.gz
 
   - name: MRtrix3 mask filter - connected components
     description: Test maskfilter for largest connected component
@@ -191,7 +191,7 @@ tests:
 
   - name: MRtrix3 5ttgen help
     description: Verify 5ttgen for tissue segmentation is available
-    command: 5ttgen --help 2>&1 | head -10
+    command: 5ttgen -help 2>&1 | head -10
     expected_output_contains: "5TT"
 
   # ==========================================================================
@@ -349,7 +349,7 @@ tests:
   - name: Convert3D version
     description: Verify Convert3D (c3d) is available
     command: /opt/convert3d-nightly/bin/c3d -version 2>&1
-    expected_output_contains: "Convert3D"
+    expected_output_contains: "Version"
 
   - name: Convert3D image info
     description: Test c3d for displaying image info

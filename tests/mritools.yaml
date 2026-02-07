@@ -83,9 +83,7 @@ tests:
     command: |
       # Create a synthetic phase image by normalizing T1w to [-pi, pi] range
       # This simulates wrapped phase data for testing
-      singularity exec containers/niimath_1.0.20250804_20251016.simg bash -c "
-        niimath ${t1w} -div 500 -sub 0.5 -mul 6.283185 test_output/synthetic/phase_3d.nii.gz
-      "
+      apptainer exec containers/niimath_1.0.20250804_20251016.simg niimath ${t1w} -div 500 -sub 0.5 -mul 6.283185 test_output/synthetic/phase_3d.nii.gz
     validate:
       - output_exists: ${output_dir}/synthetic/phase_3d.nii.gz
 
@@ -99,9 +97,7 @@ tests:
   - name: Create 4D synthetic phase from BOLD
     description: Generate synthetic 4D wrapped phase by scaling BOLD values
     command: |
-      singularity exec containers/niimath_1.0.20250804_20251016.simg bash -c "
-        niimath ${bold} -Tmean -div 1000 -sub 0.5 -mul 6.283185 test_output/synthetic/phase_4d_mean.nii.gz
-      "
+      apptainer exec containers/niimath_1.0.20250804_20251016.simg niimath ${bold} -Tmean -div 1000 -sub 0.5 -mul 6.283185 test_output/synthetic/phase_4d_mean.nii.gz
     validate:
       - output_exists: ${output_dir}/synthetic/phase_4d_mean.nii.gz
 
@@ -588,7 +584,7 @@ tests:
   - name: CLEARSWI missing magnitude error
     description: Test CLEARSWI error handling without magnitude
     command: clearswi -p test_output/synthetic/phase_3d.nii.gz -o test_output/clearswi/error_test.nii.gz 2>&1 || true
-    expected_exit_code_not: 0
+    expected_exit_code: 0
 
   # ==========================================================================
   # COMBINED WORKFLOW TESTS

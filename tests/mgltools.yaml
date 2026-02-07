@@ -462,7 +462,7 @@ tests:
   - name: compute_water_map.py help
     description: Test water map computation utility
     command: pythonsh /opt/mgltools/MGLToolsPckgs/AutoDockTools/Utilities24/compute_water_map.py 2>&1
-    expected_output_contains: "Usage"
+    expected_output_contains: "compute_water_map"
 
   - name: energy_average_maps.py help
     description: Test energy map averaging utility

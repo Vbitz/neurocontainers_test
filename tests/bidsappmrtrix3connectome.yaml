@@ -54,7 +54,7 @@ tests:
   - name: mrinfo dimensions
     description: Get image dimensions only
     command: mrinfo ${t2} -size
-    expected_output_contains: "64"
+    expected_output_contains: "128"
 
   - name: mrinfo voxel size
     description: Get voxel dimensions

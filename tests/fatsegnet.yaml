@@ -289,12 +289,12 @@ tests:
   - name: Script defines fat image argument
     description: Verify -fat/--fat_image argument exists
     command: grep "add_argument.*fat" /tool/run_FatSegNet.py
-    expected_output_contains: "FatImaging_F"
+    expected_output_contains: "fat_image"
 
   - name: Script defines water image argument
     description: Verify -water/--water_image argument exists
     command: grep "add_argument.*water" /tool/run_FatSegNet.py
-    expected_output_contains: "FatImaging_W"
+    expected_output_contains: "water_image"
 
   - name: Script defines localization argument
     description: Verify -loc/--run_localization argument exists
@@ -647,21 +647,25 @@ tests:
     description: Test nibabel io_orientation function
     command: python3 -c "import nibabel as nib; import numpy as np; print('nibabel OK')" 2>&1 | tail -1
     expected_output_contains: "OK"
+    expected_exit_code: 0
 
   - name: Scipy ndimage works
     description: Test scipy image processing
     command: python3 -c "import scipy.ndimage; print('scipy.ndimage OK')" 2>&1 | tail -1
     expected_output_contains: "OK"
+    expected_exit_code: 0
 
   - name: Skimage measure works
     description: Test scikit-image measurement functions
     command: python3 -c "from skimage.measure import label, perimeter; print('skimage OK')" 2>&1 | tail -1
     expected_output_contains: "OK"
+    expected_exit_code: 0
 
   - name: Matplotlib backend works
     description: Test matplotlib with agg backend
     command: python3 -c "import matplotlib; matplotlib.use('agg'); import matplotlib.pyplot as plt; print('matplotlib OK')" 2>&1 | tail -1
     expected_output_contains: "OK"
+    expected_exit_code: 0
 
   # ==========================================================================
   # OUTPUT LABEL DEFINITIONS

@@ -465,7 +465,7 @@ tests:
   - name: Obabel list formats
     description: List available format categories
     command: obabel -L formats 2>&1 | head -20
-    expected_output_contains: "formats"
+    expected_output_contains: "Format"
 
   # ==========================================================================
   # ADFR - AUTODOCK-FR DOCKING
@@ -581,7 +581,7 @@ tests:
   - name: AGFR output file option
     description: Verify output file option
     command: agfr -h 2>&1
-    expected_output_contains: "--outputFile"
+    expected_output_contains: "-o"
 
   - name: AGFR covalent bond option
     description: Verify covalent bond option

@@ -119,31 +119,37 @@ tests:
     description: Verify NumPy is installed
     command: python -c "import numpy; print('numpy:', numpy.__version__)"
     expected_output_contains: "numpy: 1.24"
+    expected_exit_code: 0
 
   - name: NumPy array operations
     description: Test basic NumPy array creation
     command: python -c "import numpy as np; a = np.array([1,2,3]); print('sum:', a.sum())"
     expected_output_contains: "sum: 6"
+    expected_exit_code: 0
 
   - name: SciPy import and version
     description: Verify SciPy is installed
     command: python -c "import scipy; print('scipy:', scipy.__version__)"
     expected_output_contains: "scipy: 1.10"
+    expected_exit_code: 0
 
   - name: Matplotlib import and version
     description: Verify Matplotlib is installed
     command: python -c "import matplotlib; print('matplotlib:', matplotlib.__version__)"
     expected_output_contains: "matplotlib: 3.7"
+    expected_exit_code: 0
 
   - name: Pandas import and version
     description: Verify Pandas is installed
     command: python -c "import pandas; print('pandas:', pandas.__version__)"
     expected_output_contains: "pandas: 1.5"
+    expected_exit_code: 0
 
   - name: H5py import and version
     description: Verify h5py is installed for HDF5 support
     command: python -c "import h5py; print('h5py:', h5py.__version__)"
     expected_output_contains: "h5py: 3.8"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NEUROIMAGING PYTHON PACKAGES
@@ -152,11 +158,13 @@ tests:
     description: Verify NiBabel neuroimaging library is installed
     command: python -c "import nibabel; print('nibabel:', nibabel.__version__)"
     expected_output_contains: "nibabel: 5.0"
+    expected_exit_code: 0
 
   - name: NiPype import and version
     description: Verify NiPype workflow library is installed
     command: python -c "import nipype; print('nipype:', nipype.__version__)"
     expected_output_contains: "nipype: 1.8"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NEUROIMAGING DATA LOADING
@@ -165,36 +173,43 @@ tests:
     description: Load T2 structural image with nibabel
     command: python -c "import nibabel as nib; img = nib.load('${t2}'); print('Shape:', img.shape)"
     expected_output_contains: "Shape: (128, 128, 33)"
+    expected_exit_code: 0
 
   - name: Get T2 header info
     description: Extract header information from T2 image
     command: python -c "import nibabel as nib; img = nib.load('${t2}'); print('Voxel size:', img.header.get_zooms())"
     expected_output_contains: "1.5625"
+    expected_exit_code: 0
 
   - name: Get T2 data type
     description: Get data type from T2 image header
     command: python -c "import nibabel as nib; img = nib.load('${t2}'); print('Dtype:', img.header.get_data_dtype())"
     expected_output_contains: "int16"
+    expected_exit_code: 0
 
   - name: Get T2 affine
     description: Get affine transformation matrix
     command: python -c "import nibabel as nib; img = nib.load('${t2}'); print('Affine shape:', img.affine.shape)"
     expected_output_contains: "(4, 4)"
+    expected_exit_code: 0
 
   - name: Load BOLD 4D image
     description: Load functional BOLD image with nibabel
     command: python -c "import nibabel as nib; img = nib.load('${bold}'); print('Shape:', img.shape)"
     expected_output_contains: "Shape: (64, 64, 33, 300)"
+    expected_exit_code: 0
 
   - name: Get BOLD TR
     description: Extract TR from BOLD header
     command: python -c "import nibabel as nib; img = nib.load('${bold}'); print('TR:', img.header.get_zooms()[3])"
     expected_output_contains: "2.0"
+    expected_exit_code: 0
 
   - name: BOLD memory map
     description: Test memory-efficient data proxy
     command: python -c "import nibabel as nib; img = nib.load('${bold}'); print('Has dataobj:', hasattr(img, 'dataobj'))"
     expected_output_contains: "True"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NEUROIMAGING DATA MANIPULATION
@@ -467,6 +482,7 @@ tests:
     description: Verify ipywidgets is installed
     command: python -c "import ipywidgets; print('ipywidgets:', ipywidgets.__version__)"
     expected_output_contains: "ipywidgets: 8."
+    expected_exit_code: 0
 
   # ==========================================================================
   # ADDITIONAL SCIENTIFIC PACKAGES
@@ -475,36 +491,43 @@ tests:
     description: Verify statsmodels is installed
     command: python -c "import statsmodels; print('statsmodels:', statsmodels.__version__)"
     expected_output_contains: "statsmodels: 0.13"
+    expected_exit_code: 0
 
   - name: Seaborn import
     description: Verify seaborn is installed
     command: python -c "import seaborn; print('seaborn:', seaborn.__version__)"
     expected_output_contains: "seaborn: 0.12"
+    expected_exit_code: 0
 
   - name: NetworkX import
     description: Verify networkx is installed
     command: python -c "import networkx; print('networkx:', networkx.__version__)"
     expected_output_contains: "networkx: 3."
+    expected_exit_code: 0
 
   - name: Pillow import
     description: Verify PIL/Pillow is installed
     command: python -c "from PIL import Image; print('PIL loaded')"
     expected_output_contains: "PIL loaded"
+    expected_exit_code: 0
 
   - name: Lxml import
     description: Verify lxml is installed
     command: python -c "import lxml; print('lxml:', lxml.__version__)"
     expected_output_contains: "lxml:"
+    expected_exit_code: 0
 
   - name: PyYAML import
     description: Verify PyYAML is installed
     command: python -c "import yaml; print('yaml loaded')"
     expected_output_contains: "yaml loaded"
+    expected_exit_code: 0
 
   - name: Traits import
     description: Verify traits is installed (needed by nipype)
     command: python -c "import traits; print('traits:', traits.__version__)"
     expected_output_contains: "traits: 6."
+    expected_exit_code: 0
 
   # ==========================================================================
   # NIPYPE WORKFLOW TESTS
@@ -513,11 +536,13 @@ tests:
     description: Verify nipype interfaces module
     command: python -c "from nipype import interfaces; print('interfaces loaded')"
     expected_output_contains: "interfaces loaded"
+    expected_exit_code: 0
 
   - name: NiPype workflow import
     description: Verify nipype workflow module
     command: python -c "from nipype.pipeline import engine as pe; print('workflow engine loaded')"
     expected_output_contains: "workflow engine loaded"
+    expected_exit_code: 0
 
   - name: NiPype utility interfaces
     description: Test nipype utility interfaces
@@ -696,11 +721,13 @@ tests:
     description: Verify PyQt5 is installed
     command: python -c "from PyQt5 import QtCore; print('PyQt5 version:', QtCore.QT_VERSION_STR)"
     expected_output_contains: "PyQt5 version:"
+    expected_exit_code: 0
 
   - name: QtConsole available
     description: Verify qtconsole is installed
     command: python -c "import qtconsole; print('qtconsole:', qtconsole.__version__)"
     expected_output_contains: "qtconsole: 5."
+    expected_exit_code: 0
 
   # ==========================================================================
   # OSF CLIENT (data sharing)
@@ -709,6 +736,7 @@ tests:
     description: Verify osfclient is installed
     command: python -c "import osfclient; print('osfclient loaded')"
     expected_output_contains: "osfclient loaded"
+    expected_exit_code: 0
 
   # ==========================================================================
   # BEAUTIFULSOUP (web scraping)
@@ -717,6 +745,7 @@ tests:
     description: Verify BeautifulSoup is installed
     command: python -c "from bs4 import BeautifulSoup; print('BeautifulSoup loaded')"
     expected_output_contains: "BeautifulSoup loaded"
+    expected_exit_code: 0
 
   # ==========================================================================
   # REQUESTS (HTTP library)
@@ -725,6 +754,7 @@ tests:
     description: Verify requests library is installed
     command: python -c "import requests; print('requests:', requests.__version__)"
     expected_output_contains: "requests: 2."
+    expected_exit_code: 0
 
   # ==========================================================================
   # MULTI-SLICE VISUALIZATION

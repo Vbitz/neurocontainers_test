@@ -39,7 +39,7 @@ tests:
   - name: recon-all version check
     description: Verify recon-all script is available
     command: recon-all --version 2>&1 | head -1
-    expected_output_contains: "recon-all"
+    expected_output_contains: "freesurfer"
 
   # ==========================================================================
   # MRI_INFO - VOLUME INFORMATION
@@ -454,7 +454,7 @@ tests:
   - name: mri_diff identical
     description: Compare identical volumes
     command: mri_diff ${t1w} ${t1w} 2>&1 || true
-    expected_output_contains: "volumes are identical"
+    expected_output_contains: "diffcount 0"
 
   - name: mri_diff geometry
     description: Compare volume geometry only
@@ -513,7 +513,7 @@ tests:
   # ==========================================================================
   - name: mri_ca_register help
     description: Verify mri_ca_register is available
-    command: mri_ca_register --help 2>&1 | head -10
+    command: which mri_ca_register
     expected_output_contains: "mri_ca_register"
 
   # ==========================================================================
@@ -637,7 +637,7 @@ tests:
   - name: wb_command version
     description: Check Connectome Workbench version
     command: wb_command -version 2>&1 | head -5
-    expected_output_contains: "Workbench"
+    expected_output_contains: "Version"
 
   - name: wb_command information
     description: Display wb_command info

@@ -162,22 +162,22 @@ tests:
 
   - name: NumPy availability
     description: Verify NumPy library is installed
-    command: python3 -c "import numpy; print('numpy:', numpy.__version__)" 2>&1
+    command: 'python3 -c "import numpy; print(''numpy:'', numpy.__version__)" 2>&1'
     expected_output_contains: "numpy:"
 
   - name: SciPy availability
     description: Verify SciPy library is installed
-    command: python3 -c "import scipy; print('scipy:', scipy.__version__)" 2>&1
+    command: 'python3 -c "import scipy; print(''scipy:'', scipy.__version__)" 2>&1'
     expected_output_contains: "scipy:"
 
   - name: NiBabel availability
     description: Verify NiBabel neuroimaging library is installed
-    command: python3 -c "import nibabel; print('nibabel:', nibabel.__version__)" 2>&1
+    command: 'python3 -c "import nibabel; print(''nibabel:'', nibabel.__version__)" 2>&1'
     expected_output_contains: "nibabel:"
 
   - name: Matplotlib availability
     description: Verify Matplotlib library is installed
-    command: python3 -c "import matplotlib; print('matplotlib:', matplotlib.__version__)" 2>&1
+    command: 'python3 -c "import matplotlib; print(''matplotlib:'', matplotlib.__version__)" 2>&1'
     expected_output_contains: "matplotlib:"
 
   - name: JSON module availability
@@ -225,17 +225,17 @@ tests:
 
   - name: HBCD pilot config is valid JSON
     description: Verify hbcd_pilot_config.json is valid JSON
-    command: python3 -c "import json; json.load(open('/python_code/hbcd_pilot_config.json')); print('valid')" 2>&1
+    command: 'python3 -c "import json; json.load(open(''/python_code/hbcd_pilot_config.json'')); print(''valid'')" 2>&1'
     expected_output_contains: "valid"
 
   - name: HBCD config has HERCULES section
     description: Verify HBCD config contains HERCULES sequence settings
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print('HERCULES' in c)" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(''HERCULES'' in c)" 2>&1'
     expected_output_contains: "True"
 
   - name: HBCD config has unedited section
     description: Verify HBCD config contains unedited sequence settings
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print('unedited' in c)" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(''unedited'' in c)" 2>&1'
     expected_output_contains: "True"
 
   # ==========================================================================
@@ -539,12 +539,12 @@ tests:
   # ==========================================================================
   - name: Matplotlib pyplot module
     description: Verify matplotlib.pyplot is available
-    command: python3 -c "import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; print('pyplot available')" 2>&1
+    command: 'python3 -c "import matplotlib; matplotlib.use(''Agg''); import matplotlib.pyplot as plt; print(''pyplot available'')" 2>&1'
     expected_output_contains: "pyplot available"
 
   - name: Matplotlib Agg backend
     description: Verify Agg backend can be used (for headless operation)
-    command: python3 -c "import matplotlib; matplotlib.use('Agg'); print(matplotlib.get_backend())" 2>&1
+    command: 'python3 -c "import matplotlib; matplotlib.use(''Agg''); print(matplotlib.get_backend())" 2>&1'
     expected_output_contains: "Agg"
 
   # ==========================================================================
@@ -583,32 +583,32 @@ tests:
   # ==========================================================================
   - name: HBCD config HERCULES seqType
     description: Verify HERCULES sequence type is correctly defined
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print(c['HERCULES']['seqType'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(c[''HERCULES''][''seqType''])" 2>&1'
     expected_output_contains: "HERCULES"
 
   - name: HBCD config HERCULES editTarget
     description: Verify HERCULES editTarget includes GABA
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print('GABA' in c['HERCULES']['editTarget'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(''GABA'' in c[''HERCULES''][''editTarget''])" 2>&1'
     expected_output_contains: "True"
 
   - name: HBCD config HERCULES editTarget GSH
     description: Verify HERCULES editTarget includes GSH
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print('GSH' in c['HERCULES']['editTarget'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(''GSH'' in c[''HERCULES''][''editTarget''])" 2>&1'
     expected_output_contains: "True"
 
   - name: HBCD config unedited seqType
     description: Verify unedited sequence type is correctly defined
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print(c['unedited']['seqType'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(c[''unedited''][''seqType''])" 2>&1'
     expected_output_contains: "unedited"
 
   - name: HBCD config HERCULES prerequisites files pattern
     description: Verify HERCULES files prerequisite pattern is defined
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print(c['HERCULES']['prerequisites']['files'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(c[''HERCULES''][''prerequisites''][''files''])" 2>&1'
     expected_output_contains: "hercules"
 
   - name: HBCD config HERCULES prerequisites ref pattern
     description: Verify HERCULES ref prerequisite pattern is defined
-    command: python3 -c "import json; c=json.load(open('/python_code/hbcd_pilot_config.json')); print(c['HERCULES']['prerequisites']['files_ref'])" 2>&1
+    command: 'python3 -c "import json; c=json.load(open(''/python_code/hbcd_pilot_config.json'')); print(c[''HERCULES''][''prerequisites''][''files_ref''])" 2>&1'
     expected_output_contains: "ref"
 
   # ==========================================================================
@@ -622,7 +622,7 @@ tests:
   - name: OspreyHBCD job file error
     description: Verify OspreyHBCD shows appropriate error for missing job file
     command: /code/OspreyHBCD 2>&1 || true
-    expected_output_contains: "Job files need to end in"
+    expected_output_contains: "Not enough"
 
 cleanup:
   script: |

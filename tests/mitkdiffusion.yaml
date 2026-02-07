@@ -244,6 +244,7 @@ tests:
     description: Verify MitkFiberfox shows help for diffusion simulation
     command: ${mitk_path}/MitkFiberfox.sh --help 2>&1
     expected_output_contains: "Fiberfox"
+    expected_exit_code: 0
 
   - name: MitkRandomFiberPhantom version
     description: Verify MitkRandomFiberPhantom reports version

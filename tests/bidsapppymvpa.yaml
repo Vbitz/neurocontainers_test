@@ -46,7 +46,7 @@ tests:
 
   - name: Help message
     description: Verify help documentation is accessible
-    command: /code/run.py --help 2>&1 | head -5
+    command: /code/run.py --help 2>&1 | head -20
     expected_output_contains: "PyMVPA BIDS-App"
 
   - name: Argument parser verification
@@ -64,42 +64,42 @@ tests:
 
   - name: PyMVPA import test
     description: Verify PyMVPA (mvpa2) module is importable
-    command: python -c "import mvpa2; print('mvpa2 version:', mvpa2.__version__)" 2>&1 | grep -v Warning
+    command: python -c "import mvpa2; print(\"mvpa2 version:\", mvpa2.__version__)" 2>&1 | grep -v Warning
     expected_output_contains: "mvpa2 version: 2.6.4"
 
   - name: PyMVPA suite import
     description: Verify full PyMVPA suite loads correctly
-    command: python -c "from mvpa2.suite import *; print('PyMVPA suite loaded successfully')" 2>&1 | tail -1
+    command: python -c "from mvpa2.suite import *; print(\"PyMVPA suite loaded successfully\")" 2>&1 | tail -1
     expected_output_contains: "PyMVPA suite loaded successfully"
 
   - name: nibabel verification
     description: Verify nibabel is available for NIfTI handling
-    command: python -c "import nibabel; print('nibabel:', nibabel.__version__)" 2>&1
+    command: python -c "import nibabel; print(\"nibabel:\", nibabel.__version__)" 2>&1
     expected_output_contains: "nibabel:"
 
   - name: sklearn verification
     description: Verify scikit-learn is available for classification
-    command: python -c "import sklearn; print('sklearn:', sklearn.__version__)" 2>&1 | tail -1
+    command: python -c "import sklearn; print(\"sklearn:\", sklearn.__version__)" 2>&1 | tail -1
     expected_output_contains: "sklearn:"
 
   - name: numpy verification
     description: Verify numpy is available
-    command: python -c "import numpy; print('numpy:', numpy.__version__)" 2>&1
+    command: python -c "import numpy; print(\"numpy:\", numpy.__version__)" 2>&1
     expected_output_contains: "numpy:"
 
   - name: scipy verification
     description: Verify scipy is available
-    command: python -c "import scipy; print('scipy:', scipy.__version__)" 2>&1
+    command: python -c "import scipy; print(\"scipy:\", scipy.__version__)" 2>&1
     expected_output_contains: "scipy:"
 
   - name: matplotlib verification
     description: Verify matplotlib is available for visualization
-    command: python -c "import matplotlib; print('matplotlib:', matplotlib.__version__)" 2>&1
+    command: python -c "import matplotlib; print(\"matplotlib:\", matplotlib.__version__)" 2>&1
     expected_output_contains: "matplotlib:"
 
   - name: statsmodels verification
     description: Verify statsmodels is available for statistical analysis
-    command: python -c "import statsmodels; print('statsmodels available')" 2>&1 | tail -1
+    command: python -c "import statsmodels; print(\"statsmodels available\")" 2>&1 | tail -1
     expected_output_contains: "statsmodels available"
 
   # ==========================================================================

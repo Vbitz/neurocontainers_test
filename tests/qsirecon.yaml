@@ -321,14 +321,14 @@ tests:
 
   - name: maskfilter dilate
     description: Dilate binary mask
-    command: maskfilter test_output/t1w_mask_base.nii.gz dilate test_output/mask_dilated.nii.gz -force 2>&1
+    command: maskfilter test_output/t1w_mask_base.nii.gz dilate test_output/mask_dilated.nii.gz -npass 1 -force 2>&1
     depends_on: Create binary mask for maskfilter tests
     validate:
       - output_exists: ${output_dir}/mask_dilated.nii.gz
 
   - name: maskfilter erode
     description: Erode binary mask
-    command: maskfilter test_output/t1w_mask_base.nii.gz erode test_output/mask_eroded.nii.gz -force 2>&1
+    command: maskfilter test_output/t1w_mask_base.nii.gz erode test_output/mask_eroded.nii.gz -npass 1 -force 2>&1
     depends_on: Create binary mask for maskfilter tests
     validate:
       - output_exists: ${output_dir}/mask_eroded.nii.gz
@@ -342,7 +342,7 @@ tests:
 
   - name: maskfilter connect largest
     description: Keep only largest connected component
-    command: maskfilter test_output/t1w_mask_base.nii.gz connect -largest test_output/mask_largest.nii.gz -force 2>&1
+    command: maskfilter test_output/t1w_mask_base.nii.gz connect test_output/mask_largest.nii.gz -largest -force 2>&1
     depends_on: Create binary mask for maskfilter tests
     validate:
       - output_exists: ${output_dir}/mask_largest.nii.gz
@@ -443,8 +443,8 @@ tests:
 
   - name: ANTs antsApplyTransforms version
     description: Check antsApplyTransforms version
-    command: /opt/ants/bin/antsApplyTransforms --version 2>&1
-    expected_output_contains: "ANTs Version"
+    command: /opt/ants/bin/antsApplyTransforms --help 2>&1 | head -5
+    expected_output_contains: "antsApplyTransforms"
 
   # ==========================================================================
   # ANTs TOOLS - Header and Image Info
@@ -598,13 +598,17 @@ tests:
   # ==========================================================================
   - name: Atropos Kmeans 3 classes
     description: Tissue segmentation with Kmeans initialization
-    command: /opt/ants/bin/Atropos -d 3 -a ${t1w} -i KMeans[3] -o test_output/t1w_atropos_seg.nii.gz -v 0 2>&1
+    command: |
+      /opt/ants/bin/ThresholdImage 3 ${t1w} test_output/t1w_atropos_mask.nii.gz Otsu 1 && \
+      /opt/ants/bin/Atropos -d 3 -a ${t1w} -i KMeans[3] -x test_output/t1w_atropos_mask.nii.gz -o test_output/t1w_atropos_seg.nii.gz -v 0 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_atropos_seg.nii.gz
 
   - name: Atropos Otsu initialization
     description: Tissue segmentation with Otsu initialization
-    command: /opt/ants/bin/Atropos -d 3 -a ${t1w} -i Otsu[3] -o test_output/t1w_atropos_otsu.nii.gz -v 0 2>&1
+    command: |
+      /opt/ants/bin/ThresholdImage 3 ${t1w} test_output/t1w_atropos_otsu_mask.nii.gz Otsu 1 && \
+      /opt/ants/bin/Atropos -d 3 -a ${t1w} -i Otsu[3] -x test_output/t1w_atropos_otsu_mask.nii.gz -o test_output/t1w_atropos_otsu.nii.gz -v 0 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_atropos_otsu.nii.gz
 
@@ -876,7 +880,7 @@ tests:
       mrthreshold ${t1w} -percentile 20 test_output/brain_mask_raw.nii.gz -force 2>&1 && \
       maskfilter test_output/brain_mask_raw.nii.gz dilate -npass 2 test_output/brain_mask_dilated_pipeline.nii.gz -force 2>&1 && \
       maskfilter test_output/brain_mask_dilated_pipeline.nii.gz erode -npass 2 test_output/brain_mask_closed.nii.gz -force 2>&1 && \
-      maskfilter test_output/brain_mask_closed.nii.gz connect -largest test_output/brain_mask_final.nii.gz -force 2>&1 && \
+      maskfilter test_output/brain_mask_closed.nii.gz connect test_output/brain_mask_final.nii.gz -largest -force 2>&1 && \
       mrcalc ${t1w} test_output/brain_mask_final.nii.gz -multiply test_output/t1w_brain_mrtrix.nii.gz -force 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_brain_mrtrix.nii.gz

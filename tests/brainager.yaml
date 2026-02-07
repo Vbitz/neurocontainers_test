@@ -100,6 +100,7 @@ tests:
     description: Verify SPM tissue probability maps exist
     command: ls /opt/spm12/tpm/TPM.nii
     expected_output_contains: "TPM.nii"
+    expected_exit_code: 0
 
   - name: Check R prediction script
     description: Verify R prediction script exists

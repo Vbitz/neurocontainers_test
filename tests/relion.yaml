@@ -659,12 +659,12 @@ tests:
 
   - name: CTFFIND usage
     description: Check CTFFIND usage information
-    command: /opt/ctffind-4.1.14/bin/ctffind 2>&1 | head -5
+    command: echo "" | /opt/ctffind-4.1.14/bin/ctffind 2>&1 | head -5
     expected_output_contains: "Usage:"
 
   - name: CTFFIND fast option
     description: Verify CTFFIND fast option
-    command: /opt/ctffind-4.1.14/bin/ctffind 2>&1
+    command: echo "" | /opt/ctffind-4.1.14/bin/ctffind 2>&1
     expected_output_contains: "--fast"
 
   - name: CTFFIND plot script exists

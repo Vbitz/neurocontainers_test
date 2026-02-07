@@ -354,7 +354,7 @@ tests:
   - name: Label fusion version
     description: Check label_fusion version
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/label_fusion -version 2>&1
-    expected_output_contains: "Version"
+    expected_output_contains: "revision"
 
   # ==========================================================================
   # NLM DENOISE - NON-LOCAL MEANS DENOISING
@@ -401,19 +401,19 @@ tests:
   - name: Subfield mask slices help
     description: Verify subfield_mask_slices is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/subfield_mask_slices 2>&1 | head -5
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   - name: Subfield leveler help
     description: Verify subfield_leveler is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/subfield_leveler 2>&1 | head -5
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   # ==========================================================================
   # ANTs TOOLS
   # ==========================================================================
   - name: ANTs ANTS help
     description: Verify ANTS is available
-    command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/ants_1042/ANTS 3 2>&1 | head -10
+    command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/ants_1042/ANTS 2>&1 | head -10
     expected_output_contains: "ANTS"
 
   - name: ANTs N3BiasFieldCorrection help
@@ -527,6 +527,7 @@ tests:
   - name: FSL bet2 run
     description: Perform brain extraction
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/fsl/bet2 ${t1w} test_output/t1w_brain -f 0.5
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_brain.nii.gz
 
@@ -549,26 +550,31 @@ tests:
     description: Verify ml_affine is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/ml_affine 2>&1 | head -10
     expected_output_contains: "ml_affine"
+    expected_exit_code: 0
 
   - name: VTK levelset help
     description: Verify vtklevelset is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/vtklevelset 2>&1 | head -10
     expected_output_contains: "vtklevelset"
+    expected_exit_code: 0
 
   - name: Mesh2img help
     description: Verify mesh2img is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/mesh2img 2>&1 | head -10
     expected_output_contains: "mesh2img"
+    expected_exit_code: 0
 
   - name: Warpmesh help
     description: Verify warpmesh is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/warpmesh 2>&1 | head -10
     expected_output_contains: "warpmesh"
+    expected_exit_code: 0
 
   - name: cmrep_vskel help
     description: Verify cmrep_vskel is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/cmrep_vskel 2>&1 | head -10
     expected_output_contains: "cmrep_vskel"
+    expected_exit_code: 0
 
   - name: Shrink warp help
     description: Verify shrink_warp is available
@@ -579,6 +585,7 @@ tests:
     description: Verify qvoronoi is available
     command: $ASHS_ROOT/../ashs-fastashs_beta/ext/Linux/bin/qvoronoi 2>&1 | head -5
     expected_output_contains: "qvoronoi"
+    expected_exit_code: 0
 
   # ==========================================================================
   # COMPLEX PIPELINES

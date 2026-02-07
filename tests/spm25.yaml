@@ -174,13 +174,13 @@ tests:
 
   - name: ImCalc output dtype float
     description: Output as single precision float
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_float.nii --expression "i1" --dtype 16 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_float.nii --expression "i1" --dtype FLOAT32 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_float.nii
 
   - name: ImCalc output dtype int16
     description: Output as int16
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_int16.nii --expression "i1" --dtype 4 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_int16.nii --expression "i1" --dtype INT16 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_int16.nii
 
@@ -215,6 +215,7 @@ tests:
   - name: Split 4D to 3D volumes
     description: Split 4D BOLD into 3D volumes
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.split --vol ${bold} --outdir test_output/util 2>&1
+    expected_exit_code: 0
     validate:
       - output_dir_not_empty: test_output/util
 
@@ -268,7 +269,7 @@ tests:
 
   - name: Smooth with implicit mask
     description: Apply smoothing with implicit masking
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[6 6 6]" --im 1 --prefix sim_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[6 6 6]" --im Yes --prefix sim_ 2>&1
     validate:
       - output_exists: ds000001/sub-02/anat/sim_sub-02_T1w.nii
 
@@ -391,7 +392,7 @@ tests:
   - name: DCM estimate help
     description: Display DCM estimation help
     command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.dcm.estimate help 2>&1
-    expected_output_contains: "--dcmmat"
+    expected_output_contains: "--dcms"
 
   - name: DCM BMS inference help
     description: Display DCM Bayesian model selection help

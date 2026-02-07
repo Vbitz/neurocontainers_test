@@ -193,12 +193,12 @@ tests:
   - name: SPM MCR toolbox directory
     description: Verify SPM toolbox directory structure
     command: ls /opt/spm12/spm12_mcr/toolbox/
-    expected_output_contains: "."
+    expected_exit_code: 0
 
   - name: SPM MCR spm12 directory
     description: Verify SPM12 MCR subdirectory exists
     command: ls /opt/spm12/spm12_mcr/spm12/
-    expected_output_contains: "."
+    expected_output_contains: "spm12"
 
   # ==========================================================================
   # PARTICIPANT-LEVEL PREPROCESSING (QUICK VALIDATION)
@@ -341,7 +341,7 @@ tests:
       /opt/spm12/run.sh ${bids_dir} test_output/bidsappspm_error participant \
         --participant_label 01 \
         --skip-bids-validator 2>&1 || true
-    expected_output_contains: "Cannot find T1-weighted"
+    expected_output_contains: "unable to find"
     tags: [error_handling]
 
   - name: Handle empty participant list

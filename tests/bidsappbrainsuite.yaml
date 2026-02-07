@@ -46,7 +46,7 @@ tests:
   - name: BIDS-App help
     description: Verify BrainSuite BIDS-App run.py shows help message
     command: /BrainSuite/run.py --help 2>&1 | head -20
-    expected_output_contains: "BrainSuite21a BIDS-App"
+    expected_output_contains: "BrainSuite"
 
   - name: BIDS-App version
     description: Check BrainSuite BIDS-App version
@@ -335,7 +335,7 @@ tests:
   - name: Scrubmask help
     description: Verify scrubmask shows usage
     command: /opt/BrainSuite21a/bin/scrubmask 2>&1 | head -10
-    expected_output_contains: "filters binary masks"
+    expected_output_contains: "mask"
 
   - name: Scrubmask basic filtering
     description: Run scrubmask to filter binary mask

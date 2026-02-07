@@ -302,7 +302,7 @@ tests:
   - name: dcm2niix empty directory handling
     description: Test dcm2niix behavior with empty directory
     command: dcm2niix -o test_output/nifti_convert test_output/dicom_test 2>&1 || true
-    expected_output_contains: "No valid"
+    expected_output_contains: "Unable to find"
 
   - name: dcm2niix verbose mode 0
     description: Test dcm2niix quiet mode
@@ -620,28 +620,28 @@ tests:
   # ==========================================================================
   - name: MNI152 template readable
     description: Verify MNI152 template is a valid NIfTI file
-    command: file /opt/MRIcroGL/Resources/standard/mni152.nii.gz
-    expected_output_contains: "gzip compressed"
+    command: test -f /opt/MRIcroGL/Resources/standard/mni152.nii.gz && od -N4 -An -tx1 /opt/MRIcroGL/Resources/standard/mni152.nii.gz | head -1
+    expected_output_contains: "1f 8b"
 
   - name: SPM152 template readable
     description: Verify SPM152 template is a valid NIfTI file
-    command: file /opt/MRIcroGL/Resources/standard/spm152.nii.gz
-    expected_output_contains: "gzip compressed"
+    command: test -f /opt/MRIcroGL/Resources/standard/spm152.nii.gz && od -N4 -An -tx1 /opt/MRIcroGL/Resources/standard/spm152.nii.gz | head -1
+    expected_output_contains: "1f 8b"
 
   - name: AAL atlas readable
     description: Verify AAL atlas is a valid NIfTI file
-    command: file /opt/MRIcroGL/Resources/atlas/aal.nii.gz
-    expected_output_contains: "gzip compressed"
+    command: test -f /opt/MRIcroGL/Resources/atlas/aal.nii.gz && od -N4 -An -tx1 /opt/MRIcroGL/Resources/atlas/aal.nii.gz | head -1
+    expected_output_contains: "1f 8b"
 
   - name: CT Abdo readable
     description: Verify CT abdomen sample is a valid NIfTI file
-    command: file /opt/MRIcroGL/Resources/standard/CT_Abdo.nii.gz
-    expected_output_contains: "gzip compressed"
+    command: test -f /opt/MRIcroGL/Resources/standard/CT_Abdo.nii.gz && od -N4 -An -tx1 /opt/MRIcroGL/Resources/standard/CT_Abdo.nii.gz | head -1
+    expected_output_contains: "1f 8b"
 
   - name: Visible human readable
     description: Verify visible human sample is a valid NIfTI file
-    command: file /opt/MRIcroGL/Resources/standard/visiblehuman.nii.gz
-    expected_output_contains: "gzip compressed"
+    command: test -f /opt/MRIcroGL/Resources/standard/visiblehuman.nii.gz && od -N4 -An -tx1 /opt/MRIcroGL/Resources/standard/visiblehuman.nii.gz | head -1
+    expected_output_contains: "1f 8b"
 
   # ==========================================================================
   # INSTALLATION DOCUMENTATION

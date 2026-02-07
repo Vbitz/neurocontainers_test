@@ -183,6 +183,7 @@ tests:
   - name: Inverse FFT
     description: Perform inverse FFT (k-space to image)
     command: bart fft -i 3 test_output/bart/phantom_fft test_output/bart/phantom_ifft
+    expected_exit_code: 0
     depends_on: Forward FFT
     validate:
       - output_exists: ${output_dir}/bart/phantom_ifft.cfl
@@ -296,10 +297,9 @@ tests:
 
   - name: SAXPY operation
     description: Compute a*x + y (scale and add)
-    command: bart saxpy 0.5 test_output/bart/phantom test_output/bart/ones test_output/bart/saxpy_result
+    command: bart ones 2 128 128 test_output/bart/ones_128 && bart saxpy 0.5 test_output/bart/phantom test_output/bart/ones_128 test_output/bart/saxpy_result
     depends_on:
       - Generate Shepp-Logan phantom
-      - Create ones array
     validate:
       - output_exists: ${output_dir}/bart/saxpy_result.cfl
 
@@ -613,6 +613,7 @@ tests:
   - name: Inverse wavelet transform
     description: Perform inverse Haar wavelet transform
     command: bart wavelet -a -H 3 128 128 test_output/bart/phantom_wavelet_haar test_output/bart/phantom_iwavelet
+    expected_exit_code: 0
     depends_on: Wavelet transform (Haar)
     validate:
       - output_exists: ${output_dir}/bart/phantom_iwavelet.cfl
@@ -724,6 +725,7 @@ tests:
   - name: PICS L2 reconstruction
     description: L2-regularized parallel imaging reconstruction
     command: bart pics -l2 -r 0.01 -i 30 test_output/bart/kspace_multicoil test_output/bart/sens_espirit test_output/bart/recon_pics_l2
+    expected_exit_code: 0
     depends_on:
       - Generate multi-coil k-space
       - ESPIRiT calibration
@@ -733,6 +735,7 @@ tests:
   - name: PICS L1 wavelet reconstruction
     description: L1-wavelet regularized reconstruction
     command: bart pics -l1 -r 0.001 -i 30 test_output/bart/kspace_multicoil test_output/bart/sens_espirit test_output/bart/recon_pics_l1
+    expected_exit_code: 0
     depends_on:
       - Generate multi-coil k-space
       - ESPIRiT calibration

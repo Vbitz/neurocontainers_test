@@ -42,17 +42,17 @@ tests:
   - name: RABIES preprocess help
     description: Verify rabies preprocess subcommand help
     command: rabies preprocess --help 2>&1 | head -10
-    expected_output_contains: "bids_dir"
+    expected_output_contains: "rabies preprocess"
 
   - name: RABIES confound_correction help
     description: Verify rabies confound_correction subcommand help
     command: rabies confound_correction --help 2>&1 | head -10
-    expected_output_contains: "preprocess_out"
+    expected_output_contains: "rabies confound_correction"
 
   - name: RABIES analysis help
     description: Verify rabies analysis subcommand help
     command: rabies analysis --help 2>&1 | head -10
-    expected_output_contains: "confound_correction_out"
+    expected_output_contains: "rabies analysis"
 
   # ==========================================================================
   # RABIES ERROR CHECK UTILITY
@@ -233,12 +233,12 @@ tests:
   - name: mincinfo help
     description: Verify mincinfo is available
     command: mincinfo -help 2>&1 | head -5
-    expected_output_contains: "mincinfo"
+    expected_output_contains: "Command-specific options"
 
   - name: mincresample help
     description: Verify mincresample is available
     command: mincresample -help 2>&1 | head -5
-    expected_output_contains: "mincresample"
+    expected_output_contains: "Command-specific options"
 
   # ==========================================================================
   # PYTHON NEUROIMAGING PACKAGES
@@ -339,10 +339,10 @@ tests:
     command: |
       python -c "
       import nibabel as nib
-      img = nib.load('${t1w}')
-      print('Shape:', img.shape)
-      print('Affine:', img.affine.shape)
-      print('Header:', img.header.get_data_dtype())
+      img = nib.load(\"${t1w}\")
+      print(\"Shape:\", img.shape)
+      print(\"Affine:\", img.affine.shape)
+      print(\"Header:\", img.header.get_data_dtype())
       " 2>&1
     expected_output_contains: "Shape:"
 
@@ -618,7 +618,7 @@ tests:
   - name: MELODIC availability
     description: Check if FSL MELODIC is available for ICA
     command: melodic --help 2>&1 | head -5
-    expected_output_contains: "melodic"
+    expected_output_contains: "MELODIC"
 
   # ==========================================================================
   # CHAINED PREPROCESSING OPERATIONS
@@ -627,7 +627,7 @@ tests:
     description: Test typical preprocessing chain (despike, STC, smooth)
     command: |
       # Extract subset for faster processing
-      fslroi ${bold} test_output/bold_5vol.nii.gz 0 5 && \
+      fslroi ${bold} test_output/bold_5vol.nii.gz 0 15 && \
       # Despike
       3dDespike -prefix test_output/chain_despike.nii.gz \
         -NEW -nomask test_output/bold_5vol.nii.gz && \
@@ -732,8 +732,8 @@ tests:
   - name: fslmaths output types
     description: Test fslmaths data type conversion
     command: |
-      fslmaths ${t1w} -odt float test_output/t1w_fsl_float.nii.gz && \
-      fslmaths ${t1w} -odt short test_output/t1w_fsl_short.nii.gz 2>&1
+      fslmaths ${t1w} test_output/t1w_fsl_float.nii.gz -odt float && \
+      fslmaths ${t1w} test_output/t1w_fsl_short.nii.gz -odt short 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_fsl_float.nii.gz
       - output_exists: ${output_dir}/t1w_fsl_short.nii.gz

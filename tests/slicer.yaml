@@ -22,9 +22,7 @@ test_data:
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz
   bold: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
   output_dir: test_output
-
-# CLI module path shorthand
-cli_path: /opt/Slicer-5.0.3-linux-amd64/lib/Slicer-5.0/cli-modules
+  cli_path: /opt/Slicer-5.0.3-linux-amd64/lib/Slicer-5.0/cli-modules
 
 setup:
   script: |
@@ -158,6 +156,7 @@ tests:
   - name: Add scalar volumes
     description: Add two volumes together
     command: Slicer --launch ${cli_path}/AddScalarVolumes ${t1w} ${t1w} test_output/t1w_add_t1w.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_add_t1w.nii.gz
 
@@ -171,6 +170,7 @@ tests:
   - name: Multiply scalar volumes
     description: Multiply two volumes together
     command: Slicer --launch ${cli_path}/MultiplyScalarVolumes ${t1w} ${t1w} test_output/t1w_mul_t1w.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_mul_t1w.nii.gz
 
@@ -186,6 +186,7 @@ tests:
   - name: Resample to isotropic 2mm
     description: Resample to 2mm isotropic voxels
     command: Slicer --launch ${cli_path}/ResampleScalarVolume --spacing 2,2,2 ${t1w} test_output/t1w_resample_2mm.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_resample_2mm.nii.gz
 
@@ -307,6 +308,7 @@ tests:
     description: Apply binary mask to volume
     command: Slicer --launch ${cli_path}/MaskScalarVolume --label 1 --replace 0 ${t1w} test_output/t1w_mask_binary.nii.gz test_output/t1w_masked.nii.gz
     depends_on: Create binary mask from threshold
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_masked.nii.gz
 
@@ -316,6 +318,7 @@ tests:
   - name: N4 bias field correction default
     description: Apply N4 bias field correction with default parameters
     command: Slicer --launch ${cli_path}/N4ITKBiasFieldCorrection --shrinkfactor 4 ${t1w} test_output/t1w_n4_default.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_n4_default.nii.gz
 

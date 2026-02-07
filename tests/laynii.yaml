@@ -38,12 +38,12 @@ tests:
   - name: LN_INFO basic execution
     description: Display NIfTI header information for T1w image
     command: LN_INFO -input ${t1w} -NoPlot 2>&1 | head -50
-    expected_output_contains: "dimensions"
+    expected_output_contains: "Image details"
 
   - name: LN_INFO with BOLD data
     description: Display NIfTI header information for 4D BOLD data
     command: LN_INFO -input ${bold} -NoPlot 2>&1 | head -50
-    expected_output_contains: "dimensions"
+    expected_output_contains: "Image details"
 
   # ==========================================================================
   # DATA TYPE CONVERSION
@@ -75,7 +75,7 @@ tests:
     command: LN_SKEW -input ${bold} -output test_output/bold_skew.nii.gz
     validate:
       - output_exists: ${output_dir}/bold_skew_mean.nii.gz
-      - output_exists: ${output_dir}/bold_skew_STDEV.nii.gz
+      - output_exists: ${output_dir}/bold_skew_stdev.nii.gz
       - output_exists: ${output_dir}/bold_skew_tSNR.nii.gz
       - output_exists: ${output_dir}/bold_skew_skew.nii.gz
       - output_exists: ${output_dir}/bold_skew_kurtosis.nii.gz
@@ -249,7 +249,7 @@ tests:
   # ==========================================================================
   - name: LN2_ZERO_CROSSING detection
     description: Detect zero crossings in image (edge detection)
-    command: LN2_ZERO_CROSSING -input ${t1w} -output test_output/t1w_zerocross.nii.gz
+    command: LN2_ZERO_CROSSING -data ${t1w} -output test_output/t1w_zerocross.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_zerocross.nii.gz
 
@@ -296,30 +296,30 @@ tests:
     command: LN2_LAYERS -rim test_output/sc_rim.nii.gz -nr_layers 5 -output test_output/layers_equidist
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/layers_equidist_metric_equidist.nii.gz
-      - output_exists: ${output_dir}/layers_equidist_layers_equidist.nii.gz
+      - output_exists: ${output_dir}/layers_equidist_metric_equidist.nii
+      - output_exists: ${output_dir}/layers_equidist_layers_equidist.nii
 
   - name: LN2_LAYERS equivolume
     description: Generate equi-volume cortical layers from rim file
     command: LN2_LAYERS -rim test_output/sc_rim.nii.gz -nr_layers 5 -equivol -output test_output/layers_equivol
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/layers_equivol_metric_equivol.nii.gz
-      - output_exists: ${output_dir}/layers_equivol_layers_equivol.nii.gz
+      - output_exists: ${output_dir}/layers_equivol_metric_equivol.nii
+      - output_exists: ${output_dir}/layers_equivol_layers_equivol.nii
 
   - name: LN2_LAYERS with curvature
     description: Generate layers with curvature estimation
     command: LN2_LAYERS -rim test_output/sc_rim.nii.gz -nr_layers 3 -curvature -output test_output/layers_curv
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/layers_curv_curvature_binned.nii.gz
+      - output_exists: ${output_dir}/layers_curv_curvature_binned.nii
 
   - name: LN2_LAYERS with thickness
     description: Generate layers with cortical thickness estimation
     command: LN2_LAYERS -rim test_output/sc_rim.nii.gz -nr_layers 3 -thickness -output test_output/layers_thick
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/layers_thick_thickness.nii.gz
+      - output_exists: ${output_dir}/layers_thick_thickness.nii
 
   - name: LN_GROW_LAYERS alternative
     description: Alternative layer generation using growing algorithm
@@ -343,7 +343,7 @@ tests:
     command: LN2_COLUMNS -rim test_output/sc_rim.nii.gz -midgm test_output/sc_midGM.nii.gz -nr_columns 100 -output test_output/columns
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/columns_columns.nii.gz
+      - output_exists: ${output_dir}/columns_columns100.nii
 
   - name: LN_3DCOLUMNS generation
     description: Generate 3D columns from layer landmarks
@@ -419,7 +419,7 @@ tests:
     command: LN_BOCO -Nulled test_output/lo_Nulled_intemp.nii.gz -BOLD test_output/lo_BOLD_intemp.nii.gz -output test_output/VASO_boco.nii.gz
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/VASO_boco.nii.gz
+      - output_exists: ${output_dir}/VASO_boco_VASO_LN.nii.gz
 
   - name: LN_BOCO with shift
     description: BOLD correction with temporal shift estimation
@@ -490,7 +490,7 @@ tests:
     command: LN2_VORONOI -domain test_output/sc_rim.nii.gz -init test_output/sc_midGM.nii.gz -output test_output/voronoi
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/voronoi_voronoi.nii.gz
+      - output_exists: ${output_dir}/voronoi_voronoi.nii
 
   # ==========================================================================
   # GEODESIC DISTANCE
@@ -500,7 +500,7 @@ tests:
     command: LN2_GEODISTANCE -domain test_output/sc_rim.nii.gz -init test_output/sc_midGM.nii.gz -output test_output/geodist
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/geodist_geodistance.nii.gz
+      - output_exists: ${output_dir}/geodist_geodistance.nii
 
   # ==========================================================================
   # LOITUMA (Layer profile interpolation)
@@ -540,27 +540,27 @@ tests:
     command: LN2_MULTILATERATE -rim test_output/sc_rim.nii.gz -control_points test_output/sc_midGM.nii.gz -radius 5 -output test_output/multilat
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/multilat_UV_coordinates.nii.gz
+      - output_exists: ${output_dir}/multilat_UV_coordinates.nii
 
   # ==========================================================================
   # PATCH FLATTENING
   # ==========================================================================
   - name: LN2_PATCH_FLATTEN
     description: Flatten cortical patch for visualization
-    command: LN2_PATCH_FLATTEN -values test_output/sc_VASO_act.nii.gz -coord_uv test_output/multilat_UV_coordinates.nii.gz -coord_d test_output/layers_equidist_metric_equidist.nii.gz -domain test_output/sc_rim.nii.gz -output test_output/flattened
+    command: LN2_PATCH_FLATTEN -values test_output/sc_VASO_act.nii.gz -coord_uv test_output/multilat_UV_coordinates.nii -coord_d test_output/layers_equidist_metric_equidist.nii -domain test_output/sc_rim.nii.gz -output test_output/flattened
     depends_on: LN2_MULTILATERATE columns
     validate:
-      - output_exists: ${output_dir}/flattened_flat_values.nii.gz
+      - output_exists: ${output_dir}/flattened_flat_values.nii
 
   # ==========================================================================
   # IFPOINTS (Column seed placement)
   # ==========================================================================
   - name: LN2_IFPOINTS seed placement
     description: Place column seed points on cortical surface
-    command: LN2_IFPOINTS -rim test_output/sc_rim.nii.gz -dist 3 -output test_output/ifpoints
+    command: LN2_IFPOINTS -domain test_output/sc_rim.nii.gz -dist 3 -output test_output/ifpoints
     depends_on: Copy container test data
     validate:
-      - output_exists: ${output_dir}/ifpoints_initial_coordinates.nii.gz
+      - output_exists: ${output_dir}/ifpoints_initial_coordinates.nii
 
 cleanup:
   script: |

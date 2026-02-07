@@ -608,6 +608,7 @@ tests:
       print('Result type:', type(result).__name__)
       print('Has pattern:', 'pattern' in result)
       "
+    expected_exit_code: 0
     expected_output_contains: "Has pattern: True"
 
   - name: Test parse_entities with run

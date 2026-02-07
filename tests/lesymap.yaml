@@ -68,10 +68,11 @@ tests:
     description: Check LESYMAP package version
     command: R --quiet -e "library(LESYMAP); packageVersion('LESYMAP')"
     expected_output_contains: "0.0.0.9221"
+    expected_exit_code: 0
 
   - name: LESYMAP functions available
     description: List available LESYMAP functions
-    command: R --quiet -e "library(LESYMAP); cat(paste(ls('package:LESYMAP'), collapse='\n'))"
+    command: R --quiet -e "library(LESYMAP); cat(paste(ls('package:LESYMAP'), collapse='\\n'))"
     expected_output_contains: "lesymap"
 
   - name: LESYMAP exports lsm_BMfast
@@ -820,6 +821,7 @@ tests:
       "
     depends_on: Create synthetic lesion mask 3
     expected_output_contains: "Overlap"
+    expected_exit_code: 0
 
   # ==========================================================================
   # REGISTRATION TESTS

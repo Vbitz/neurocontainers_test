@@ -75,43 +75,51 @@ tests:
 
   - name: Python import giga_connectome
     description: Verify giga_connectome package can be imported
-    command: python3 -c "import giga_connectome; print('giga_connectome imported successfully')"
+    command: "python3 -c \"import giga_connectome; print('giga_connectome imported successfully')\""
     expected_output_contains: "imported successfully"
+    expected_exit_code: 0
 
   - name: Python nilearn version
     description: Verify nilearn is installed with correct version
-    command: python3 -c "import nilearn; print('nilearn:', nilearn.__version__)"
+    command: "python3 -c \"import nilearn; print('nilearn:', nilearn.__version__)\""
     expected_output_contains: "nilearn: 0.10"
+    expected_exit_code: 0
 
   - name: Python nibabel version
     description: Verify nibabel is installed
-    command: python3 -c "import nibabel; print('nibabel:', nibabel.__version__)"
+    command: "python3 -c \"import nibabel; print('nibabel:', nibabel.__version__)\""
     expected_output_contains: "nibabel: 5."
+    expected_exit_code: 0
 
   - name: Python pybids version
     description: Verify pybids is installed
-    command: python3 -c "import bids; print('pybids:', bids.__version__)"
+    command: "python3 -c \"import bids; print('pybids:', bids.__version__)\""
     expected_output_contains: "pybids: 0.15"
+    expected_exit_code: 0
 
   - name: Python templateflow version
     description: Verify templateflow is installed
-    command: python3 -c "import templateflow; print('templateflow:', templateflow.__version__)"
+    command: "python3 -c \"import templateflow; print('templateflow:', templateflow.__version__)\""
     expected_output_contains: "templateflow: 0.8"
+    expected_exit_code: 0
 
   - name: Python numpy version
     description: Verify numpy is installed
-    command: python3 -c "import numpy; print('numpy:', numpy.__version__)"
+    command: "python3 -c \"import numpy; print('numpy:', numpy.__version__)\""
     expected_output_contains: "numpy: 1."
+    expected_exit_code: 0
 
   - name: Python scipy import
     description: Verify scipy is available
-    command: python3 -c "import scipy; print('scipy:', scipy.__version__)"
+    command: "python3 -c \"import scipy; print('scipy:', scipy.__version__)\""
     expected_output_contains: "scipy:"
+    expected_exit_code: 0
 
   - name: Python pandas import
     description: Verify pandas is available
-    command: python3 -c "import pandas; print('pandas:', pandas.__version__)"
+    command: "python3 -c \"import pandas; print('pandas:', pandas.__version__)\""
     expected_output_contains: "pandas:"
+    expected_exit_code: 0
 
   # ==========================================================================
   # PYBIDS COMMAND LINE TOOL
@@ -138,10 +146,10 @@ tests:
 
   - name: pybids layout creation
     description: Create BIDS layout database index
-    command: pybids layout ${bids_dir} test_output/bids_layout.db --no-validate 2>&1
+    command: pybids layout ${bids_dir} test_output/bids_layout --no-validate 2>&1
     expected_exit_code: 0
     validate:
-      - output_exists: ${output_dir}/bids_layout.db
+      - output_exists: ${output_dir}/bids_layout
 
   # ==========================================================================
   # NIBABEL COMMAND LINE TOOLS
@@ -846,7 +854,7 @@ tests:
   - name: nib-ls nonexistent file
     description: Verify proper error for nonexistent file
     command: nib-ls /nonexistent/file.nii.gz 2>&1 || true
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   - name: nib-conform missing output
     description: Verify proper error when output not specified

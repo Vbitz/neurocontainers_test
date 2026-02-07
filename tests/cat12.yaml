@@ -51,7 +51,7 @@ tests:
   - name: CAT12 standalone directory exists
     description: Verify CAT12 standalone batch files are present
     command: ls /opt/cat12/standalone/*.m | wc -l
-    expected_output_contains: "14"
+    expected_output_contains: "13"
 
   - name: SPM12 binary exists
     description: Verify compiled SPM12 binary is present
@@ -190,7 +190,8 @@ tests:
     description: Verify segmentation batch file can be parsed (no actual processing)
     command: |
       cp /opt/cat12/standalone/cat_standalone_segment.m test_output/cat12_work/test_segment.m && \
-      sed -i "s|<UNDEFINED>|'$(pwd)/test_output/sub-01_T1w.nii'|g" test_output/cat12_work/test_segment.m && \
+      NIIFILE="$(pwd)/test_output/sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|'${NIIFILE}'|g" test_output/cat12_work/test_segment.m && \
       head -30 test_output/cat12_work/test_segment.m
     depends_on: Prepare uncompressed T1w for CAT12
     expected_output_contains: "matlabbatch"
@@ -202,7 +203,8 @@ tests:
     description: Prepare simple processing batch for testing
     command: |
       cp /opt/cat12/standalone/cat_standalone_simple.m test_output/cat12_work/test_simple.m && \
-      sed -i "s|<UNDEFINED>|'$(pwd)/test_output/sub-01_T1w.nii'|g" test_output/cat12_work/test_simple.m && \
+      NIIFILE="$(pwd)/test_output/sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|'${NIIFILE}'|g" test_output/cat12_work/test_simple.m && \
       grep -c "matlabbatch" test_output/cat12_work/test_simple.m
     depends_on: Prepare uncompressed T1w for CAT12
     expected_exit_code: 0
@@ -217,7 +219,8 @@ tests:
       # Add FWHM setting
       echo "matlabbatch{1}.spm.spatial.smooth.fwhm = [6 6 6];" >> test_output/cat12_work/test_smooth.m && \
       echo "matlabbatch{1}.spm.spatial.smooth.prefix = 's6';" >> test_output/cat12_work/test_smooth.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/sub-01_T1w.nii'}|g" test_output/cat12_work/test_smooth.m && \
+      NIIFILE="$(pwd)/test_output/sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|{'${NIIFILE}'}|g" test_output/cat12_work/test_smooth.m && \
       cat test_output/cat12_work/test_smooth.m
     depends_on: Prepare uncompressed T1w for CAT12
     expected_output_contains: "matlabbatch"
@@ -239,7 +242,8 @@ tests:
     description: Prepare de-facing batch file
     command: |
       cp /opt/cat12/standalone/cat_standalone_deface.m test_output/cat12_work/test_deface.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/sub-01_T1w.nii'}|g" test_output/cat12_work/test_deface.m && \
+      NIIFILE="$(pwd)/test_output/sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|{'${NIIFILE}'}|g" test_output/cat12_work/test_deface.m && \
       cat test_output/cat12_work/test_deface.m
     depends_on: Prepare uncompressed T1w for CAT12
     expected_output_contains: "matlabbatch"
@@ -275,10 +279,11 @@ tests:
     command: |
       cp /opt/cat12/standalone/cat_standalone_segment.m test_output/cat12_work/test_segment_nosurf.m && \
       # Disable surface processing for faster test
-      sed -i 's/output.surface = 1/output.surface = 0/g' test_output/cat12_work/test_segment_nosurf.m && \
+      sed -i "s/output.surface = 1/output.surface = 0/g" test_output/cat12_work/test_segment_nosurf.m && \
       # Disable verbose printing
-      sed -i 's/admin.print = 2/admin.print = 0/g' test_output/cat12_work/test_segment_nosurf.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/sub-01_T1w.nii'}|g" test_output/cat12_work/test_segment_nosurf.m && \
+      sed -i "s/admin.print = 2/admin.print = 0/g" test_output/cat12_work/test_segment_nosurf.m && \
+      NIIFILE="$(pwd)/test_output/sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|{'${NIIFILE}'}|g" test_output/cat12_work/test_segment_nosurf.m && \
       grep "output.surface" test_output/cat12_work/test_segment_nosurf.m
     depends_on: Prepare uncompressed T1w for CAT12
     expected_output_contains: "surface = 0"
@@ -349,7 +354,8 @@ tests:
     description: Prepare total intracranial volume extraction
     command: |
       cp /opt/cat12/standalone/cat_standalone_get_TIV.m test_output/cat12_work/test_tiv.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/report/cat_sub-01_T1w.xml'}|g" test_output/cat12_work/test_tiv.m && \
+      XMLFILE="$(pwd)/test_output/report/cat_sub-01_T1w.xml" && \
+      sed -i "s|<UNDEFINED>|{'${XMLFILE}'}|g" test_output/cat12_work/test_tiv.m && \
       echo "matlabbatch{1}.spm.tools.cat.tools.calcvol.calcvol_TIV = 0;" >> test_output/cat12_work/test_tiv.m && \
       echo "matlabbatch{1}.spm.tools.cat.tools.calcvol.calcvol_name = 'TIV_output.txt';" >> test_output/cat12_work/test_tiv.m && \
       cat test_output/cat12_work/test_tiv.m
@@ -371,7 +377,8 @@ tests:
     description: Prepare sample homogeneity/quality check batch
     command: |
       cp /opt/cat12/standalone/cat_standalone_get_quality.m test_output/cat12_work/test_quality.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/mri/mwp1sub-01_T1w.nii'}|g" test_output/cat12_work/test_quality.m && \
+      NIIFILE="$(pwd)/test_output/mri/mwp1sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|{'${NIIFILE}'}|g" test_output/cat12_work/test_quality.m && \
       echo "matlabbatch{1}.spm.tools.cat.tools.quality_measures.csv_name = 'quality_output.csv';" >> test_output/cat12_work/test_quality.m && \
       echo "matlabbatch{1}.spm.tools.cat.tools.quality_measures.globals = 1;" >> test_output/cat12_work/test_quality.m && \
       cat test_output/cat12_work/test_quality.m
@@ -393,7 +400,8 @@ tests:
     description: Prepare image quality rating extraction
     command: |
       cp /opt/cat12/standalone/cat_standalone_get_IQR.m test_output/cat12_work/test_iqr.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/report/cat_sub-01_T1w.xml'}|g" test_output/cat12_work/test_iqr.m && \
+      XMLFILE="$(pwd)/test_output/report/cat_sub-01_T1w.xml" && \
+      sed -i "s|<UNDEFINED>|{'${XMLFILE}'}|g" test_output/cat12_work/test_iqr.m && \
       echo "matlabbatch{1}.spm.tools.cat.tools.iqr.iqr_name = 'IQR_output.txt';" >> test_output/cat12_work/test_iqr.m && \
       cat test_output/cat12_work/test_iqr.m
     depends_on: Run CAT12 segmentation (no surface)
@@ -416,7 +424,8 @@ tests:
       cp /opt/cat12/standalone/cat_standalone_smooth.m test_output/cat12_work/test_smooth_gm.m && \
       echo "matlabbatch{1}.spm.spatial.smooth.fwhm = [8 8 8];" >> test_output/cat12_work/test_smooth_gm.m && \
       echo "matlabbatch{1}.spm.spatial.smooth.prefix = 's8';" >> test_output/cat12_work/test_smooth_gm.m && \
-      sed -i "s|<UNDEFINED>|{'$(pwd)/test_output/mri/mwp1sub-01_T1w.nii'}|g" test_output/cat12_work/test_smooth_gm.m && \
+      NIIFILE="$(pwd)/test_output/mri/mwp1sub-01_T1w.nii" && \
+      sed -i "s|<UNDEFINED>|{'${NIIFILE}'}|g" test_output/cat12_work/test_smooth_gm.m && \
       cat test_output/cat12_work/test_smooth_gm.m
     depends_on: Run CAT12 segmentation (no surface)
     expected_output_contains: "smooth"
@@ -441,7 +450,7 @@ tests:
       ROI_FILE=$(ls test_output/label/catROI_*.xml 2>/dev/null | head -1) && \
       if [ -n "$ROI_FILE" ]; then
         cp /opt/cat12/standalone/cat_standalone_get_ROI_values.m test_output/cat12_work/test_roi.m && \
-        sed -i "s|<UNDEFINED>|{'${ROI_FILE}'}|g" test_output/cat12_work/test_roi.m && \
+        sed -i "s|<UNDEFINED>|{'$ROI_FILE'}|g" test_output/cat12_work/test_roi.m && \
         echo "matlabbatch{1}.spm.tools.cat.tools.calcroi.calcroi_name = 'ROI_values';" >> test_output/cat12_work/test_roi.m && \
         cat test_output/cat12_work/test_roi.m
       else

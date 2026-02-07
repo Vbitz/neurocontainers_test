@@ -90,19 +90,22 @@ tests:
 
   - name: reg_tools downsample
     description: Downsample image by factor of 2
-    command: reg_tools -in ${t1w} -down -out test_output/t1w_downsampled.nii.gz
+    command: reg_tools -in test_output/t1w_float.nii.gz -down -out test_output/t1w_downsampled.nii.gz
+    depends_on: reg_tools float conversion
     validate:
       - output_exists: ${output_dir}/t1w_downsampled.nii.gz
 
   - name: reg_tools Gaussian smoothing
     description: Smooth image with Gaussian kernel (2mm sigma in each dimension)
-    command: reg_tools -in ${t1w} -smoG 2 2 2 -out test_output/t1w_smoothG.nii.gz
+    command: reg_tools -in test_output/t1w_float.nii.gz -smoG 2 2 2 -out test_output/t1w_smoothG.nii.gz
+    depends_on: reg_tools float conversion
     validate:
       - output_exists: ${output_dir}/t1w_smoothG.nii.gz
 
   - name: reg_tools B-spline smoothing
     description: Smooth image with cubic B-spline kernel
-    command: reg_tools -in ${t1w} -smoS 2 2 2 -out test_output/t1w_smoothS.nii.gz
+    command: reg_tools -in test_output/t1w_float.nii.gz -smoS 2 2 2 -out test_output/t1w_smoothS.nii.gz
+    depends_on: reg_tools float conversion
     validate:
       - output_exists: ${output_dir}/t1w_smoothS.nii.gz
 
@@ -168,7 +171,8 @@ tests:
 
   - name: reg_tools remove NaN/Inf
     description: Replace NaN and Inf values with specified value
-    command: reg_tools -in ${t1w} -rmNanInf 0 -out test_output/t1w_rmNanInf.nii.gz
+    command: reg_tools -in test_output/t1w_float.nii.gz -rmNanInf 0 -out test_output/t1w_rmNanInf.nii.gz
+    depends_on: reg_tools float conversion
     validate:
       - output_exists: ${output_dir}/t1w_rmNanInf.nii.gz
 

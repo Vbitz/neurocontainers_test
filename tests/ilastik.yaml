@@ -249,7 +249,7 @@ tests:
   - name: Neural Network applet available
     description: Verify Neural Network applet exists
     command: ls /opt/ilastik-1.4.0-Linux/lib/python3.7/site-packages/ilastik/applets/neuralNetwork/ 2>&1
-    expected_output_contains: "nnClassificationApplet.py"
+    expected_output_contains: "nnClassApplet"
 
   - name: Tracking applet available
     description: Verify Tracking feature extraction applet exists

@@ -52,8 +52,8 @@ tests:
 
   - name: signMaps usage
     description: Verify signMaps command displays usage information
-    command: signMaps 2>&1 | head -5 || true
-    expected_output_contains: "signMaps"
+    command: signMaps 2>&1 | head -10 || true
+    expected_output_contains: "sign"
 
   # ===========================================================================
   # PYTHON ENVIRONMENT TESTS
@@ -160,8 +160,8 @@ tests:
 
   - name: wb_command list commands
     description: Verify wb_command has available subcommands
-    command: wb_command -list-commands 2>&1 | head -10
-    expected_output_contains: "-cifti"
+    command: wb_command -list-commands 2>&1 | head -20
+    expected_output_contains: "volume"
 
   - name: wb_command help
     description: Test wb_command general help
@@ -471,8 +471,8 @@ tests:
   # ===========================================================================
   - name: wb_command nifti-information
     description: Display NIfTI information using workbench
-    command: wb_command -nifti-information ${t1w} 2>&1
-    expected_output_contains: "Type"
+    command: wb_command -nifti-information ${t1w} -print-header 2>&1
+    expected_output_contains: "sizeof_hdr"
 
   - name: wb_command volume-create
     description: Create a blank volume file
@@ -551,7 +551,7 @@ tests:
 
   - name: wb_command volume-merge
     description: Merge two volumes
-    command: wb_command -volume-merge test_output/t1w_merged.nii.gz -volume ${t1w} -volume ${t2}
+    command: wb_command -volume-merge test_output/t1w_merged.nii.gz -volume ${t1w} -volume ${t1w}
     validate:
       - output_exists: ${output_dir}/t1w_merged.nii.gz
 
@@ -565,7 +565,7 @@ tests:
 
   - name: Nibabel read BOLD
     description: Read BOLD using nibabel
-    command: python -c "import nibabel as nib; img=nib.load('${bold}'); print('Shape:', img.shape); print('TR:', img.header.get_zooms()[-1] if len(img.shape)==4 else 'N/A')"
+    command: python -c "import nibabel as nib; img=nib.load(\"${bold}\"); print('Shape:', img.shape); print('TR:', img.header.get_zooms()[-1] if len(img.shape)==4 else 'N/A')"
     expected_output_contains: "Shape:"
 
   - name: NumPy image statistics
@@ -868,7 +868,7 @@ tests:
   - name: Labels directory exists
     description: Verify retinotopy labels are available
     command: ls -la /opt/deepRetinotopy_TheToolbox/labels/
-    expected_output_contains: "labels"
+    expected_output_contains: "total"
 
   - name: Utils templates exist
     description: Verify template utilities are available

@@ -93,7 +93,7 @@ tests:
     description: Check that the output contains simulation time series data
     command: grep -c "Time" test_output/eirs-corticothalamic.output || echo "0"
     depends_on: EIRS corticothalamic simulation
-    expected_output_contains: "1"
+    expected_output_contains: "2"
 
   - name: EIRS burst simulation
     description: Run EIRS model with burst dynamics configuration

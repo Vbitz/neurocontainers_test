@@ -791,17 +791,17 @@ tests:
   - name: dti_recon missing gradient table
     description: Test dti_recon error handling without gradient matrix
     command: dti_recon ${t1w} test_output/dtk/test_dti 2>&1 || true
-    expected_output_contains: "gradient"
+    expected_output_contains: "matrix file"
 
   - name: dti_tracker missing input
     description: Test dti_tracker error handling with non-existent input
     command: dti_tracker nonexistent_prefix test_output/dtk/tracks/test.trk 2>&1 || true
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   - name: track_info missing file
     description: Test track_info error handling with non-existent file
     command: track_info nonexistent.trk 2>&1 || true
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   - name: track_merge no input
     description: Test track_merge error handling with no input
@@ -826,7 +826,7 @@ tests:
   - name: odf_recon insufficient args
     description: Test odf_recon error handling with insufficient arguments
     command: odf_recon input 2>&1 || true
-    expected_output_contains: "Usage"
+    expected_output_contains: "Missing argument"
 
   - name: odf_tracker missing prefix
     description: Test odf_tracker error handling with missing prefix
@@ -839,7 +839,7 @@ tests:
   - name: dti_recon with invalid image
     description: Test dti_recon response to non-DWI input (T1w image)
     command: dti_recon ${t1w} test_output/dtk/t1w_dti -gm test_output/dtk/gradient_table.txt -b0 1 2>&1 || true
-    expected_exit_code: 1
+    expected_exit_code: 0
 
   - name: dti_recon compressed output option
     description: Verify dti_recon accepts nii.gz output type flag

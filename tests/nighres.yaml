@@ -186,8 +186,8 @@ tests:
 
   - name: ANTs apply transforms
     description: Verify antsApplyTransforms is available
-    command: antsApplyTransforms --version 2>&1 | head -3
-    expected_output_contains: "ANTs"
+    command: antsApplyTransforms --help 2>&1 | head -3
+    expected_output_contains: "antsApplyTransforms"
 
   - name: ANTs N4 bias correction
     description: Verify N4BiasFieldCorrection is available
@@ -226,13 +226,7 @@ tests:
 
   - name: Load BOLD with nibabel
     description: Load 4D BOLD image using nibabel
-    command: |
-      python3 -c "
-      import nibabel as nib
-      img = nib.load('${bold}')
-      print('Shape:', img.shape)
-      print('Dimensions:', len(img.shape))
-      "
+    command: python3 -c "import nibabel as nib; img = nib.load('${bold}'); print('Shape:', img.shape); print('Dimensions:', len(img.shape))"
     expected_output_contains: "Dimensions: 4"
 
   - name: Save NIfTI with nibabel
@@ -611,7 +605,7 @@ tests:
   - name: Brain slab coregistration example
     description: Check brain slab coregistration example exists
     command: head -30 /opt/nighres/examples/testing_03_brain_slab_coregistration.py
-    expected_output_contains: "coregistration"
+    expected_output_contains: "registration"
 
   - name: MASSP subcortex example
     description: Check MASSP subcortex parcellation example exists
@@ -858,6 +852,7 @@ tests:
       nib.save(result, 'test_output/bold_tmean.nii.gz')
       print('Temporal mean computed, shape:', mean_data.shape)
       "
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/bold_tmean.nii.gz
 
@@ -883,6 +878,7 @@ tests:
       nib.save(result, 'test_output/bold_tsnr.nii.gz')
       print('tSNR computed, mean tSNR:', np.nanmean(tsnr[tsnr > 0]))
       "
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/bold_tsnr.nii.gz
 
@@ -943,6 +939,7 @@ tests:
       nib.save(result, 'test_output/bold_bandpass.nii.gz')
       print('Bandpass filtering completed')
       "
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/bold_bandpass.nii.gz
 

@@ -118,7 +118,7 @@ tests:
   - name: nib-ls header fields
     description: List specific header fields
     command: nib-ls -H "dim,pixdim" ${t1w}
-    expected_output_contains: "dim"
+    expected_output_contains: "1.333333"
 
   - name: nib-ls verbose output
     description: List image with verbose output
@@ -210,8 +210,9 @@ tests:
 
   - name: nib-roi verify extracted dimensions
     description: Verify the dimensions of extracted ROI
-    command: nib-ls test_output/nibabel_out/t1w_roi_central.nii.gz
-    depends_on: nib-roi extract central cube
+    command: |
+      nib-roi -i 40:120 -j 50:140 -k 50:140 ${t1w} test_output/nibabel_out/t1w_roi_central.nii.gz && \
+      nib-ls test_output/nibabel_out/t1w_roi_central.nii.gz
     expected_output_contains: "80"
 
   - name: nib-roi extract single slice
@@ -240,7 +241,7 @@ tests:
 
   - name: nib-roi flip i axis
     description: Extract ROI with flipped i axis
-    command: nib-roi -i 0:160:-1 ${t1w} test_output/nibabel_out/t1w_flip_i.nii.gz
+    command: nib-roi -i 160:0:-1 ${t1w} test_output/nibabel_out/t1w_flip_i.nii.gz
     validate:
       - output_exists: ${output_dir}/nibabel_out/t1w_flip_i.nii.gz
 
@@ -273,7 +274,7 @@ tests:
 
   - name: nib-conform custom voxel size
     description: Conform T1w to 2mm isotropic voxels
-    command: nib-conform --voxel-size 2.0 2.0 2.0 ${t1w} test_output/nibabel_out/t1w_2mm.nii.gz -f
+    command: nib-conform --voxel-size 2 2 2 ${t1w} test_output/nibabel_out/t1w_2mm.nii.gz -f
     validate:
       - output_exists: ${output_dir}/nibabel_out/t1w_2mm.nii.gz
 
@@ -291,7 +292,7 @@ tests:
 
   - name: nib-conform custom shape and voxel size
     description: Conform T1w to custom shape and voxel size
-    command: nib-conform --out-shape 96 96 96 --voxel-size 2.0 2.0 2.0 ${t1w} test_output/nibabel_out/t1w_custom.nii.gz -f
+    command: nib-conform --out-shape 96 96 96 --voxel-size 2 2 2 ${t1w} test_output/nibabel_out/t1w_custom.nii.gz -f
     validate:
       - output_exists: ${output_dir}/nibabel_out/t1w_custom.nii.gz
 
@@ -374,7 +375,7 @@ tests:
   - name: dcmstack list translators
     description: List available DICOM translators
     command: dcmstack --list-translators 2>&1
-    expected_output_contains: "translator"
+    expected_output_contains: "Csa"
 
   - name: dcmstack default regexes
     description: Show default include/exclude regular expressions
@@ -443,7 +444,7 @@ tests:
   - name: Isotropic resampling pipeline
     description: Conform image to 1mm isotropic voxels
     command: |
-      nib-conform --voxel-size 1.0 1.0 1.0 ${t1w} test_output/nibabel_out/t1w_1mm_iso.nii.gz -f && \
+      nib-conform --voxel-size 1 1 1 ${t1w} test_output/nibabel_out/t1w_1mm_iso.nii.gz -f && \
       nib-ls test_output/nibabel_out/t1w_1mm_iso.nii.gz
     validate:
       - output_exists: ${output_dir}/nibabel_out/t1w_1mm_iso.nii.gz

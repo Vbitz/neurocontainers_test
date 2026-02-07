@@ -182,7 +182,7 @@ tests:
   - name: nib-roi available
     description: Test nibabel ROI extraction tool is available
     command: nib-roi --help
-    expected_output_contains: "Usage"
+    expected_output_contains: "usage"
 
   # ==========================================================================
   # GLM_SINGLE CLASS INSTANTIATION AND PARAMETERS
@@ -194,32 +194,62 @@ tests:
 
   - name: GLM_single default parameters
     description: Check default parameters are properly set
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('n_pcs', g.params['n_pcs'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('n_pcs', g.params['n_pcs'])
+      PYEOF
     expected_output_contains: "n_pcs 10"
 
   - name: GLM_single HRF model parameter
     description: Check HRF model default parameter
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('hrfmodel', g.params['hrfmodel'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('hrfmodel', g.params['hrfmodel'])
+      PYEOF
     expected_output_contains: "optimise"
 
   - name: GLM_single n_boots parameter
     description: Check bootstrap resampling default parameter
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('n_boots', g.params['n_boots'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('n_boots', g.params['n_boots'])
+      PYEOF
     expected_output_contains: "n_boots 100"
 
   - name: GLM_single wantglmdenoise parameter
     description: Check GLMdenoise is enabled by default
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('wantglmdenoise', g.params['wantglmdenoise'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('wantglmdenoise', g.params['wantglmdenoise'])
+      PYEOF
     expected_output_contains: "wantglmdenoise 1"
 
   - name: GLM_single wantfracridge parameter
     description: Check fractional ridge regression is enabled by default
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('wantfracridge', g.params['wantfracridge'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('wantfracridge', g.params['wantfracridge'])
+      PYEOF
     expected_output_contains: "wantfracridge 1"
 
   - name: GLM_single wantlibrary parameter
     description: Check HRF library is enabled by default
-    command: "python3 -c \"from glmsingle.glmsingle import GLM_single; g = GLM_single(); print('wantlibrary', g.params['wantlibrary'])\""
+    command: |
+      python3 << 'PYEOF'
+      from glmsingle.glmsingle import GLM_single
+      g = GLM_single()
+      print('wantlibrary', g.params['wantlibrary'])
+      PYEOF
     expected_output_contains: "wantlibrary 1"
 
   - name: GLM_single fracs parameter
@@ -542,6 +572,7 @@ tests:
       print('Colormap shape', cmap.shape)
       "
     expected_output_contains: "shape"
+    expected_exit_code: 0
 
   - name: Sign4 colormap
     description: Test sign4 colormap for signed data

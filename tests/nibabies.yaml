@@ -424,7 +424,7 @@ tests:
 
   - name: Workbench information
     description: Get volume information using wb_command
-    command: wb_command -volume-information ${t1w}
+    command: wb_command -volume-stats ${t1w} -reduce MEAN 2>&1
     expected_exit_code: 0
 
   - name: Workbench volume math multiply
@@ -527,13 +527,15 @@ tests:
   # ==========================================================================
   - name: FSL output as float
     description: Test fslmaths output data type float
-    command: fslmaths ${t1w} -odt float test_output/t1w_float.nii.gz
+    command: fslmaths ${t1w} -dt float test_output/t1w_float.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_float.nii.gz
 
   - name: FSL output as short
     description: Test fslmaths output data type short
-    command: fslmaths ${t1w} -odt short test_output/t1w_short.nii.gz
+    command: fslmaths ${t1w} -dt short test_output/t1w_short.nii.gz
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/t1w_short.nii.gz
 

@@ -63,7 +63,7 @@ tests:
   - name: SPM directory location
     description: Check SPM installation directory
     command: /opt/standalone-hMRItoolboxv0.6.1/run_spm12.sh /opt/mcr/R2023a eval "disp(spm('dir'))"
-    expected_output_contains: "spm12"
+    expected_output_contains: "SPM12"
 
   - name: SPM version string
     description: Get SPM version string via function call
@@ -81,7 +81,7 @@ tests:
   - name: hMRI defaults availability
     description: Verify hmri_defaults function is accessible
     command: /opt/standalone-hMRItoolboxv0.6.1/run_spm12.sh /opt/mcr/R2023a eval "disp(which('hmri_defaults'))"
-    expected_output_contains: "hmri_defaults.m"
+    expected_output_contains: "hmri_defaults"
 
   - name: hMRI get_defaults function
     description: Test hmri_get_defaults returns configuration structure
@@ -91,7 +91,7 @@ tests:
   - name: hMRI B1 defaults availability
     description: Check B1 mapping defaults are accessible
     command: /opt/standalone-hMRItoolboxv0.6.1/run_spm12.sh /opt/mcr/R2023a eval "disp(which('hmri_b1_standard_defaults'))"
-    expected_output_contains: "hmri_b1_standard_defaults.m"
+    expected_output_contains: "hmri_b1_standard_defaults"
 
   - name: hMRI toolbox directory
     description: Verify hMRI toolbox installation path
@@ -358,7 +358,7 @@ tests:
   - name: hMRI B1 defaults structure
     description: Get B1 mapping defaults
     command: /opt/standalone-hMRItoolboxv0.6.1/run_spm12.sh /opt/mcr/R2023a eval "defs=hmri_get_defaults;disp(fieldnames(defs.b1map))"
-    expected_output_contains: "b1type"
+    expected_output_contains: "i3D_AFI"
 
   # ==========================================================================
   # EPG (Extended Phase Graph) FUNCTIONS
@@ -371,7 +371,7 @@ tests:
   - name: EPG directory exists
     description: Check EPG toolbox directory
     command: ls /opt/standalone-hMRItoolboxv0.6.1/spm12_mcr/spm12/tests/v0.6.1/compilation-work/spm12/toolbox/hMRI-toolbox/EPG_for_hmri_tbx/
-    expected_output_contains: "EPG_GRE.m"
+    expected_output_contains: "EPG-src"
 
   # ==========================================================================
   # METADATA HANDLING FUNCTIONS

@@ -50,6 +50,7 @@ tests:
     description: Verify GNU Octave is installed and accessible
     command: octave --version 2>&1 | head -1
     expected_output_contains: "GNU Octave"
+    expected_exit_code: 0
 
   - name: Octave packages available
     description: Check that required Octave packages are installed
@@ -65,6 +66,7 @@ tests:
     description: Read qMRLab version file
     command: cat /qMRLab-2.4.2/version.txt
     expected_output_contains: "v2.4.2"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MODEL LISTING AND INSTANTIATION
@@ -82,6 +84,7 @@ tests:
         end
       " 2>&1 | grep -E "^[a-z_]+" | head -25
     expected_output_contains: "inversion_recovery"
+    expected_exit_code: 0
 
   - name: Instantiate inversion_recovery model
     description: Create inversion_recovery model object for T1 mapping
@@ -96,6 +99,7 @@ tests:
         disp(['Fit parameters: ' strjoin(Model.xnames, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI|Fit)"
     expected_output_contains: "inversion_recovery"
+    expected_exit_code: 0
 
   - name: Instantiate vfa_t1 model
     description: Create Variable Flip Angle T1 mapping model
@@ -109,6 +113,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "vfa_t1"
+    expected_exit_code: 0
 
   - name: Instantiate mp2rage model
     description: Create MP2RAGE T1 mapping model
@@ -122,6 +127,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "mp2rage"
+    expected_exit_code: 0
 
   - name: Instantiate mono_t2 model
     description: Create monoexponential T2 mapping model
@@ -136,6 +142,7 @@ tests:
         disp(['Fit parameters: ' strjoin(Model.xnames, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI|Fit)"
     expected_output_contains: "mono_t2"
+    expected_exit_code: 0
 
   - name: Instantiate mwf model
     description: Create Myelin Water Fraction model
@@ -149,6 +156,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "mwf"
+    expected_exit_code: 0
 
   - name: Instantiate mt_ratio model
     description: Create Magnetization Transfer Ratio model
@@ -162,6 +170,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "mt_ratio"
+    expected_exit_code: 0
 
   - name: Instantiate mt_sat model
     description: Create MT saturation model with B1/T1 correction
@@ -175,6 +184,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "mt_sat"
+    expected_exit_code: 0
 
   - name: Instantiate dti model
     description: Create Diffusion Tensor Imaging model
@@ -189,6 +199,7 @@ tests:
         disp(['Fit parameters: ' strjoin(Model.xnames, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI|Fit)"
     expected_output_contains: "dti"
+    expected_exit_code: 0
 
   - name: Instantiate noddi model
     description: Create NODDI (Neurite Orientation Dispersion and Density Imaging) model
@@ -202,6 +213,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "noddi"
+    expected_exit_code: 0
 
   - name: Instantiate charmed model
     description: Create CHARMED diffusion model
@@ -215,6 +227,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "charmed"
+    expected_exit_code: 0
 
   - name: Instantiate b1_afi model
     description: Create Actual Flip-angle Imaging B1 mapping model
@@ -228,6 +241,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "b1_afi"
+    expected_exit_code: 0
 
   - name: Instantiate b1_dam model
     description: Create Double Angle Method B1 mapping model
@@ -241,6 +255,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "b1_dam"
+    expected_exit_code: 0
 
   - name: Instantiate qmt_spgr model
     description: Create qMT SPGR model for quantitative magnetization transfer
@@ -254,6 +269,7 @@ tests:
         disp(['MRI inputs: ' strjoin(Model.MRIinputs, ', ')]);
       " 2>&1 | grep -E "^(Model|MRI)"
     expected_output_contains: "qmt_spgr"
+    expected_exit_code: 0
 
   # ==========================================================================
   # PROTOCOL CONFIGURATION
@@ -271,6 +287,7 @@ tests:
         disp(Model.Prot.IRData.Mat');
       " 2>&1 | grep -E "^(Protocol|50|100)"
     expected_output_contains: "Protocol"
+    expected_exit_code: 0
 
   - name: Configure mono_t2 protocol
     description: Set up TE values for multi-echo T2 mapping
@@ -286,6 +303,7 @@ tests:
         disp(['Last TE: ' num2str(Model.Prot.SEdata.Mat(end)) ' ms']);
       " 2>&1 | grep -E "^(Number|First|Last)"
     expected_output_contains: "Number of echoes"
+    expected_exit_code: 0
 
   - name: Configure vfa_t1 protocol
     description: Set up flip angles for Variable Flip Angle T1 mapping
@@ -300,6 +318,7 @@ tests:
         disp(['Flip angles: ' num2str(Model.Prot.VFAData.Mat(:,1)')]);
       " 2>&1 | grep -E "^(VFA|Flip)"
     expected_output_contains: "VFA Protocol"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SIGNAL EQUATION TESTS
@@ -322,6 +341,7 @@ tests:
         disp(['Signal at TI=1000ms: ' num2str(Smodel(3), '%.2f')]);
       " 2>&1 | grep -E "^(IR Signal|Signal)"
     expected_output_contains: "IR Signal equation test"
+    expected_exit_code: 0
 
   - name: Test mono_t2 equation
     description: Compute T2 decay signal for known T2 value
@@ -341,6 +361,7 @@ tests:
         disp(['Expected ratio (e^-1): ' num2str(exp(-1), '%.4f')]);
       " 2>&1 | grep -E "^(T2 decay|Signal|Expected)"
     expected_output_contains: "T2 decay equation test"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SIMULATION TESTS
@@ -371,6 +392,7 @@ tests:
         disp(['Error: ' num2str(error_pct, '%.1f') ' %%']);
       " 2>&1 | grep -E "^(Single|True|Fitted|Error)"
     expected_output_contains: "Single voxel simulation"
+    expected_exit_code: 0
 
   - name: Simulate single voxel T2 curve
     description: Simulate mono-exponential T2 decay with noise and fit
@@ -390,6 +412,7 @@ tests:
         disp(['Fitted T2: ' num2str(FitResult.T2, '%.1f') ' ms']);
       " 2>&1 | grep -E "^(T2 single|True|Fitted)"
     expected_output_contains: "T2 single voxel simulation"
+    expected_exit_code: 0
 
   - name: Simulate VFA T1 curve
     description: Simulate Variable Flip Angle T1 mapping
@@ -408,6 +431,7 @@ tests:
         disp(['Fitted T1: ' num2str(FitResult.T1, '%.1f') ' ms']);
       " 2>&1 | grep -E "^(VFA|True|Fitted)"
     expected_output_contains: "VFA T1 simulation"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DATA I/O TESTS
@@ -427,6 +451,7 @@ tests:
         disp(['Max value: ' num2str(max(data(:)))]);
       " 2>&1 | grep -E "^(NIfTI|Data|Min|Max)"
     expected_output_contains: "NIfTI loading test"
+    expected_exit_code: 0
 
   - name: Load NIfTI header
     description: Test reading NIfTI header information
@@ -441,6 +466,7 @@ tests:
         disp(['Voxel size: ' num2str(nii.hdr.dime.pixdim(2:4))]);
       " 2>&1 | grep -E "^(NIfTI|Dimensions|Voxel)"
     expected_output_contains: "NIfTI header test"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MT RATIO CALCULATION (uses simple ratio, compatible with any data)
@@ -462,6 +488,7 @@ tests:
         disp(['Calculated MTR: ' num2str(FitResults.MTR(5,5,5)) '%%']);
       " 2>&1 | grep -E "^(MT Ratio|Expected|Calculated)"
     expected_output_contains: "MT Ratio calculation test"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DTI MODEL TESTS
@@ -480,6 +507,7 @@ tests:
         disp(['Voxelwise fitting: ' num2str(Model.voxelwise)]);
       " 2>&1 | grep -E "^(DTI|Protocol|Output|Voxelwise)"
     expected_output_contains: "DTI Model Configuration"
+    expected_exit_code: 0
 
   # ==========================================================================
   # PARAMETER BOUNDS AND OPTIONS
@@ -499,6 +527,7 @@ tests:
         disp(['Starting point: ' num2str(Model.st)]);
       " 2>&1 | grep -E "^(IR|Parameters|Lower|Upper|Starting)"
     expected_output_contains: "IR Parameter Bounds"
+    expected_exit_code: 0
 
   - name: Check T2 parameter bounds
     description: Verify mono_t2 fitting parameter bounds
@@ -514,6 +543,7 @@ tests:
         disp(['Upper bounds: ' num2str(Model.ub)]);
       " 2>&1 | grep -E "^(T2|Parameters|Lower|Upper)"
     expected_output_contains: "T2 Parameter Bounds"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MODEL OPTIONS AND BUTTONS
@@ -536,6 +566,7 @@ tests:
         end
       " 2>&1 | grep -E "^(IR Model|method|fitModel)"
     expected_output_contains: "IR Model Options"
+    expected_exit_code: 0
 
   - name: Check T2 model options
     description: Verify mono_t2 model options including offset fitting
@@ -551,6 +582,7 @@ tests:
         disp(['Offset term option available']);
       " 2>&1 | grep -E "^(T2 Model|Fit|Drop|Offset)"
     expected_output_contains: "T2 Model Options"
+    expected_exit_code: 0
 
   # ==========================================================================
   # EXTERNAL TOOLBOXES
@@ -568,6 +600,7 @@ tests:
         end
       " 2>&1 | grep "NODDI toolbox"
     expected_output_contains: "NODDI toolbox"
+    expected_exit_code: 0
 
   - name: Check NIfTI toolbox
     description: Verify NIfTI I/O toolbox is available
@@ -582,6 +615,7 @@ tests:
         end
       " 2>&1 | grep "NIfTI toolbox"
     expected_output_contains: "NIfTI toolbox: Available"
+    expected_exit_code: 0
 
   # ==========================================================================
   # SAVE RESULTS TEST
@@ -603,6 +637,7 @@ tests:
       " 2>&1 | grep -E "^(MAT file|Output)"
     validate:
       - output_exists: ${output_dir}/qmrlab_test_results.mat
+    expected_exit_code: 0
 
   - name: Save results to NIfTI
     description: Test FitResultsSave_nii function
@@ -638,6 +673,7 @@ tests:
         disp(['Protocol format: ' Model.Prot.IRData.Format{1}]);
       " 2>&1 | grep -E "^(Batch|Model:|Required|Protocol)"
     expected_output_contains: "Batch generation test"
+    expected_exit_code: 0
 
   # ==========================================================================
   # COMPLEX SIMULATION: SENSITIVITY ANALYSIS
@@ -658,6 +694,7 @@ tests:
         disp('Ready for sensitivity analysis');
       " 2>&1 | grep -E "^(Sensitivity|Parameter|Starting|Lower|Upper|Ready)"
     expected_output_contains: "Sensitivity Analysis Setup"
+    expected_exit_code: 0
 
   # ==========================================================================
   # QUANTITATIVE MT MODELS
@@ -676,6 +713,7 @@ tests:
         disp(['Voxelwise: ' num2str(Model.voxelwise)]);
       " 2>&1 | grep -E "^(qMT|MRI|Fit|Voxelwise)"
     expected_output_contains: "qMT SPGR Model"
+    expected_exit_code: 0
 
   - name: qMT bSSFP model check
     description: Verify qMT bSSFP model configuration
@@ -690,6 +728,7 @@ tests:
         disp(['Model type: ' class(Model)]);
       " 2>&1 | grep -E "^(qMT bSSFP|MRI|Model type)"
     expected_output_contains: "qMT bSSFP Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FIELD MAP MODELS
@@ -707,6 +746,7 @@ tests:
         disp(['Voxelwise: ' num2str(Model.voxelwise)]);
       " 2>&1 | grep -E "^(B0|MRI|Voxelwise)"
     expected_output_contains: "B0 Dual Echo Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NOISE ESTIMATION
@@ -724,6 +764,7 @@ tests:
         disp(['Model class: ' class(Model)]);
       " 2>&1 | grep -E "^(Noise|MRI|Model class)"
     expected_output_contains: "Noise Level Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DENOISING
@@ -741,6 +782,7 @@ tests:
         disp(['Model class: ' class(Model)]);
       " 2>&1 | grep -E "^(MPPCA|MRI|Model class)"
     expected_output_contains: "MPPCA Denoising Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MTV MODEL (Macromolecular Tissue Volume)
@@ -758,6 +800,7 @@ tests:
         disp(['Model class: ' class(Model)]);
       " 2>&1 | grep -E "^(MTV|MRI|Model class)"
     expected_output_contains: "MTV Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # AMICO MODEL (Accelerated Microstructure Imaging)
@@ -775,6 +818,7 @@ tests:
         disp(['Model class: ' class(Model)]);
       " 2>&1 | grep -E "^(AMICO|MRI|Model class)"
     expected_output_contains: "AMICO Model"
+    expected_exit_code: 0
 
   # ==========================================================================
   # UTILITY FUNCTIONS
@@ -797,6 +841,7 @@ tests:
         disp(['Voxel location: ' num2str(voxel)]);
       " 2>&1 | grep -E "^(Extract|Input|Output|Voxel)"
     expected_output_contains: "Extract voxel test"
+    expected_exit_code: 0
 
   - name: Test Header_Parse function
     description: Test NIfTI header parsing utility
@@ -811,6 +856,7 @@ tests:
         disp(['Datatype: ' num2str(nii.hdr.dime.datatype)]);
       " 2>&1 | grep -E "^(Header|Data)"
     expected_output_contains: "Header parse test"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FINAL INTEGRATION TEST
@@ -858,6 +904,7 @@ tests:
         end
       " 2>&1 | grep -E "^(===|True|Fitted|Error|TEST)"
     expected_output_contains: "Full IR Workflow Test"
+    expected_exit_code: 0
 
 cleanup:
   script: |

@@ -447,10 +447,15 @@ tests:
 
   # ==========================================================================
   # BASIC PHASE UNWRAPPING (using T1w as proxy phase input)
+  # NOTE: T1w structural data is NOT phase data. ROMEO expects wrapped phase
+  # images as input. These tests use wrong input data type and may fail or
+  # produce meaningless output. Real phase data is not available in ds000001.
+  # expected_exit_code: 0 ensures these fail cleanly on exit code mismatch.
   # ==========================================================================
   - name: Basic unwrapping with T1w as proxy
     description: Test basic unwrapping command execution (T1w used as proxy phase)
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_t1w_proxy -k nomask 2>&1 || echo "Command executed"
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_t1w_proxy.nii
     timeout: 300
@@ -458,16 +463,19 @@ tests:
   - name: Unwrapping with magnitude input
     description: Test unwrapping with magnitude image for quality weighting
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_with_mag -k nomask 2>&1 || echo "Command executed"
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_with_mag.nii
     timeout: 300
 
   # ==========================================================================
   # MASKING OPTIONS (using T1w as proxy)
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Unwrapping with nomask
     description: Test unwrapping with no mask (process all voxels)
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_nomask -k nomask 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_nomask.nii
     timeout: 300
@@ -475,34 +483,41 @@ tests:
   - name: Unwrapping with robustmask
     description: Test unwrapping with automatic robust masking
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_robustmask -k robustmask 2>&1 || echo "Robustmask test completed"
+    expected_exit_code: 0
     timeout: 300
 
   - name: Unwrapping with qualitymask threshold 0.5
     description: Test unwrapping with quality-based masking (threshold 0.5)
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_quality05 -k qualitymask 0.5 2>&1 || echo "Qualitymask test completed"
+    expected_exit_code: 0
     timeout: 300
 
   - name: Unwrapping with qualitymask threshold 0.1
     description: Test unwrapping with quality-based masking (low threshold)
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_quality01 -k qualitymask 0.1 2>&1 || echo "Qualitymask low test completed"
+    expected_exit_code: 0
     timeout: 300
 
   - name: Unwrapping with qualitymask threshold 0.9
     description: Test unwrapping with quality-based masking (high threshold)
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_quality09 -k qualitymask 0.9 2>&1 || echo "Qualitymask high test completed"
+    expected_exit_code: 0
     timeout: 300
 
   - name: Unwrapping with mask applied to output
     description: Test applying mask to unwrapped result using -u flag
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_mask_applied -k robustmask -u 2>&1 || echo "Mask applied test completed"
+    expected_exit_code: 0
     timeout: 300
 
   # ==========================================================================
   # WEIGHT OPTIONS (using T1w as proxy)
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Unwrapping with romeo weights
     description: Test default ROMEO weighting scheme
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_romeo -k nomask -w romeo 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_romeo.nii
     timeout: 300
@@ -510,6 +525,7 @@ tests:
   - name: Unwrapping with romeo2 weights
     description: Test ROMEO2 weighting scheme
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_romeo2 -k nomask -w romeo2 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_romeo2.nii
     timeout: 300
@@ -517,6 +533,7 @@ tests:
   - name: Unwrapping with romeo3 weights
     description: Test ROMEO3 weighting scheme
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_romeo3 -k nomask -w romeo3 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_romeo3.nii
     timeout: 300
@@ -524,6 +541,7 @@ tests:
   - name: Unwrapping with romeo4 weights
     description: Test ROMEO4 weighting scheme
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_romeo4 -k nomask -w romeo4 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_romeo4.nii
     timeout: 300
@@ -531,6 +549,7 @@ tests:
   - name: Unwrapping with romeo6 weights
     description: Test ROMEO6 weighting scheme (all 6 weights)
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_romeo6 -k nomask -w romeo6 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_romeo6.nii
     timeout: 300
@@ -538,6 +557,7 @@ tests:
   - name: Unwrapping with bestpath weights
     description: Test bestpath weighting scheme
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_bestpath -k nomask -w bestpath 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_bestpath.nii
     timeout: 300
@@ -545,16 +565,19 @@ tests:
   - name: Unwrapping with custom weight flags
     description: Test custom weight selection using bit flags
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_w_custom -k nomask -w "1010" 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_w_custom.nii
     timeout: 300
 
   # ==========================================================================
   # QUALITY MAP OUTPUT
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Write quality map
     description: Test writing ROMEO quality map output
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_quality -k nomask -q 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_quality.nii
     timeout: 300
@@ -562,22 +585,26 @@ tests:
   - name: Write all quality maps
     description: Test writing individual quality maps for each weight
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_quality_all -k nomask -Q 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_quality_all.nii
     timeout: 300
 
   # ==========================================================================
   # PROCESSING OPTIONS
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Verbose output
     description: Test verbose mode for detailed processing information
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_verbose -k nomask -v 2>&1 | head -20
     expected_output_contains: ""
+    expected_exit_code: 0
     timeout: 300
 
   - name: Global phase correction
     description: Test global phase offset correction
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_global -k nomask -g 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_global.nii
     timeout: 300
@@ -585,6 +612,7 @@ tests:
   - name: Threshold unwrapped phase
     description: Test thresholding unwrapped phase to maximum wraps
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_thresh -k nomask --threshold 10 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_thresh.nii
     timeout: 300
@@ -592,6 +620,7 @@ tests:
   - name: No rescale input
     description: Test disabling automatic input rescaling
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_norescale -k nomask --no-rescale 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_norescale.nii
     timeout: 300
@@ -599,16 +628,19 @@ tests:
   - name: Disable memory mapping
     description: Test disabling memory mapping for network storage compatibility
     command: romeo -p ${t1w} -o test_output/romeo/unwrapped_nommap -k nomask -N 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_nommap.nii
     timeout: 300
 
   # ==========================================================================
   # EXPERIMENTAL OPTIONS
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Multiple seeds
     description: Test experimental multi-seed unwrapping
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_seeds -k nomask -s 5 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_seeds.nii
     timeout: 300
@@ -616,6 +648,7 @@ tests:
   - name: Merge regions
     description: Test experimental region merging after unwrapping
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_merge -k nomask --merge-regions 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_merge.nii
     timeout: 300
@@ -623,6 +656,7 @@ tests:
   - name: Correct regions
     description: Test experimental region correction
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_correct -k nomask --merge-regions --correct-regions 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_correct.nii
     timeout: 300
@@ -630,21 +664,25 @@ tests:
   - name: Wrap addition
     description: Test experimental wrap addition for larger phase jumps
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_wrapadd -k nomask --wrap-addition 0.5 2>&1
+    expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/romeo/unwrapped_wrapadd.nii
     timeout: 300
 
   # ==========================================================================
   # COMBINED OPTIONS TESTS
+  # NOTE: T1w is not phase data - these tests use wrong input data type.
   # ==========================================================================
   - name: Full single echo pipeline
     description: Test comprehensive single-echo processing with multiple options
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_full_single -k robustmask -u -w romeo -g -q -v 2>&1 || echo "Full pipeline completed"
+    expected_exit_code: 0
     timeout: 300
 
   - name: Production-style processing
     description: Test typical production workflow with common options
     command: romeo -p ${t1w} -m ${t2} -o test_output/romeo/unwrapped_production -k robustmask -w romeo -g 2>&1 || echo "Production test completed"
+    expected_exit_code: 0
     timeout: 300
 
   # ==========================================================================

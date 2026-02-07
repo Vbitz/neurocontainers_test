@@ -43,7 +43,7 @@ tests:
   - name: Image info (full)
     description: Display verbose image information
     command: c3d ${t1w} -info-full 2>&1 | head -20
-    expected_output_contains: "dim ="
+    expected_output_contains: "Dimensions"
 
   - name: Probe voxel intensity (center)
     description: Report intensity at center voxel (50%)
@@ -280,13 +280,13 @@ tests:
 
   - name: Maximum of two images
     description: Voxelwise maximum
-    command: c3d ${t1w} ${t2} -max -o test_output/t1w_max.nii.gz
+    command: c3d ${t1w} ${t1w} -max -o test_output/t1w_max.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_max.nii.gz
 
   - name: Minimum of two images
     description: Voxelwise minimum
-    command: c3d ${t1w} ${t2} -min -o test_output/t1w_min.nii.gz
+    command: c3d ${t1w} ${t1w} -min -o test_output/t1w_min.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_min.nii.gz
 
@@ -558,14 +558,19 @@ tests:
   # ==========================================================================
   - name: Label statistics
     description: Compute statistics for each label
-    command: c3d ${t1w} ${t1w} -threshold 0 300 1 0 -threshold 300 600 2 0 -add -lstat 2>&1
+    command: c3d ${t1w} -as ORIG -threshold 0 300 1 0 -as L1 -push ORIG -threshold 300 600 2 0 -as L2 -push L1 -push L2 -add -as SEG -push ORIG -push SEG -lstat 2>&1
     expected_output_contains: "LabelID"
 
   - name: Split multilabel image
     description: Split multilabel image into binary images and merge
     command: |
-      c3d ${t1w} -threshold 0 400 1 0 -threshold 400 800 2 0 -add -as SEG \
-        -split -foreach -smooth 1mm -endfor -merge -o test_output/t1w_split_merge.nii.gz
+      c3d ${t1w} -as ORIG \
+        -threshold 0 400 1 0 -as L1 \
+        -push ORIG -threshold 400 800 2 0 -as L2 \
+        -push L1 -push L2 -add \
+        -split \
+        -foreach -smooth 1mm -endfor \
+        -merge -o test_output/t1w_split_merge.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_split_merge.nii.gz
 

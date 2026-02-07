@@ -201,33 +201,33 @@ tests:
   # ==========================================================================
   - name: PyTorch availability
     description: Verify PyTorch is installed and importable
-    command: python3 -c "import torch; print('PyTorch', torch.__version__)"
-    expected_output_contains: "PyTorch"
+    command: python3 -c "import torch; print(torch.__name__, torch.__version__)"
+    expected_output_contains: "torch"
 
   - name: NumPy availability
     description: Verify NumPy is installed
-    command: python3 -c "import numpy; print('NumPy', numpy.__version__)"
-    expected_output_contains: "NumPy"
+    command: python3 -c "import numpy; print(numpy.__name__, numpy.__version__)"
+    expected_output_contains: "numpy"
 
   - name: Nibabel availability
     description: Verify Nibabel (neuroimaging I/O) is installed
-    command: python3 -c "import nibabel; print('Nibabel', nibabel.__version__)"
-    expected_output_contains: "Nibabel"
+    command: python3 -c "import nibabel; print(nibabel.__name__, nibabel.__version__)"
+    expected_output_contains: "nibabel"
 
   - name: Scipy availability
     description: Verify Scipy is installed
-    command: python3 -c "import scipy; print('Scipy', scipy.__version__)"
-    expected_output_contains: "Scipy"
+    command: python3 -c "import scipy; print(scipy.__name__, scipy.__version__)"
+    expected_output_contains: "scipy"
 
   - name: Pandas availability
     description: Verify Pandas is installed
-    command: python3 -c "import pandas; print('Pandas', pandas.__version__)"
-    expected_output_contains: "Pandas"
+    command: python3 -c "import pandas; print(pandas.__name__, pandas.__version__)"
+    expected_output_contains: "pandas"
 
   - name: Scikit-image availability
     description: Verify scikit-image is installed
-    command: python3 -c "import skimage; print('scikit-image', skimage.__version__)"
-    expected_output_contains: "scikit-image"
+    command: python3 -c "import skimage; print(skimage.__name__, skimage.__version__)"
+    expected_output_contains: "skimage"
 
   # ==========================================================================
   # FASTSURFER UTILITY FUNCTIONS
@@ -487,8 +487,8 @@ tests:
 
   - name: version module
     description: Verify version module reports version
-    command: python3 -c "from FastSurferCNN.version import __version__; print('Version:', __version__)"
-    expected_output_contains: "Version:"
+    command: python3 -c "from FastSurferCNN.version import __version__; print(__version__)"
+    expected_output_contains: "2."
 
   # ==========================================================================
   # FREESURFER COLOR LOOKUP TABLE

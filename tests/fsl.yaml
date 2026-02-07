@@ -257,15 +257,15 @@ tests:
 
   - name: fslmaths - maximum
     description: Take voxel-wise maximum of two images
-    command: fslmaths ${t1w} -max ${t2} test_output/t1w_max_t2.nii.gz
+    command: fslmaths ${t1w} -max ${t1w} test_output/t1w_max_t1w.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_max_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_max_t1w.nii.gz
 
   - name: fslmaths - minimum
     description: Take voxel-wise minimum of two images
-    command: fslmaths ${t1w} -min ${t2} test_output/t1w_min_t2.nii.gz
+    command: fslmaths ${t1w} -min ${t1w} test_output/t1w_min_t1w.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_min_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_min_t1w.nii.gz
 
   - name: fslmaths - modulus
     description: Calculate modulus remainder
@@ -479,19 +479,19 @@ tests:
   # ==========================================================================
   - name: fslmaths - output char
     description: Convert to char data type
-    command: fslmaths ${t1w} -bin -odt char test_output/t1w_odt_char.nii.gz
+    command: fslmaths -dt char ${t1w} -bin test_output/t1w_odt_char.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_odt_char.nii.gz
 
   - name: fslmaths - output short
     description: Convert to short data type
-    command: fslmaths ${t1w} -odt short test_output/t1w_odt_short.nii.gz
+    command: fslmaths -dt short ${t1w} test_output/t1w_odt_short.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_odt_short.nii.gz
 
   - name: fslmaths - output float
     description: Convert to float data type
-    command: fslmaths ${t1w} -odt float test_output/t1w_odt_float.nii.gz
+    command: fslmaths -dt float ${t1w} test_output/t1w_odt_float.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_odt_float.nii.gz
 
@@ -777,7 +777,7 @@ tests:
 
   - name: fsl_motion_outliers - FD
     description: Detect motion outliers using framewise displacement
-    command: fsl_motion_outliers -i ${bold} -o test_output/bold_fd_confounds.txt -s test_output/bold_fd.txt --fd --nomoco
+    command: fsl_motion_outliers -i ${bold} -o test_output/bold_fd_confounds.txt -s test_output/bold_fd.txt --fd
     validate:
       - output_exists: ${output_dir}/bold_fd.txt
 

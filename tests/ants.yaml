@@ -44,8 +44,8 @@ tests:
 
   - name: antsApplyTransforms version check
     description: Verify antsApplyTransforms binary runs
-    command: antsApplyTransforms --version
-    expected_output_contains: "ANTs Version"
+    command: antsApplyTransforms --help
+    expected_output_contains: "antsApplyTransforms"
 
   # ==========================================================================
   # HEADER AND IMAGE INFORMATION
@@ -293,12 +293,12 @@ tests:
 
   - name: ImageMath total intensity
     description: Sum all voxel values in image
-    command: ImageMath 3 test_output/t1w_total.txt total ${t1w}
+    command: ImageMath 3 test_output/t1w_total.nii.gz total ${t1w}
     expected_exit_code: 0
 
   - name: ImageMath mean intensity
     description: Compute mean voxel value
-    command: ImageMath 3 test_output/t1w_mean.txt mean ${t1w}
+    command: ImageMath 3 test_output/t1w_mean.nii.gz mean ${t1w}
     expected_exit_code: 0
 
   # ==========================================================================
@@ -783,13 +783,13 @@ tests:
   # ==========================================================================
   - name: Add Gaussian noise
     description: Add Gaussian noise to image
-    command: AddNoiseToImage 3 ${t1w} test_output/t1w_noisy_gaussian.nii.gz 0 50
+    command: AddNoiseToImage -d 3 -i ${t1w} -o test_output/t1w_noisy_gaussian.nii.gz 0 50
     validate:
       - output_exists: ${output_dir}/t1w_noisy_gaussian.nii.gz
 
   - name: Add Rician noise
     description: Add Rician noise to image
-    command: AddNoiseToImage 3 ${t1w} test_output/t1w_noisy_rician.nii.gz 1 50
+    command: AddNoiseToImage -d 3 -i ${t1w} -o test_output/t1w_noisy_rician.nii.gz 1 50
     validate:
       - output_exists: ${output_dir}/t1w_noisy_rician.nii.gz
 

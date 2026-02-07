@@ -299,7 +299,7 @@ tests:
   - name: Remote use help
     description: Verify apptainer remote use subcommand help
     command: apptainer remote use --help
-    expected_output_contains: "Set a remote endpoint"
+    expected_output_contains: "remote endpoint"
 
   - name: Remote status help
     description: Verify apptainer remote status subcommand help
@@ -314,7 +314,7 @@ tests:
   - name: Remote logout help
     description: Verify apptainer remote logout subcommand help
     command: apptainer remote logout --help
-    expected_output_contains: "Logout from"
+    expected_output_contains: "Log out from"
 
   # ==========================================================================
   # GLOBAL OPTIONS

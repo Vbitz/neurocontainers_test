@@ -148,13 +148,13 @@ tests:
 
   - name: C3D voxel-wise max
     description: Test -max operation (maximum of two images)
-    command: c3d ${t1w} ${t2} -max -o test_output/c3d_max.nii.gz
+    command: c3d ${t1w} ${t1w} -max -o test_output/c3d_max.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_max.nii.gz
 
   - name: C3D voxel-wise min
     description: Test -min operation (minimum of two images)
-    command: c3d ${t1w} ${t2} -min -o test_output/c3d_min.nii.gz
+    command: c3d ${t1w} ${t1w} -min -o test_output/c3d_min.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_min.nii.gz
 
@@ -294,7 +294,7 @@ tests:
 
   - name: C3D resample isotropic
     description: Test -resample-iso operation (resample to isotropic)
-    command: c3d ${t1w} -resample-iso -o test_output/c3d_t1w_resample_iso.nii.gz
+    command: c3d ${t1w} -resample-iso min -o test_output/c3d_t1w_resample_iso.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_t1w_resample_iso.nii.gz
 
@@ -538,7 +538,7 @@ tests:
 
   - name: Greedy metric computation
     description: Test greedy -metric for computing registration metric
-    command: greedy -d 3 -i ${t1w} ${t2} -it test_output/greedy_affine.mat -metric NCC 4 -o test_output/greedy_metric.nii.gz
+    command: greedy -d 3 -i ${t1w} ${t2} -it test_output/greedy_affine.mat -m NCC 4 -o test_output/greedy_metric.nii.gz
     depends_on: Greedy affine registration
     validate:
       - output_exists: ${output_dir}/greedy_metric.nii.gz
@@ -592,7 +592,7 @@ tests:
 
   - name: C3D affine tool translation
     description: Test c3d_affine_tool -trans to generate translation matrix
-    command: c3d_affine_tool -trans 10 20 30 -o test_output/translation.mat
+    command: c3d_affine_tool -tran 10 20 30 -o test_output/translation.mat
     validate:
       - output_exists: ${output_dir}/translation.mat
 
@@ -646,7 +646,7 @@ tests:
   # ==========================================================================
   - name: C3D tile images
     description: Test -tile operation (combine images into grid)
-    command: c3d ${t1w} -slice z 40% -as S1 ${t1w} -slice z 50% -as S2 -push S1 -push S2 -tile xy -o test_output/c3d_tiled.nii.gz
+    command: c3d ${t1w} -slice z 40% -as S1 ${t1w} -slice z 50% -as S2 -push S1 -push S2 -tile 2x1 -o test_output/c3d_tiled.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_tiled.nii.gz
 
@@ -675,7 +675,7 @@ tests:
   # ==========================================================================
   - name: C3D add Gaussian noise
     description: Test -noise-gaussian operation
-    command: c3d ${t1w} -noise-gaussian 0 10 -o test_output/c3d_t1w_noisy.nii.gz
+    command: c3d ${t1w} -noise-gaussian 0x10 -o test_output/c3d_t1w_noisy.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_t1w_noisy.nii.gz
 
@@ -705,7 +705,7 @@ tests:
 
   - name: C3D Hessian objectness
     description: Test -hessian-objectness for structure detection
-    command: c3d ${t1w} -hessobj 1mm 0 -o test_output/c3d_hessobj.nii.gz
+    command: c3d ${t1w} -hessobj 1mm 1 -o test_output/c3d_hessobj.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_hessobj.nii.gz
 

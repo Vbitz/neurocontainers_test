@@ -156,7 +156,7 @@ tests:
 
   - name: NetworkX graph operations
     description: Test NetworkX graph creation and analysis
-    command: python -c "import networkx as nx; G = nx.Graph(); G.add_edges_from([(1,2),(2,3),(3,1)]); print('Nodes:', G.number_of_nodes()); print('Edges:', G.number_of_edges())"
+    command: python -c "import networkx as nx; G = nx.Graph(); G.add_edges_from([(1,2),(2,3),(3,1)]); print(\"Nodes:\", G.number_of_nodes()); print(\"Edges:\", G.number_of_edges())"
     expected_output_contains: "Nodes: 3"
 
   # ==========================================================================
@@ -217,6 +217,7 @@ tests:
     description: Test PyMCubes marching cubes implementation
     command: python -c "import mcubes; print('PyMCubes (mcubes) imported successfully')"
     expected_output_contains: "PyMCubes (mcubes) imported successfully"
+    expected_exit_code: 0
 
   - name: PyMCubes mesh generation
     description: Test PyMCubes isosurface extraction
@@ -406,6 +407,7 @@ tests:
     description: Test scipy distance transform for vessel analysis
     command: python -c "import numpy as np; from scipy.ndimage import distance_transform_edt; vol = np.zeros((20,20,20)); vol[5:15,5:15,5:15] = 1; dt = distance_transform_edt(vol); print('Distance transform max:', dt.max())"
     expected_output_contains: "Distance transform max:"
+    expected_exit_code: 0
 
   - name: Binary morphology operations
     description: Test scipy binary morphology for vessel processing

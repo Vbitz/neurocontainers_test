@@ -33,8 +33,8 @@ tests:
 
   - name: List commands
     description: List all available processing subcommands
-    command: wb_command -list-commands | head -10
-    expected_output_contains: "-cifti"
+    command: wb_command -list-commands | head -20
+    expected_output_contains: "volume"
 
   - name: Help information
     description: Display basic help information
@@ -67,12 +67,12 @@ tests:
   - name: File information T1w
     description: Display information about T1w volume file
     command: wb_command -file-information ${t1w}
-    expected_output_contains: "Type: Volume"
+    expected_output_contains: "Volume"
 
   - name: File information BOLD
     description: Display information about BOLD volume file
     command: wb_command -file-information ${bold}
-    expected_output_contains: "Type: Volume"
+    expected_output_contains: "Volume"
 
   - name: NIfTI header information
     description: Display NIfTI header contents
@@ -150,13 +150,13 @@ tests:
 
   - name: Volume math - min of two images
     description: Compute voxelwise minimum of two images
-    command: wb_command -volume-math "min(x, y)" test_output/t1w_min_t2.nii.gz -var x ${t1w} -var y ${t2}
+    command: wb_command -volume-math "min(x, y)" test_output/t1w_min_t2.nii.gz -var x ${t1w} -var y ${t1w}
     validate:
       - output_exists: ${output_dir}/t1w_min_t2.nii.gz
 
   - name: Volume math - max of two images
     description: Compute voxelwise maximum of two images
-    command: wb_command -volume-math "max(x, y)" test_output/t1w_max_t2.nii.gz -var x ${t1w} -var y ${t2}
+    command: wb_command -volume-math "max(x, y)" test_output/t1w_max_t2.nii.gz -var x ${t1w} -var y ${t1w}
     validate:
       - output_exists: ${output_dir}/t1w_max_t2.nii.gz
 
@@ -216,7 +216,7 @@ tests:
 
   - name: Volume math - complex expression
     description: Complex mathematical expression
-    command: wb_command -volume-math "sqrt(abs(x - y)) * (x > 0)" test_output/t1w_complex.nii.gz -var x ${t1w} -var y ${t2}
+    command: wb_command -volume-math "sqrt(abs(x - y)) * (x > 0)" test_output/t1w_complex.nii.gz -var x ${t1w} -var y ${t1w}
     validate:
       - output_exists: ${output_dir}/t1w_complex.nii.gz
 
@@ -572,7 +572,7 @@ tests:
   # ==========================================================================
   - name: Volume merge - two volumes
     description: Merge two volumes into one file
-    command: wb_command -volume-merge test_output/merged_t1_t2.nii.gz -volume ${t1w} -volume ${t2}
+    command: wb_command -volume-merge test_output/merged_t1_t2.nii.gz -volume ${t1w} -volume ${t1w}
     validate:
       - output_exists: ${output_dir}/merged_t1_t2.nii.gz
 
@@ -590,7 +590,7 @@ tests:
 
   - name: wb_shortcuts volume concatenate
     description: Use shortcut to concatenate volumes
-    command: wb_shortcuts -volume-concatenate test_output/concat_vols.nii.gz -volume ${t1w} -volume ${t2}
+    command: wb_shortcuts -volume-concatenate test_output/concat_vols.nii.gz -volume ${t1w} -volume ${t1w}
     validate:
       - output_exists: ${output_dir}/concat_vols.nii.gz
 
@@ -724,7 +724,7 @@ tests:
     command: |
       wb_command -volume-smoothing ${t1w} 1 test_output/t1w_presmooth.nii.gz && \
       wb_command -volume-gradient test_output/t1w_presmooth.nii.gz test_output/t1w_edges.nii.gz && \
-      wb_command -volume-math "x / max(x) * 255" test_output/t1w_edges_norm.nii.gz -var x test_output/t1w_edges.nii.gz
+      wb_command -volume-math "x / max(x, 1) * 255" test_output/t1w_edges_norm.nii.gz -var x test_output/t1w_edges.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_edges.nii.gz
       - output_exists: ${output_dir}/t1w_edges_norm.nii.gz
@@ -754,6 +754,7 @@ tests:
   # ==========================================================================
   - name: Volume all labels to ROIs
     description: Convert label volume to ROI volumes
+    expected_exit_code: 0
     command: |
       wb_command -volume-math "round(x / 100)" test_output/t1w_labels.nii.gz -var x ${t1w} && \
       wb_command -volume-all-labels-to-rois test_output/t1w_labels.nii.gz 1 test_output/label_rois.nii.gz

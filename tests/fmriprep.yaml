@@ -44,7 +44,7 @@ tests:
   - name: fmriprep help
     description: Verify fmriprep help is accessible
     command: fmriprep --help 2>&1 | head -20
-    expected_output_contains: "fMRIPrep: fMRI PREProcessing workflows"
+    expected_output_contains: "usage: fmriprep"
 
   - name: fmriprep BIDS validation skip test
     description: Test fmriprep can parse BIDS dataset with validation skip
@@ -57,7 +57,7 @@ tests:
   - name: N4BiasFieldCorrection version
     description: Verify N4BiasFieldCorrection is available
     command: N4BiasFieldCorrection --version 2>&1 || N4BiasFieldCorrection 2>&1 | head -5
-    expected_output_contains: "N4"
+    expected_output_contains: "ANTs"
 
   - name: N4BiasFieldCorrection help
     description: Check N4BiasFieldCorrection help output

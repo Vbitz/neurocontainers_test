@@ -25,41 +25,49 @@ tests:
     description: Verify pcntoolkit package can be imported
     command: python -c "import pcntoolkit; print('pcntoolkit imported successfully')"
     expected_output_contains: "pcntoolkit imported successfully"
+    expected_exit_code: 0
 
   - name: Import normative module
     description: Verify normative modeling module loads
     command: python -c "from pcntoolkit import normative; print('normative module loaded')"
     expected_output_contains: "normative module loaded"
+    expected_exit_code: 0
 
   - name: Import util module
     description: Verify utility module loads
     command: python -c "from pcntoolkit import util; print('util module loaded')"
     expected_output_contains: "util module loaded"
+    expected_exit_code: 0
 
   - name: Import dataio module
     description: Verify data I/O module loads
     command: python -c "from pcntoolkit import dataio; print('dataio module loaded')"
     expected_output_contains: "dataio module loaded"
+    expected_exit_code: 0
 
   - name: Import model module
     description: Verify model module loads
     command: python -c "from pcntoolkit import model; print('model module loaded')"
     expected_output_contains: "model module loaded"
+    expected_exit_code: 0
 
   - name: Import trendsurf module
     description: Verify trend surface module loads
     command: python -c "from pcntoolkit import trendsurf; print('trendsurf module loaded')"
     expected_output_contains: "trendsurf module loaded"
+    expected_exit_code: 0
 
   - name: Import normative_model module
     description: Verify normative model module loads
     command: python -c "from pcntoolkit import normative_model; print('normative_model module loaded')"
     expected_output_contains: "normative_model module loaded"
+    expected_exit_code: 0
 
   - name: Import configs module
     description: Verify configs module loads
     command: python -c "from pcntoolkit import configs; print('configs module loaded')"
     expected_output_contains: "configs module loaded"
+    expected_exit_code: 0
 
   # ==========================================================================
   # DEPENDENCY PACKAGE IMPORTS
@@ -68,46 +76,55 @@ tests:
     description: Verify numpy is available
     command: python -c "import numpy as np; print(f'numpy {np.__version__}')"
     expected_output_contains: "numpy"
+    expected_exit_code: 0
 
   - name: Import scipy
     description: Verify scipy is available
     command: python -c "import scipy; print(f'scipy {scipy.__version__}')"
     expected_output_contains: "scipy"
+    expected_exit_code: 0
 
   - name: Import pandas
     description: Verify pandas is available
     command: python -c "import pandas as pd; print(f'pandas {pd.__version__}')"
     expected_output_contains: "pandas"
+    expected_exit_code: 0
 
   - name: Import nibabel
     description: Verify nibabel is available for neuroimaging I/O
     command: python -c "import nibabel as nib; print(f'nibabel {nib.__version__}')"
     expected_output_contains: "nibabel"
+    expected_exit_code: 0
 
   - name: Import sklearn
     description: Verify scikit-learn is available
     command: python -c "import sklearn; print(f'sklearn {sklearn.__version__}')"
     expected_output_contains: "sklearn"
+    expected_exit_code: 0
 
   - name: Import pymc
     description: Verify PyMC is available for Bayesian modeling
     command: python -c "import pymc; print(f'pymc {pymc.__version__}')"
     expected_output_contains: "pymc"
+    expected_exit_code: 0
 
   - name: Import arviz
     description: Verify ArviZ is available for Bayesian diagnostics
     command: python -c "import arviz; print(f'arviz {arviz.__version__}')"
     expected_output_contains: "arviz"
+    expected_exit_code: 0
 
   - name: Import torch
     description: Verify PyTorch is available
     command: python -c "import torch; print(f'torch {torch.__version__}')"
     expected_output_contains: "torch"
+    expected_exit_code: 0
 
   - name: Import xarray
     description: Verify xarray is available
     command: python -c "import xarray; print(f'xarray {xarray.__version__}')"
     expected_output_contains: "xarray"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NORMATIVE MODELING FUNCTION IMPORTS
@@ -116,41 +133,49 @@ tests:
     description: Verify normative estimate function can be imported
     command: python -c "from pcntoolkit.normative import estimate; print('estimate function imported')"
     expected_output_contains: "estimate function imported"
+    expected_exit_code: 0
 
   - name: Import normative.predict
     description: Verify normative predict function can be imported
     command: python -c "from pcntoolkit.normative import predict; print('predict function imported')"
     expected_output_contains: "predict function imported"
+    expected_exit_code: 0
 
   - name: Import normative.transfer
     description: Verify normative transfer function can be imported
     command: python -c "from pcntoolkit.normative import transfer; print('transfer function imported')"
     expected_output_contains: "transfer function imported"
+    expected_exit_code: 0
 
   - name: Import normative.evaluate
     description: Verify normative evaluate function can be imported
     command: python -c "from pcntoolkit.normative import evaluate; print('evaluate function imported')"
     expected_output_contains: "evaluate function imported"
+    expected_exit_code: 0
 
   - name: Import normative.fit
     description: Verify normative fit function can be imported
     command: python -c "from pcntoolkit.normative import fit; print('fit function imported')"
     expected_output_contains: "fit function imported"
+    expected_exit_code: 0
 
   - name: Import normative.merge
     description: Verify normative merge function can be imported
     command: python -c "from pcntoolkit.normative import merge; print('merge function imported')"
     expected_output_contains: "merge function imported"
+    expected_exit_code: 0
 
   - name: Import normative.extend
     description: Verify normative extend function can be imported
     command: python -c "from pcntoolkit.normative import extend; print('extend function imported')"
     expected_output_contains: "extend function imported"
+    expected_exit_code: 0
 
   - name: Import normative.tune
     description: Verify normative tune function can be imported
     command: python -c "from pcntoolkit.normative import tune; print('tune function imported')"
     expected_output_contains: "tune function imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # NORMATIVE MODEL CLASSES
@@ -159,31 +184,37 @@ tests:
     description: Verify Bayesian Linear Regression normative model class
     command: python -c "from pcntoolkit.normative_model.norm_blr import NormBLR; print('NormBLR class imported')"
     expected_output_contains: "NormBLR class imported"
+    expected_exit_code: 0
 
   - name: Import NormGPR class
     description: Verify Gaussian Process Regression normative model class
     command: python -c "from pcntoolkit.normative_model.norm_gpr import NormGPR; print('NormGPR class imported')"
     expected_output_contains: "NormGPR class imported"
+    expected_exit_code: 0
 
   - name: Import NormHBR class
     description: Verify Hierarchical Bayesian Regression normative model class
     command: python -c "from pcntoolkit.normative_model.norm_hbr import NormHBR; print('NormHBR class imported')"
     expected_output_contains: "NormHBR class imported"
+    expected_exit_code: 0
 
   - name: Import NormRFA class
     description: Verify Random Feature Approximation normative model class
     command: python -c "from pcntoolkit.normative_model.norm_rfa import NormRFA; print('NormRFA class imported')"
     expected_output_contains: "NormRFA class imported"
+    expected_exit_code: 0
 
   - name: Import NormBase class
     description: Verify base normative model class
     command: python -c "from pcntoolkit.normative_model.norm_base import NormBase; print('NormBase class imported')"
     expected_output_contains: "NormBase class imported"
+    expected_exit_code: 0
 
   - name: Import norm_init function
     description: Verify normative model initialization function
     command: python -c "from pcntoolkit.normative_model.norm_utils import norm_init; print('norm_init imported')"
     expected_output_contains: "norm_init imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # MODEL CLASSES (LOW-LEVEL)
@@ -192,26 +223,31 @@ tests:
     description: Verify Bayesian Linear Regression model class
     command: python -c "from pcntoolkit.model.bayesreg import BLR; print('BLR class imported')"
     expected_output_contains: "BLR class imported"
+    expected_exit_code: 0
 
   - name: Import GPR class
     description: Verify Gaussian Process Regression model class
     command: python -c "from pcntoolkit.model.gp import GPR; print('GPR class imported')"
     expected_output_contains: "GPR class imported"
+    expected_exit_code: 0
 
   - name: Import covariance functions
     description: Verify GP covariance function classes
     command: python -c "from pcntoolkit.model.gp import CovSqExp, CovLin, CovSqExpARD, CovSum; print('Covariance classes imported')"
     expected_output_contains: "Covariance classes imported"
+    expected_exit_code: 0
 
   - name: Import HBR class
     description: Verify Hierarchical Bayesian Regression model class
     command: python -c "from pcntoolkit.model.hbr import HBR; print('HBR class imported')"
     expected_output_contains: "HBR class imported"
+    expected_exit_code: 0
 
   - name: Import GPRRFA class
     description: Verify GP Random Feature Approximation model class
     command: python -c "from pcntoolkit.model.rfa import GPRRFA; print('GPRRFA class imported')"
     expected_output_contains: "GPRRFA class imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # UTILITY FUNCTIONS
@@ -220,71 +256,85 @@ tests:
     description: Verify B-spline basis creation function
     command: python -c "from pcntoolkit.util.utils import create_bspline_basis; print('create_bspline_basis imported')"
     expected_output_contains: "create_bspline_basis imported"
+    expected_exit_code: 0
 
   - name: Import create_design_matrix
     description: Verify design matrix creation function
     command: python -c "from pcntoolkit.util.utils import create_design_matrix; print('create_design_matrix imported')"
     expected_output_contains: "create_design_matrix imported"
+    expected_exit_code: 0
 
   - name: Import create_poly_basis
     description: Verify polynomial basis creation function
     command: python -c "from pcntoolkit.util.utils import create_poly_basis; print('create_poly_basis imported')"
     expected_output_contains: "create_poly_basis imported"
+    expected_exit_code: 0
 
   - name: Import z_score function
     description: Verify z-score computation function
     command: python -c "from pcntoolkit.util.utils import z_score; print('z_score imported')"
     expected_output_contains: "z_score imported"
+    expected_exit_code: 0
 
   - name: Import compute_MSLL function
     description: Verify MSLL computation function
     command: python -c "from pcntoolkit.util.utils import compute_MSLL; print('compute_MSLL imported')"
     expected_output_contains: "compute_MSLL imported"
+    expected_exit_code: 0
 
   - name: Import compute_pearsonr function
     description: Verify Pearson correlation function
     command: python -c "from pcntoolkit.util.utils import compute_pearsonr; print('compute_pearsonr imported')"
     expected_output_contains: "compute_pearsonr imported"
+    expected_exit_code: 0
 
   - name: Import explained_var function
     description: Verify explained variance function
     command: python -c "from pcntoolkit.util.utils import explained_var; print('explained_var imported')"
     expected_output_contains: "explained_var imported"
+    expected_exit_code: 0
 
   - name: Import scaler function
     description: Verify scaler utility function
     command: python -c "from pcntoolkit.util.utils import scaler; print('scaler imported')"
     expected_output_contains: "scaler imported"
+    expected_exit_code: 0
 
   - name: Import simulate_data function
     description: Verify data simulation function
     command: python -c "from pcntoolkit.util.utils import simulate_data; print('simulate_data imported')"
     expected_output_contains: "simulate_data imported"
+    expected_exit_code: 0
 
   - name: Import calibration_error function
     description: Verify calibration error function
     command: python -c "from pcntoolkit.util.utils import calibration_error; print('calibration_error imported')"
     expected_output_contains: "calibration_error imported"
+    expected_exit_code: 0
 
   - name: Import FDR function
     description: Verify false discovery rate function
     command: python -c "from pcntoolkit.util.utils import FDR; print('FDR imported')"
     expected_output_contains: "FDR imported"
+    expected_exit_code: 0
 
   - name: Import squared_dist function
     description: Verify squared distance function
     command: python -c "from pcntoolkit.util.utils import squared_dist; print('squared_dist imported')"
     expected_output_contains: "squared_dist imported"
+    expected_exit_code: 0
 
   - name: Import Welford class
     description: Verify Welford online statistics class
     command: python -c "from pcntoolkit.util.utils import Welford; print('Welford class imported')"
     expected_output_contains: "Welford class imported"
+    expected_exit_code: 0
 
   - name: Import CustomCV class
     description: Verify custom cross-validation class
     command: python -c "from pcntoolkit.util.utils import CustomCV; print('CustomCV class imported')"
     expected_output_contains: "CustomCV class imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # WARP TRANSFORMATION CLASSES
@@ -293,26 +343,31 @@ tests:
     description: Verify Box-Cox warp transformation class
     command: python -c "from pcntoolkit.util.utils import WarpBoxCox; print('WarpBoxCox imported')"
     expected_output_contains: "WarpBoxCox imported"
+    expected_exit_code: 0
 
   - name: Import WarpSinArcsinh
     description: Verify Sin-Arcsinh warp transformation class
     command: python -c "from pcntoolkit.util.utils import WarpSinArcsinh; print('WarpSinArcsinh imported')"
     expected_output_contains: "WarpSinArcsinh imported"
+    expected_exit_code: 0
 
   - name: Import WarpCompose
     description: Verify composed warp transformation class
     command: python -c "from pcntoolkit.util.utils import WarpCompose; print('WarpCompose imported')"
     expected_output_contains: "WarpCompose imported"
+    expected_exit_code: 0
 
   - name: Import WarpAffine
     description: Verify affine warp transformation class
     command: python -c "from pcntoolkit.util.utils import WarpAffine; print('WarpAffine imported')"
     expected_output_contains: "WarpAffine imported"
+    expected_exit_code: 0
 
   - name: Import WarpLog
     description: Verify log warp transformation class
     command: python -c "from pcntoolkit.util.utils import WarpLog; print('WarpLog imported')"
     expected_output_contains: "WarpLog imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # BSPLINE MODULE
@@ -321,11 +376,13 @@ tests:
     description: Verify B-spline class
     command: python -c "from pcntoolkit.util.bspline import BSpline; print('BSpline class imported')"
     expected_output_contains: "BSpline class imported"
+    expected_exit_code: 0
 
   - name: Import BSplineBasis class
     description: Verify B-spline basis class
     command: python -c "from pcntoolkit.util.bspline import BSplineBasis; print('BSplineBasis class imported')"
     expected_output_contains: "BSplineBasis class imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FILE I/O FUNCTIONS
@@ -334,51 +391,61 @@ tests:
     description: Verify generic load function
     command: python -c "from pcntoolkit.dataio.fileio import load; print('fileio.load imported')"
     expected_output_contains: "fileio.load imported"
+    expected_exit_code: 0
 
   - name: Import fileio.save
     description: Verify generic save function
     command: python -c "from pcntoolkit.dataio.fileio import save; print('fileio.save imported')"
     expected_output_contains: "fileio.save imported"
+    expected_exit_code: 0
 
   - name: Import fileio.load_nifti
     description: Verify NIfTI load function
     command: python -c "from pcntoolkit.dataio.fileio import load_nifti; print('load_nifti imported')"
     expected_output_contains: "load_nifti imported"
+    expected_exit_code: 0
 
   - name: Import fileio.save_nifti
     description: Verify NIfTI save function
     command: python -c "from pcntoolkit.dataio.fileio import save_nifti; print('save_nifti imported')"
     expected_output_contains: "save_nifti imported"
+    expected_exit_code: 0
 
   - name: Import fileio.load_ascii
     description: Verify ASCII load function
     command: python -c "from pcntoolkit.dataio.fileio import load_ascii; print('load_ascii imported')"
     expected_output_contains: "load_ascii imported"
+    expected_exit_code: 0
 
   - name: Import fileio.save_ascii
     description: Verify ASCII save function
     command: python -c "from pcntoolkit.dataio.fileio import save_ascii; print('save_ascii imported')"
     expected_output_contains: "save_ascii imported"
+    expected_exit_code: 0
 
   - name: Import fileio.load_cifti
     description: Verify CIFTI load function
     command: python -c "from pcntoolkit.dataio.fileio import load_cifti; print('load_cifti imported')"
     expected_output_contains: "load_cifti imported"
+    expected_exit_code: 0
 
   - name: Import fileio.save_cifti
     description: Verify CIFTI save function
     command: python -c "from pcntoolkit.dataio.fileio import save_cifti; print('save_cifti imported')"
     expected_output_contains: "save_cifti imported"
+    expected_exit_code: 0
 
   - name: Import fileio.create_mask
     description: Verify mask creation function
     command: python -c "from pcntoolkit.dataio.fileio import create_mask; print('create_mask imported')"
     expected_output_contains: "create_mask imported"
+    expected_exit_code: 0
 
   - name: Import fileio.vol2vec
     description: Verify volume to vector conversion function
     command: python -c "from pcntoolkit.dataio.fileio import vol2vec; print('vol2vec imported')"
     expected_output_contains: "vol2vec imported"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - UTILITY COMPUTATIONS
@@ -393,6 +460,7 @@ tests:
       print(f'B-spline basis created, type: {type(B).__name__}')
       "
     expected_output_contains: "B-spline basis created"
+    expected_exit_code: 0
 
   - name: Test create_poly_basis function
     description: Create polynomial basis and verify output shape
@@ -407,6 +475,7 @@ tests:
       print('create_poly_basis test passed')
       "
     expected_output_contains: "create_poly_basis test passed"
+    expected_exit_code: 0
 
   - name: Test squared_dist function
     description: Compute squared distances between vectors
@@ -422,6 +491,7 @@ tests:
       print('squared_dist test passed')
       "
     expected_output_contains: "squared_dist test passed"
+    expected_exit_code: 0
 
   - name: Test compute_pearsonr function
     description: Compute Pearson correlation coefficient
@@ -437,6 +507,7 @@ tests:
       print('compute_pearsonr test passed')
       "
     expected_output_contains: "compute_pearsonr test passed"
+    expected_exit_code: 0
 
   - name: Test explained_var function
     description: Compute explained variance
@@ -452,6 +523,7 @@ tests:
       print('explained_var test passed')
       "
     expected_output_contains: "explained_var test passed"
+    expected_exit_code: 0
 
   - name: Test scaler function creation
     description: Create scaler objects for data normalization
@@ -463,6 +535,7 @@ tests:
       print('scaler test passed')
       "
     expected_output_contains: "scaler test passed"
+    expected_exit_code: 0
 
   - name: Test FDR function
     description: Test false discovery rate correction
@@ -476,6 +549,7 @@ tests:
       print('FDR test passed')
       "
     expected_output_contains: "FDR test passed"
+    expected_exit_code: 0
 
   - name: Test Welford online statistics
     description: Test Welford algorithm for online mean/variance
@@ -493,6 +567,7 @@ tests:
       print('Welford test passed')
       "
     expected_output_contains: "Welford test passed"
+    expected_exit_code: 0
 
   - name: Test simulate_data function
     description: Generate simulated data for testing
@@ -508,6 +583,7 @@ tests:
       print('simulate_data test passed')
       "
     expected_output_contains: "simulate_data test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - WARP TRANSFORMATIONS
@@ -525,6 +601,7 @@ tests:
       print('WarpBoxCox test passed')
       "
     expected_output_contains: "WarpBoxCox test passed"
+    expected_exit_code: 0
 
   - name: Test WarpSinArcsinh transformation
     description: Apply Sin-Arcsinh warp transformation
@@ -539,6 +616,7 @@ tests:
       print('WarpSinArcsinh test passed')
       "
     expected_output_contains: "WarpSinArcsinh test passed"
+    expected_exit_code: 0
 
   - name: Test WarpAffine transformation
     description: Apply affine warp transformation
@@ -553,6 +631,7 @@ tests:
       print('WarpAffine test passed')
       "
     expected_output_contains: "WarpAffine test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - BSPLINE
@@ -572,6 +651,7 @@ tests:
       print('BSplineBasis test passed')
       "
     expected_output_contains: "BSplineBasis test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - BAYESIAN LINEAR REGRESSION
@@ -586,6 +666,7 @@ tests:
       print('BLR creation test passed')
       "
     expected_output_contains: "BLR creation test passed"
+    expected_exit_code: 0
 
   - name: Test BLR estimate and predict
     description: Fit and predict with Bayesian Linear Regression
@@ -607,6 +688,7 @@ tests:
       print('BLR estimate/predict test passed')
       "
     expected_output_contains: "BLR estimate/predict test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - GAUSSIAN PROCESS REGRESSION
@@ -621,6 +703,7 @@ tests:
       print('GPR creation test passed')
       "
     expected_output_contains: "GPR creation test passed"
+    expected_exit_code: 0
 
   - name: Test CovSqExp covariance function
     description: Test squared exponential covariance function
@@ -637,6 +720,7 @@ tests:
       print('CovSqExp test passed')
       "
     expected_output_contains: "CovSqExp test passed"
+    expected_exit_code: 0
 
   - name: Test CovSum covariance function
     description: Test sum of covariance functions
@@ -652,6 +736,7 @@ tests:
       print('CovSum test passed')
       "
     expected_output_contains: "CovSum test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - NORMATIVE MODEL CLASSES
@@ -666,6 +751,7 @@ tests:
       print('NormBLR instantiation test passed')
       "
     expected_output_contains: "NormBLR instantiation test passed"
+    expected_exit_code: 0
 
   - name: Test NormGPR instantiation
     description: Create NormGPR normative model instance
@@ -677,6 +763,7 @@ tests:
       print('NormGPR instantiation test passed')
       "
     expected_output_contains: "NormGPR instantiation test passed"
+    expected_exit_code: 0
 
   - name: Test norm_init function
     description: Initialize normative model using factory function
@@ -688,6 +775,7 @@ tests:
       print('norm_init test passed')
       "
     expected_output_contains: "norm_init test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - EVALUATION METRICS
@@ -707,6 +795,7 @@ tests:
       print('evaluate function test passed')
       "
     expected_output_contains: "evaluate function test passed"
+    expected_exit_code: 0
 
   - name: Test compute_MSLL function
     description: Compute Mean Standardized Log Loss
@@ -723,6 +812,7 @@ tests:
       print('compute_MSLL test passed')
       "
     expected_output_contains: "compute_MSLL test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - DATA I/O
@@ -743,6 +833,7 @@ tests:
     validate:
       - output_exists: ${output_dir}/test_data.txt
     expected_output_contains: "ASCII save/load test passed"
+    expected_exit_code: 0
 
   - name: Test fileio save and load
     description: Test generic save/load functions
@@ -759,6 +850,7 @@ tests:
     validate:
       - output_exists: ${output_dir}/test_generic.txt
     expected_output_contains: "fileio save/load test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - Z-SCORE AND DEVIATION
@@ -779,6 +871,7 @@ tests:
       print('z_score test passed')
       "
     expected_output_contains: "z_score test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - CROSS-VALIDATION
@@ -797,6 +890,7 @@ tests:
       print('CustomCV test passed')
       "
     expected_output_contains: "CustomCV test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - CALIBRATION
@@ -813,6 +907,7 @@ tests:
       print('calibration_descriptives test passed')
       "
     expected_output_contains: "calibration_descriptives test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # FUNCTIONAL TESTS - RAVEL/UNRAVEL
@@ -833,6 +928,7 @@ tests:
       print('ravel/unravel test passed')
       "
     expected_output_contains: "ravel/unravel test passed"
+    expected_exit_code: 0
 
   # ==========================================================================
   # INTEGRATION TESTS - SIMPLE NORMATIVE MODELING WORKFLOW
@@ -870,6 +966,7 @@ tests:
       - output_exists: ${output_dir}/cov_test.txt
       - output_exists: ${output_dir}/resp_test.txt
     expected_output_contains: "Data workflow test passed"
+    expected_exit_code: 0
 
 cleanup:
   script: |

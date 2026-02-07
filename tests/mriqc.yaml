@@ -97,9 +97,9 @@ tests:
 
   - name: Create BIDS layout database
     description: Index BIDS dataset with PyBIDS
-    command: pybids layout ${bids_dir} test_output/bids_db.sqlite --no-validate 2>&1
+    command: pybids layout ${bids_dir} test_output/bids_db/ --no-validate 2>&1
     validate:
-      - output_exists: ${output_dir}/bids_db.sqlite
+      - output_exists: ${output_dir}/bids_db/
 
   # ==========================================================================
   # NIPYPE FUNCTIONALITY
@@ -116,7 +116,7 @@ tests:
 
   - name: Nipype run help
     description: Check nipypecli run command
-    command: nipypecli run --help 2>&1
+    command: nipypecli run nipype.interfaces.utility --help 2>&1
     expected_output_contains: "Interface"
 
   # ==========================================================================

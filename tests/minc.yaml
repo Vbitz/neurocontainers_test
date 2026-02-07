@@ -140,7 +140,7 @@ tests:
 
   - name: Statistics within range
     description: Compute statistics for voxels within a range
-    command: mincstats test_output/t1w.mnc -range 50 500 -count -mean -quiet
+    command: mincstats -range 50 500 -count -mean -quiet test_output/t1w.mnc
     depends_on: Convert T1w NIfTI to MINC
     expected_exit_code: 0
 
@@ -515,7 +515,7 @@ tests:
 
   - name: Concatenate with step size
     description: Concatenate volumes with specified step size
-    command: mincconcat -concat_dimension time -step 2 test_output/t1w.mnc test_output/t1w.mnc test_output/t1w_concat2.mnc -clobber
+    command: mincconcat -concat_dimension time -start 0 -step 2 test_output/t1w.mnc test_output/t1w.mnc test_output/t1w_concat2.mnc -clobber
     depends_on: Convert T1w NIfTI to MINC
     validate:
       - output_exists: ${output_dir}/t1w_concat2.mnc
@@ -838,7 +838,7 @@ tests:
     description: Dump MINC header information
     command: mincdump -h test_output/t1w.mnc 2>&1 | head -30
     depends_on: Convert T1w NIfTI to MINC
-    expected_output_contains: "netcdf"
+    expected_output_contains: "HDF5"
 
   - name: Get history
     description: Show processing history of MINC file

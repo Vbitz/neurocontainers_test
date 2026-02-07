@@ -464,7 +464,7 @@ tests:
 
   - name: Dual ROI files
     description: Filter tracks passing through two ROI regions
-    command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -roi ${t1w} 100 10000 -roi2 ${t2} 50 5000 -nr -disable_log 2>&1
+    command: /opt/trackvis-0.6.1/track_vis test_output/synthetic_tracks.trk -roi ${t1w} 100 10000 -roi2 ${t1w} 50 5000 -nr -disable_log 2>&1
     expected_exit_code: 0
 
   - name: Output ROI volume

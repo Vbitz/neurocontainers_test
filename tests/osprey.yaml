@@ -168,7 +168,7 @@ tests:
 
   - name: Unedited PRESS SPAR header check
     description: Verify unedited PRESS SPAR file is readable
-    command: head -10 /opt/exampledata/UnEdited/sub-01/ses-01/mrs/sub-01_ses-01_press/sub-01_PRESS_35_act.spar
+    command: cat /opt/exampledata/UnEdited/sub-01/ses-01/mrs/sub-01_ses-01_press/sub-01_PRESS_35_act.spar
     expected_output_contains: "GYROSCAN"
 
   # ==========================================================================

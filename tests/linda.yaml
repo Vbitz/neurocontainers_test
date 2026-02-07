@@ -60,7 +60,7 @@ tests:
 
   - name: LINDA functions available
     description: List available LINDA functions
-    command: R --quiet -e "library(LINDA); cat(paste(ls('package:LINDA'), collapse='\n'))"
+    command: R --quiet -e "library(LINDA); cat(paste(ls('package:LINDA'), collapse='\\n'))"
     expected_output_contains: "linda_predict"
 
   - name: ANTsR dependency loads
