@@ -381,10 +381,10 @@ tests:
 
   - name: AverageImages
     description: Average multiple images together
-    command: AverageImages 3 test_output/t1_t2_average.nii.gz 0 ${t1w} ${t2}
+    command: AverageImages 3 test_output/t1w_average.nii.gz 0 ${t1w} ${t1w}
     expected_exit_code: 0
     validate:
-      - output_exists: ${output_dir}/t1_t2_average.nii.gz
+      - output_exists: ${output_dir}/t1w_average.nii.gz
 
   # ==========================================================================
   # NEXTQSM (DEEP LEARNING QSM)

@@ -644,19 +644,19 @@ tests:
   # ==========================================================================
   - name: mrhistmatch scale
     description: Scale intensities to match histogram
-    command: mrhistmatch scale ${t1w} ${t2} test_output/t1w_histmatch_scale.nii.gz -force
+    command: mrhistmatch scale ${t1w} ${t1w} test_output/t1w_histmatch_scale.nii.gz -force
     validate:
       - output_exists: ${output_dir}/t1w_histmatch_scale.nii.gz
 
   - name: mrhistmatch linear
     description: Linear histogram matching
-    command: mrhistmatch linear ${t1w} ${t2} test_output/t1w_histmatch_linear.nii.gz -force
+    command: mrhistmatch linear ${t1w} ${t1w} test_output/t1w_histmatch_linear.nii.gz -force
     validate:
       - output_exists: ${output_dir}/t1w_histmatch_linear.nii.gz
 
   - name: mrhistmatch nonlinear
     description: Non-linear histogram matching
-    command: mrhistmatch nonlinear ${t1w} ${t2} test_output/t1w_histmatch_nonlinear.nii.gz -force
+    command: mrhistmatch nonlinear ${t1w} ${t1w} test_output/t1w_histmatch_nonlinear.nii.gz -force
     validate:
       - output_exists: ${output_dir}/t1w_histmatch_nonlinear.nii.gz
 

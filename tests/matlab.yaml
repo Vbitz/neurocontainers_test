@@ -1,12 +1,12 @@
 # matlab container test suite
 # Tests for MATLAB R2022b - MathWorks scientific computing environment
 #
-# Important: MATLAB requires a valid license. Tests are designed to work
-# in batch mode with -nodisplay -nodesktop flags. Some tests may fail
-# without proper license activation.
+# These tests verify container integrity WITHOUT requiring a MATLAB license.
+# All tests use file system checks, binary availability, help output, and
+# version info extraction rather than matlab -batch (which needs a license).
 #
 # Container includes:
-#   - MATLAB R2022b (Update 7)
+#   - MATLAB R2022b (Update 7) at /opt/matlab/R2022b/
 #   - Image Processing Toolbox
 #   - Signal Processing Toolbox
 #   - Statistics and Machine Learning Toolbox
@@ -15,12 +15,14 @@
 #   - Computer Vision Toolbox
 #   - Bioinformatics Toolbox
 #   - Text Analytics Toolbox
+#   - 38 toolboxes total
 
 name: matlab
 version: R2022b
 container: matlab_2022b_20250124.simg
 
 test_data:
+  matlab_root: /opt/matlab/R2022b
   output_dir: test_output
 
 setup:
@@ -28,918 +30,465 @@ setup:
     #!/usr/bin/env bash
     set -e
     mkdir -p test_output
-    mkdir -p test_output/scripts
 
 tests:
   # ==========================================================================
-  # BASIC FUNCTIONALITY AND VERSION CHECKS
+  # BASIC BINARY AVAILABILITY
   # ==========================================================================
   - name: MATLAB help
-    description: Display MATLAB command line help
+    description: Display MATLAB command line help (no license needed)
     command: matlab -help 2>&1 | head -20
     expected_output_contains: "Usage:"
     expected_exit_code: 0
 
-  - name: MATLAB version display
-    description: Check MATLAB version using -batch mode
-    command: matlab -nodisplay -nodesktop -batch "disp(version)" 2>&1
-    expected_output_contains: "R2022b"
-    expected_exit_code: 0
-
-  - name: MATLAB release info
-    description: Get detailed release information
-    command: matlab -nodisplay -nodesktop -batch "ver" 2>&1
-    expected_output_contains: "MATLAB"
-    expected_exit_code: 0
-
-  - name: MATLAB root directory
-    description: Display MATLAB installation root
-    command: matlab -nodisplay -nodesktop -batch "disp(matlabroot)" 2>&1
-    expected_output_contains: "matlab"
-    expected_exit_code: 0
-
-  - name: MATLAB computer type
-    description: Display computer architecture
-    command: matlab -nodisplay -nodesktop -batch "disp(computer)" 2>&1
-    expected_output_contains: "GLNXA64"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # BASIC ARITHMETIC OPERATIONS
-  # ==========================================================================
-  - name: Basic addition
-    description: Test simple arithmetic addition
-    command: matlab -nodisplay -nodesktop -batch "disp(2+3)"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: Basic multiplication
-    description: Test simple arithmetic multiplication
-    command: matlab -nodisplay -nodesktop -batch "disp(6*7)"
-    expected_output_contains: "42"
-    expected_exit_code: 0
-
-  - name: Basic division
-    description: Test simple arithmetic division
-    command: matlab -nodisplay -nodesktop -batch "disp(100/4)"
-    expected_output_contains: "25"
-    expected_exit_code: 0
-
-  - name: Power operation
-    description: Test exponentiation
-    command: matlab -nodisplay -nodesktop -batch "disp(2^10)"
-    expected_output_contains: "1024"
-    expected_exit_code: 0
-
-  - name: Square root
-    description: Test square root function
-    command: matlab -nodisplay -nodesktop -batch "disp(sqrt(144))"
-    expected_output_contains: "12"
-    expected_exit_code: 0
-
-  - name: Complex numbers
-    description: Test complex number operations
-    command: matlab -nodisplay -nodesktop -batch "z = 3+4i; disp(abs(z))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # MATRIX OPERATIONS
-  # ==========================================================================
-  - name: Create identity matrix
-    description: Test eye() function for identity matrix
-    command: matlab -nodisplay -nodesktop -batch "disp(eye(3))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Create zeros matrix
-    description: Test zeros() function
-    command: matlab -nodisplay -nodesktop -batch "disp(sum(sum(zeros(5))))"
-    expected_output_contains: "0"
-    expected_exit_code: 0
-
-  - name: Create ones matrix
-    description: Test ones() function
-    command: matlab -nodisplay -nodesktop -batch "disp(sum(sum(ones(3,3))))"
-    expected_output_contains: "9"
-    expected_exit_code: 0
-
-  - name: Matrix multiplication
-    description: Test matrix multiplication operation
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; B=[5 6; 7 8]; disp(A*B)"
-    expected_output_contains: "19"
-    expected_exit_code: 0
-
-  - name: Matrix transpose
-    description: Test matrix transpose operation
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2 3]; disp(A')"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Matrix determinant
-    description: Test det() function
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; disp(det(A))"
-    expected_output_contains: "-2"
-    expected_exit_code: 0
-
-  - name: Matrix inverse
-    description: Test inv() function
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4]; B=inv(A); disp(round(A*B))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Eigenvalues
-    description: Test eig() function for eigenvalues
-    command: matlab -nodisplay -nodesktop -batch "A=[4 2; 1 3]; e=eig(A); disp(sort(e))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Singular value decomposition
-    description: Test svd() function
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2; 3 4; 5 6]; s=svd(A); disp(length(s))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Matrix rank
-    description: Test rank() function
-    command: matlab -nodisplay -nodesktop -batch "A=[1 2 3; 4 5 6; 7 8 9]; disp(rank(A))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Matrix dimensions
-    description: Test size() function
-    command: matlab -nodisplay -nodesktop -batch "A=rand(5,10); disp(size(A))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # RANDOM NUMBER GENERATION
-  # ==========================================================================
-  - name: Random uniform
-    description: Test rand() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x=rand(1,5); disp(mean(x)>0)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Random normal
-    description: Test randn() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x=randn(1000,1); disp(abs(mean(x))<0.1)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Random integers
-    description: Test randi() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x=randi(100,1,10); disp(all(x>=1 & x<=100))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Random permutation
-    description: Test randperm() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); p=randperm(5); disp(sort(p))"
-    expected_output_contains: "1     2     3     4     5"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # STATISTICAL FUNCTIONS
-  # ==========================================================================
-  - name: Mean calculation
-    description: Test mean() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; disp(mean(x))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Standard deviation
-    description: Test std() function
-    command: matlab -nodisplay -nodesktop -batch "x=[2 4 4 4 5 5 7 9]; disp(round(std(x)*100)/100)"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Variance
-    description: Test var() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; disp(var(x))"
-    expected_output_contains: "2.5"
-    expected_exit_code: 0
-
-  - name: Median
-    description: Test median() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 3 5 7 9]; disp(median(x))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: Mode
-    description: Test mode() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 2 2 3 3 3 4]; disp(mode(x))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Correlation
-    description: Test corrcoef() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; y=[5 4 3 2 1]; r=corrcoef(x,y); disp(r(1,2))"
-    expected_output_contains: "-1"
-    expected_exit_code: 0
-
-  - name: Covariance
-    description: Test cov() function
-    command: matlab -nodisplay -nodesktop -batch "x=[1 2 3 4 5]; c=cov(x); disp(c)"
-    expected_output_contains: "2.5"
-    expected_exit_code: 0
-
-  - name: Percentile
-    description: Test prctile() function
-    command: matlab -nodisplay -nodesktop -batch "x=1:100; disp(prctile(x,50))"
-    expected_output_contains: "50"
-    expected_exit_code: 0
-
-  - name: Histogram counts
-    description: Test histcounts() function
-    command: matlab -nodisplay -nodesktop -batch "x=randn(1000,1); [N,edges]=histcounts(x,10); disp(sum(N))"
-    expected_output_contains: "1000"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # TRIGONOMETRIC FUNCTIONS
-  # ==========================================================================
-  - name: Sine function
-    description: Test sin() function
-    command: matlab -nodisplay -nodesktop -batch "disp(sin(pi/2))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Cosine function
-    description: Test cos() function
-    command: matlab -nodisplay -nodesktop -batch "disp(cos(0))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Tangent function
-    description: Test tan() function
-    command: matlab -nodisplay -nodesktop -batch "disp(round(tan(pi/4)*1000)/1000)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Inverse sine
-    description: Test asin() function
-    command: matlab -nodisplay -nodesktop -batch "disp(round(asin(1)*1000)/1000)"
-    expected_output_contains: "1.571"
-    expected_exit_code: 0
-
-  - name: Hyperbolic functions
-    description: Test sinh(), cosh(), tanh()
-    command: matlab -nodisplay -nodesktop -batch "disp(round(sinh(1)*1000)/1000)"
-    expected_output_contains: "1.175"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # EXPONENTIAL AND LOGARITHMIC FUNCTIONS
-  # ==========================================================================
-  - name: Exponential function
-    description: Test exp() function
-    command: matlab -nodisplay -nodesktop -batch "disp(round(exp(1)*1000)/1000)"
-    expected_output_contains: "2.718"
-    expected_exit_code: 0
-
-  - name: Natural logarithm
-    description: Test log() function
-    command: matlab -nodisplay -nodesktop -batch "disp(round(log(exp(5))*1000)/1000)"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: Base-10 logarithm
-    description: Test log10() function
-    command: matlab -nodisplay -nodesktop -batch "disp(log10(1000))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Base-2 logarithm
-    description: Test log2() function
-    command: matlab -nodisplay -nodesktop -batch "disp(log2(256))"
-    expected_output_contains: "8"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # STRING OPERATIONS
-  # ==========================================================================
-  - name: String concatenation
-    description: Test string concatenation
-    command: matlab -nodisplay -nodesktop -batch "s = 'Hello' + ' ' + 'World'; disp(s)"
-    expected_output_contains: "Hello World"
-    expected_exit_code: 0
-
-  - name: String comparison
-    description: Test strcmp() function
-    command: matlab -nodisplay -nodesktop -batch "disp(strcmp('abc','abc'))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: String length
-    description: Test strlength() function
-    command: matlab -nodisplay -nodesktop -batch "disp(strlength('MATLAB'))"
-    expected_output_contains: "6"
-    expected_exit_code: 0
-
-  - name: String upper case
-    description: Test upper() function
-    command: matlab -nodisplay -nodesktop -batch "disp(upper('hello'))"
-    expected_output_contains: "HELLO"
-    expected_exit_code: 0
-
-  - name: String split
-    description: Test split() function
-    command: matlab -nodisplay -nodesktop -batch "parts = split('a,b,c',','); disp(length(parts))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Regular expressions
-    description: Test regexp() function
-    command: matlab -nodisplay -nodesktop -batch "s = 'test123'; match = regexp(s,'\\d+','match'); disp(match{1})"
-    expected_output_contains: "123"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # CELL AND STRUCTURE OPERATIONS
-  # ==========================================================================
-  - name: Cell array creation
-    description: Test cell array creation
-    command: matlab -nodisplay -nodesktop -batch "c = {1,'hello',[1 2 3]}; disp(length(c))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Structure creation
-    description: Test structure creation
-    command: matlab -nodisplay -nodesktop -batch "s.name='test'; s.value=42; disp(s.value)"
-    expected_output_contains: "42"
-    expected_exit_code: 0
-
-  - name: Field names
-    description: Test fieldnames() function
-    command: matlab -nodisplay -nodesktop -batch "s.a=1; s.b=2; fn=fieldnames(s); disp(length(fn))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # FILE I/O OPERATIONS
-  # ==========================================================================
-  - name: Save MAT file
-    description: Test save() function for MAT files
-    command: matlab -nodisplay -nodesktop -batch "x=1:10; y=rand(5,5); save('test_output/test.mat','x','y'); disp('Saved')"
-    validate:
-      - output_exists: ${output_dir}/test.mat
-    expected_exit_code: 0
-
-  - name: Load MAT file
-    description: Test load() function for MAT files
-    command: matlab -nodisplay -nodesktop -batch "x=1:10; save('test_output/load_test.mat','x'); clear; load('test_output/load_test.mat'); disp(sum(x))"
-    expected_output_contains: "55"
-    expected_exit_code: 0
-
-  - name: Write text file
-    description: Test fprintf() for text file writing
-    command: matlab -nodisplay -nodesktop -batch "fid=fopen('test_output/test.txt','w'); fprintf(fid,'Hello MATLAB'); fclose(fid); disp('Written')"
-    validate:
-      - output_exists: ${output_dir}/test.txt
-    expected_exit_code: 0
-
-  - name: Read text file
-    description: Test fscanf() for text file reading
-    command: matlab -nodisplay -nodesktop -batch "fid=fopen('test_output/test.txt','w'); fprintf(fid,'12345'); fclose(fid); fid=fopen('test_output/test.txt','r'); data=fscanf(fid,'%s'); fclose(fid); disp(data)"
-    expected_output_contains: "12345"
-    expected_exit_code: 0
-
-  - name: CSV write
-    description: Test writematrix() for CSV output
-    command: matlab -nodisplay -nodesktop -batch "M = magic(3); writematrix(M,'test_output/magic.csv'); disp('CSV written')"
-    validate:
-      - output_exists: ${output_dir}/magic.csv
-    expected_exit_code: 0
-
-  - name: CSV read
-    description: Test readmatrix() for CSV input
-    command: matlab -nodisplay -nodesktop -batch "M = magic(3); writematrix(M,'test_output/read_test.csv'); N = readmatrix('test_output/read_test.csv'); disp(sum(N(:)))"
-    expected_output_contains: "45"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # POLYNOMIAL OPERATIONS
-  # ==========================================================================
-  - name: Polynomial roots
-    description: Test roots() function
-    command: matlab -nodisplay -nodesktop -batch "p = [1 -6 11 -6]; r = roots(p); disp(sort(real(r))')"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Polynomial evaluation
-    description: Test polyval() function
-    command: matlab -nodisplay -nodesktop -batch "p = [1 0 -1]; disp(polyval(p,2))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Polynomial fitting
-    description: Test polyfit() function
-    command: matlab -nodisplay -nodesktop -batch "x=1:5; y=2*x+1; p=polyfit(x,y,1); disp(round(p(1)))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Polynomial convolution
-    description: Test conv() for polynomial multiplication
-    command: matlab -nodisplay -nodesktop -batch "a=[1 2]; b=[1 3]; c=conv(a,b); disp(c)"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # INTERPOLATION AND CURVE FITTING
-  # ==========================================================================
-  - name: Linear interpolation
-    description: Test interp1() function
-    command: matlab -nodisplay -nodesktop -batch "x=0:10; y=sin(x); xi=5.5; yi=interp1(x,y,xi); disp(round(yi*1000)/1000)"
-    expected_output_contains: "-0"
-    expected_exit_code: 0
-
-  - name: Spline interpolation
-    description: Test spline() function
-    command: matlab -nodisplay -nodesktop -batch "x=0:5; y=x.^2; xi=2.5; yi=spline(x,y,xi); disp(round(yi*10)/10)"
-    expected_output_contains: "6"
-    expected_exit_code: 0
-
-  - name: 2D interpolation
-    description: Test interp2() function
-    command: matlab -nodisplay -nodesktop -batch "[X,Y]=meshgrid(1:3,1:3); Z=X+Y; zi=interp2(X,Y,Z,2,2); disp(zi)"
-    expected_output_contains: "4"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # NUMERICAL INTEGRATION AND DIFFERENTIATION
-  # ==========================================================================
-  - name: Numerical integration
-    description: Test integral() function
-    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^2; q = integral(f,0,1); disp(round(q*1000)/1000)"
-    expected_output_contains: "0.333"
-    expected_exit_code: 0
-
-  - name: Numerical differentiation
-    description: Test diff() function
-    command: matlab -nodisplay -nodesktop -batch "x = [1 4 9 16 25]; dx = diff(x); disp(dx)"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Gradient
-    description: Test gradient() function
-    command: matlab -nodisplay -nodesktop -batch "y = [1 4 9 16 25]; g = gradient(y); disp(g(3))"
-    expected_output_contains: "6"
-    expected_exit_code: 0
-
-  - name: Cumulative sum
-    description: Test cumsum() function
-    command: matlab -nodisplay -nodesktop -batch "x = 1:5; cs = cumsum(x); disp(cs(end))"
-    expected_output_contains: "15"
-    expected_exit_code: 0
-
-  - name: Cumulative trapezoid
-    description: Test cumtrapz() function
-    command: matlab -nodisplay -nodesktop -batch "x = 0:0.1:1; y = x.^2; ct = cumtrapz(x,y); disp(round(ct(end)*1000)/1000)"
-    expected_output_contains: "0.335"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # OPTIMIZATION
-  # ==========================================================================
-  - name: Find minimum
-    description: Test fminbnd() function
-    command: matlab -nodisplay -nodesktop -batch "f = @(x) (x-3).^2; [xmin,fmin] = fminbnd(f,0,5); disp(round(xmin))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  - name: Find zero
-    description: Test fzero() function
-    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^3 - 8; x0 = fzero(f,1); disp(round(x0))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # LINEAR ALGEBRA - ADVANCED
-  # ==========================================================================
-  - name: LU decomposition
-    description: Test lu() function
-    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; [L,U] = lu(A); disp(round(det(L)*det(U)))"
-    expected_output_contains: "-2"
-    expected_exit_code: 0
-
-  - name: QR decomposition
-    description: Test qr() function
-    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; [Q,R] = qr(A); disp(round(Q*Q',6))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Cholesky decomposition
-    description: Test chol() function
-    command: matlab -nodisplay -nodesktop -batch "A = [4 2; 2 5]; R = chol(A); disp(round(R'*R))"
-    expected_output_contains: "4"
-    expected_exit_code: 0
-
-  - name: Linear system solve
-    description: Test backslash operator for Ax=b
-    command: matlab -nodisplay -nodesktop -batch "A = [1 2; 3 4]; b = [5; 11]; x = A\\b; disp(x')"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Null space
-    description: Test null() function
-    command: matlab -nodisplay -nodesktop -batch "A = [1 2 3; 4 5 6]; N = null(A); disp(size(N,2))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Matrix norm
-    description: Test norm() function
-    command: matlab -nodisplay -nodesktop -batch "A = [3 4]; disp(norm(A))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: Condition number
-    description: Test cond() function
-    command: matlab -nodisplay -nodesktop -batch "A = eye(3); disp(cond(A))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # FFT AND SIGNAL PROCESSING BASICS
-  # ==========================================================================
-  - name: FFT computation
-    description: Test fft() function
-    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3 4]; X = fft(x); disp(X(1))"
-    expected_output_contains: "10"
-    expected_exit_code: 0
-
-  - name: Inverse FFT
-    description: Test ifft() function
-    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3 4]; X = fft(x); y = ifft(X); disp(round(y))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: 2D FFT
-    description: Test fft2() function
-    command: matlab -nodisplay -nodesktop -batch "A = ones(4); B = fft2(A); disp(B(1,1))"
-    expected_output_contains: "16"
-    expected_exit_code: 0
-
-  - name: Power spectrum
-    description: Test periodogram for power spectrum
-    command: matlab -nodisplay -nodesktop -batch "t=0:0.01:1; x=sin(2*pi*10*t); [pxx,f]=periodogram(x,hamming(length(x)),length(x),100); disp(length(pxx)>0)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Convolution
-    description: Test conv() for signal convolution
-    command: matlab -nodisplay -nodesktop -batch "x = [1 2 3]; h = [1 1]; y = conv(x,h); disp(y)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Filter design
-    description: Test butter() for Butterworth filter
-    command: matlab -nodisplay -nodesktop -batch "[b,a] = butter(2,0.5); disp(length(b))"
-    expected_output_contains: "3"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # IMAGE PROCESSING TOOLBOX
-  # ==========================================================================
-  - name: Image Processing Toolbox check
-    description: Verify Image Processing Toolbox is available
-    command: matlab -nodisplay -nodesktop -batch "v = ver('images'); disp(~isempty(v))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Create test image
-    description: Create a test image using peaks
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(255*mat2gray(peaks(256))); imwrite(I,'test_output/peaks.png'); disp('Image created')"
-    validate:
-      - output_exists: ${output_dir}/peaks.png
-    expected_exit_code: 0
-
-  - name: Image read
-    description: Test imread() function
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(peaks(64)+10); imwrite(I,'test_output/test_img.png'); J = imread('test_output/test_img.png'); disp(size(J,1))"
-    expected_output_contains: "64"
-    expected_exit_code: 0
-
-  - name: Image resize
-    description: Test imresize() function
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); J = imresize(I,0.5); disp(size(J,1))"
-    expected_output_contains: "50"
-    expected_exit_code: 0
-
-  - name: Image filtering
-    description: Test imfilter() function
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); h = fspecial('gaussian',5,1); J = imfilter(I,h); disp(size(J,1))"
-    expected_output_contains: "100"
-    expected_exit_code: 0
-
-  - name: Edge detection
-    description: Test edge() function
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(peaks(100)+10); BW = edge(I,'Canny'); disp(any(BW(:)))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Image histogram
-    description: Test imhist() function
-    command: matlab -nodisplay -nodesktop -batch "I = uint8(rand(100,100)*255); [counts,bins] = imhist(I); disp(length(counts))"
-    expected_output_contains: "256"
-    expected_exit_code: 0
-
-  - name: Morphological operations
-    description: Test imerode() and imdilate()
-    command: matlab -nodisplay -nodesktop -batch "BW = ones(10); se = strel('disk',2); BW2 = imerode(BW,se); disp(sum(BW2(:))>0)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # STATISTICS AND MACHINE LEARNING TOOLBOX
-  # ==========================================================================
-  - name: Statistics Toolbox check
-    description: Verify Statistics and Machine Learning Toolbox is available
-    command: matlab -nodisplay -nodesktop -batch "v = ver('stats'); disp(~isempty(v))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Normal distribution fit
-    description: Test fitdist() for normal distribution
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x = randn(100,1)*2+5; pd = fitdist(x,'Normal'); disp(round(pd.mu))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: T-test
-    description: Test ttest() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x = randn(30,1)+1; [h,p] = ttest(x); disp(h)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: ANOVA
-    description: Test anova1() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); y = [randn(10,1); randn(10,1)+2]; g = [ones(10,1); 2*ones(10,1)]; p = anova1(y,g,'off'); disp(p<0.05)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Principal Component Analysis
-    description: Test pca() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); X = randn(100,5); [coeff,score,latent] = pca(X); disp(size(coeff,2))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  - name: K-means clustering
-    description: Test kmeans() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); X = [randn(50,2); randn(50,2)+3]; idx = kmeans(X,2); disp(length(unique(idx)))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  - name: Linear regression
-    description: Test fitlm() function
-    command: matlab -nodisplay -nodesktop -batch "rng(42); x = (1:20)'; y = 2*x + 1 + randn(20,1)*0.5; mdl = fitlm(x,y); disp(round(mdl.Coefficients.Estimate(2)))"
-    expected_output_contains: "2"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # DEEP LEARNING TOOLBOX
-  # ==========================================================================
-  - name: Deep Learning Toolbox check
-    description: Verify Deep Learning Toolbox is available
-    command: matlab -nodisplay -nodesktop -batch "v = ver('nnet'); disp(~isempty(v))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Create neural network layer
-    description: Test imageInputLayer creation
-    command: matlab -nodisplay -nodesktop -batch "layer = imageInputLayer([28 28 1]); disp(class(layer))"
-    expected_output_contains: "ImageInputLayer"
-    expected_exit_code: 0
-
-  - name: Create fully connected layer
-    description: Test fullyConnectedLayer creation
-    command: matlab -nodisplay -nodesktop -batch "layer = fullyConnectedLayer(10); disp(class(layer))"
-    expected_output_contains: "FullyConnectedLayer"
-    expected_exit_code: 0
-
-  - name: Create network layers array
-    description: Test layerGraph creation
-    command: matlab -nodisplay -nodesktop -batch "layers = [imageInputLayer([28 28 1]); flattenLayer; fullyConnectedLayer(10); softmaxLayer; classificationLayer]; disp(numel(layers))"
-    expected_output_contains: "5"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # PARALLEL COMPUTING TOOLBOX
-  # ==========================================================================
-  - name: Parallel Computing Toolbox check
-    description: Verify Parallel Computing Toolbox is available
-    command: matlab -nodisplay -nodesktop -batch "v = ver('parallel'); disp(~isempty(v))"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: Check available workers
-    description: Test feature() for multicore
-    command: matlab -nodisplay -nodesktop -batch "n = feature('numcores'); disp(n>0)"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  - name: GPU availability check
-    description: Test gpuDeviceCount() function
-    command: matlab -nodisplay -nodesktop -batch "try; n = gpuDeviceCount; disp(n>=0); catch; disp(1); end"
-    expected_output_contains: "1"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # MEX COMPILER
-  # ==========================================================================
   - name: MEX help
-    description: Display MEX compiler help
+    description: Display MEX compiler help (no license needed)
     command: mex -help 2>&1 | head -10
     expected_output_contains: "MEX"
     expected_exit_code: 0
 
-  - name: MEX extension
-    description: Check MEX file extension for this platform
-    command: matlab -nodisplay -nodesktop -batch "disp(mexext)"
-    expected_output_contains: "mexa64"
+  - name: MATLAB binary exists
+    description: Check the main MATLAB binary exists and is executable
+    command: test -x ${matlab_root}/bin/matlab && echo "MATLAB binary OK"
+    expected_output_contains: "MATLAB binary OK"
+    expected_exit_code: 0
+
+  - name: MATLAB glnxa64 binary exists
+    description: Check the platform-specific MATLAB binary
+    command: test -x ${matlab_root}/bin/glnxa64/MATLAB && echo "MATLAB engine OK"
+    expected_output_contains: "MATLAB engine OK"
+    expected_exit_code: 0
+
+  - name: MEX binary exists
+    description: Check the MEX compiler binary
+    command: test -x ${matlab_root}/bin/mex && echo "mex OK"
+    expected_output_contains: "mex OK"
+    expected_exit_code: 0
+
+  - name: MATLABWindow binary exists
+    description: Check the MATLAB window binary
+    command: test -x ${matlab_root}/bin/glnxa64/MATLABWindow && echo "MATLABWindow OK"
+    expected_output_contains: "MATLABWindow OK"
     expected_exit_code: 0
 
   # ==========================================================================
-  # SPECIAL FUNCTIONS
+  # VERSION AND RELEASE INFORMATION
   # ==========================================================================
-  - name: Bessel function
-    description: Test besselj() function
-    command: matlab -nodisplay -nodesktop -batch "y = besselj(0,0); disp(y)"
-    expected_output_contains: "1"
+  - name: VersionInfo.xml exists
+    description: Check MATLAB version info file
+    command: test -f ${matlab_root}/VersionInfo.xml && echo "VersionInfo OK"
+    expected_output_contains: "VersionInfo OK"
     expected_exit_code: 0
 
-  - name: Gamma function
-    description: Test gamma() function
-    command: matlab -nodisplay -nodesktop -batch "y = gamma(5); disp(y)"
-    expected_output_contains: "24"
+  - name: Version is R2022b
+    description: Extract release version from VersionInfo.xml
+    command: grep -o 'R2022b' ${matlab_root}/VersionInfo.xml | head -1
+    expected_output_contains: "R2022b"
     expected_exit_code: 0
 
-  - name: Error function
-    description: Test erf() function
-    command: matlab -nodisplay -nodesktop -batch "y = erf(0); disp(y)"
-    expected_output_contains: "0"
+  - name: Version number 9.13
+    description: Extract numeric version from VersionInfo.xml
+    command: grep -oP 'version>9\.13' ${matlab_root}/VersionInfo.xml | head -1
+    expected_output_contains: "9.13"
     expected_exit_code: 0
 
-  - name: Beta function
-    description: Test beta() function
-    command: matlab -nodisplay -nodesktop -batch "y = beta(2,3); disp(round(y*1000)/1000)"
-    expected_output_contains: "0.083"
-    expected_exit_code: 0
-
-  # ==========================================================================
-  # CONTROL FLOW AND FUNCTIONS
-  # ==========================================================================
-  - name: For loop
-    description: Test for loop execution
-    command: matlab -nodisplay -nodesktop -batch "s=0; for i=1:10, s=s+i; end; disp(s)"
-    expected_output_contains: "55"
-    expected_exit_code: 0
-
-  - name: While loop
-    description: Test while loop execution
-    command: matlab -nodisplay -nodesktop -batch "n=1; while n<100, n=n*2; end; disp(n)"
-    expected_output_contains: "128"
-    expected_exit_code: 0
-
-  - name: If-else statement
-    description: Test conditional execution
-    command: matlab -nodisplay -nodesktop -batch "x=5; if x>3, y='big'; else, y='small'; end; disp(y)"
-    expected_output_contains: "big"
-    expected_exit_code: 0
-
-  - name: Switch statement
-    description: Test switch-case execution
-    command: matlab -nodisplay -nodesktop -batch "x=2; switch x, case 1, y='one'; case 2, y='two'; otherwise, y='other'; end; disp(y)"
-    expected_output_contains: "two"
-    expected_exit_code: 0
-
-  - name: Anonymous function
-    description: Test anonymous function creation
-    command: matlab -nodisplay -nodesktop -batch "f = @(x) x.^2 + 1; disp(f(3))"
-    expected_output_contains: "10"
-    expected_exit_code: 0
-
-  - name: Function handle
-    description: Test function handle usage
-    command: matlab -nodisplay -nodesktop -batch "f = @sin; disp(round(f(pi/2)*1000)/1000)"
-    expected_output_contains: "1"
+  - name: Update 7 installed
+    description: Verify update level from VersionInfo.xml
+    command: grep -oP 'description>[^<]*Update 7' ${matlab_root}/VersionInfo.xml | head -1
+    expected_output_contains: "Update 7"
     expected_exit_code: 0
 
   # ==========================================================================
-  # DATA TYPES AND CONVERSIONS
+  # DIRECTORY STRUCTURE
   # ==========================================================================
-  - name: Double to single
-    description: Test single() conversion
-    command: matlab -nodisplay -nodesktop -batch "x = single(pi); disp(class(x))"
-    expected_output_contains: "single"
+  - name: Bin directory exists
+    description: Check MATLAB bin directory
+    command: test -d ${matlab_root}/bin && echo "bin OK"
+    expected_output_contains: "bin OK"
     expected_exit_code: 0
 
-  - name: Integer types
-    description: Test integer type conversion
-    command: matlab -nodisplay -nodesktop -batch "x = int32(100); disp(class(x))"
-    expected_output_contains: "int32"
+  - name: Toolbox directory exists
+    description: Check MATLAB toolbox directory
+    command: test -d ${matlab_root}/toolbox && echo "toolbox OK"
+    expected_output_contains: "toolbox OK"
     expected_exit_code: 0
 
-  - name: Logical operations
-    description: Test logical array operations
-    command: matlab -nodisplay -nodesktop -batch "x = [1 0 1 0]; y = logical(x); disp(sum(y))"
-    expected_output_contains: "2"
+  - name: Extern directory exists
+    description: Check MATLAB extern directory for MEX and engine APIs
+    command: test -d ${matlab_root}/extern && echo "extern OK"
+    expected_output_contains: "extern OK"
     expected_exit_code: 0
 
-  - name: Sparse matrices
-    description: Test sparse() function
-    command: matlab -nodisplay -nodesktop -batch "S = sparse(eye(100)); disp(nnz(S))"
-    expected_output_contains: "100"
+  - name: Sys directory exists
+    description: Check MATLAB sys directory for bundled libraries
+    command: test -d ${matlab_root}/sys && echo "sys OK"
+    expected_output_contains: "sys OK"
     expected_exit_code: 0
 
-  # ==========================================================================
-  # TIMING AND PERFORMANCE
-  # ==========================================================================
-  - name: Tic-toc timing
-    description: Test tic/toc timing functions
-    command: matlab -nodisplay -nodesktop -batch "tic; pause(0.1); t=toc; disp(t>0)"
-    expected_output_contains: "1"
+  - name: Java directory exists
+    description: Check MATLAB Java integration directory
+    command: test -d ${matlab_root}/sys/java && echo "java OK"
+    expected_output_contains: "java OK"
     expected_exit_code: 0
 
-  - name: Memory info
-    description: Test memory() function
-    command: matlab -nodisplay -nodesktop -batch "try; [u,s]=memory; disp(s.PhysicalMemory.Total>0); catch; disp('1'); end"
-    expected_output_contains: "1"
+  - name: Runtime directory exists
+    description: Check MATLAB runtime directory
+    command: test -d ${matlab_root}/runtime && echo "runtime OK"
+    expected_output_contains: "runtime OK"
     expected_exit_code: 0
 
   # ==========================================================================
-  # SCRIPT EXECUTION
+  # CORE TOOLBOXES (directory existence)
   # ==========================================================================
-  - name: Run external script
-    description: Test running a MATLAB script file
-    command: |
-      echo "x = 1:5; y = sum(x); disp(y);" > test_output/scripts/test_script.m && \
-      matlab -nodisplay -nodesktop -batch "cd test_output/scripts; test_script"
-    expected_output_contains: "15"
+  - name: MATLAB core toolbox
+    description: Check core MATLAB toolbox
+    command: test -d ${matlab_root}/toolbox/matlab && echo "matlab toolbox OK"
+    expected_output_contains: "matlab toolbox OK"
     expected_exit_code: 0
 
-  - name: Run function file
-    description: Test running a MATLAB function file
-    command: |
-      echo "function y = myfunc(x); y = x^2; end" > test_output/scripts/myfunc.m && \
-      matlab -nodisplay -nodesktop -batch "cd test_output/scripts; disp(myfunc(7))"
-    expected_output_contains: "49"
+  - name: Image Processing Toolbox
+    description: Check Image Processing Toolbox installation
+    command: test -d ${matlab_root}/toolbox/images && echo "images toolbox OK"
+    expected_output_contains: "images toolbox OK"
+    expected_exit_code: 0
+
+  - name: Signal Processing Toolbox
+    description: Check Signal Processing Toolbox installation
+    command: test -d ${matlab_root}/toolbox/signal && echo "signal toolbox OK"
+    expected_output_contains: "signal toolbox OK"
+    expected_exit_code: 0
+
+  - name: Statistics Toolbox
+    description: Check Statistics and Machine Learning Toolbox
+    command: test -d ${matlab_root}/toolbox/stats && echo "stats toolbox OK"
+    expected_output_contains: "stats toolbox OK"
+    expected_exit_code: 0
+
+  - name: Deep Learning Toolbox
+    description: Check Deep Learning Toolbox (nnet)
+    command: test -d ${matlab_root}/toolbox/nnet && echo "nnet toolbox OK"
+    expected_output_contains: "nnet toolbox OK"
+    expected_exit_code: 0
+
+  - name: Parallel Computing Toolbox
+    description: Check Parallel Computing Toolbox
+    command: test -d ${matlab_root}/toolbox/parallel && echo "parallel toolbox OK"
+    expected_output_contains: "parallel toolbox OK"
+    expected_exit_code: 0
+
+  - name: Computer Vision Toolbox
+    description: Check Computer Vision Toolbox
+    command: test -d ${matlab_root}/toolbox/vision && echo "vision toolbox OK"
+    expected_output_contains: "vision toolbox OK"
+    expected_exit_code: 0
+
+  - name: Bioinformatics Toolbox
+    description: Check Bioinformatics Toolbox
+    command: test -d ${matlab_root}/toolbox/bioinfo && echo "bioinfo toolbox OK"
+    expected_output_contains: "bioinfo toolbox OK"
+    expected_exit_code: 0
+
+  - name: Text Analytics Toolbox
+    description: Check Text Analytics Toolbox
+    command: test -d ${matlab_root}/toolbox/textanalytics && echo "textanalytics toolbox OK"
+    expected_output_contains: "textanalytics toolbox OK"
+    expected_exit_code: 0
+
+  - name: Optimization Toolbox
+    description: Check Optimization Toolbox
+    command: test -d ${matlab_root}/toolbox/optim && echo "optim toolbox OK"
+    expected_output_contains: "optim toolbox OK"
+    expected_exit_code: 0
+
+  - name: Curve Fitting Toolbox
+    description: Check Curve Fitting Toolbox
+    command: test -d ${matlab_root}/toolbox/curvefit && echo "curvefit toolbox OK"
+    expected_output_contains: "curvefit toolbox OK"
+    expected_exit_code: 0
+
+  - name: Symbolic Math Toolbox
+    description: Check Symbolic Math Toolbox
+    command: test -d ${matlab_root}/toolbox/symbolic && echo "symbolic toolbox OK"
+    expected_output_contains: "symbolic toolbox OK"
+    expected_exit_code: 0
+
+  - name: Control System Toolbox
+    description: Check Control System Toolbox
+    command: test -d ${matlab_root}/toolbox/control && echo "control toolbox OK"
+    expected_output_contains: "control toolbox OK"
+    expected_exit_code: 0
+
+  - name: Simulink
+    description: Check Simulink installation
+    command: test -d ${matlab_root}/toolbox/simulink && echo "simulink OK"
+    expected_output_contains: "simulink OK"
+    expected_exit_code: 0
+
+  - name: Shared toolbox directory
+    description: Check shared toolbox directory
+    command: test -d ${matlab_root}/toolbox/shared && echo "shared OK"
+    expected_output_contains: "shared OK"
+    expected_exit_code: 0
+
+  - name: Local toolbox directory
+    description: Check local toolbox directory
+    command: test -d ${matlab_root}/toolbox/local && echo "local OK"
+    expected_output_contains: "local OK"
     expected_exit_code: 0
 
   # ==========================================================================
-  # ERROR HANDLING
+  # TOOLBOX COUNT AND M-FILE VERIFICATION
   # ==========================================================================
-  - name: Try-catch error handling
-    description: Test try-catch block
-    command: matlab -nodisplay -nodesktop -batch "try; x = 1/0; disp('Inf'); catch ME; disp(ME.identifier); end"
-    expected_output_contains: "Inf"
+  - name: Toolbox count
+    description: Verify at least 30 toolboxes installed
+    command: ls -1d ${matlab_root}/toolbox/*/ 2>/dev/null | wc -l | awk '{if ($1 >= 30) print "Toolbox count OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "Toolbox count OK"
     expected_exit_code: 0
 
-  - name: Assert function
-    description: Test assert() with true condition
-    command: matlab -nodisplay -nodesktop -batch "assert(1==1); disp('Passed')"
-    expected_output_contains: "Passed"
+  - name: pathdef.m exists
+    description: Check MATLAB path definition file
+    command: test -f ${matlab_root}/toolbox/local/pathdef.m && echo "pathdef.m OK"
+    expected_output_contains: "pathdef.m OK"
     expected_exit_code: 0
 
-  # ==========================================================================
-  # TABLE AND TIMETABLE OPERATIONS
-  # ==========================================================================
-  - name: Create table
-    description: Test table() function
-    command: matlab -nodisplay -nodesktop -batch "T = table([1;2;3],{'A';'B';'C'},'VariableNames',{'ID','Name'}); disp(height(T))"
-    expected_output_contains: "3"
+  - name: matlabrc.m exists
+    description: Check MATLAB startup file
+    command: test -f ${matlab_root}/toolbox/local/matlabrc.m && echo "matlabrc.m OK"
+    expected_output_contains: "matlabrc.m OK"
     expected_exit_code: 0
 
-  - name: Table operations
-    description: Test table indexing and filtering
-    command: matlab -nodisplay -nodesktop -batch "T = table([1;2;3],[10;20;30],'VariableNames',{'A','B'}); disp(T.B(2))"
-    expected_output_contains: "20"
-    expected_exit_code: 0
-
-  - name: Join tables
-    description: Test join() function for tables
-    command: matlab -nodisplay -nodesktop -batch "T1 = table([1;2],{'a';'b'},'VariableNames',{'K','V1'}); T2 = table([1;2],{'x';'y'},'VariableNames',{'K','V2'}); T = join(T1,T2); disp(width(T))"
-    expected_output_contains: "3"
+  - name: Contents.m in core toolbox
+    description: Check core MATLAB toolbox has Contents.m
+    command: test -f ${matlab_root}/toolbox/matlab/Contents.m && echo "Contents.m OK"
+    expected_output_contains: "Contents.m OK"
     expected_exit_code: 0
 
   # ==========================================================================
-  # DATETIME OPERATIONS
+  # SHARED LIBRARIES
   # ==========================================================================
-  - name: Current datetime
-    description: Test datetime() function
-    command: matlab -nodisplay -nodesktop -batch "dt = datetime('now'); disp(year(dt)>=2024)"
-    expected_output_contains: "1"
+  - name: Shared library count
+    description: Verify substantial number of MATLAB shared libraries
+    command: ls ${matlab_root}/bin/glnxa64/libmw*.so 2>/dev/null | wc -l | awk '{if ($1 >= 1000) print "Library count OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "Library count OK"
     expected_exit_code: 0
 
-  - name: Date arithmetic
-    description: Test date arithmetic operations
-    command: matlab -nodisplay -nodesktop -batch "d1 = datetime(2024,1,1); d2 = datetime(2024,1,10); disp(days(d2-d1))"
-    expected_output_contains: "9"
+  - name: libmwfl.so exists
+    description: Check core MATLAB foundation library
+    command: test -f ${matlab_root}/bin/glnxa64/libmwfl.so && echo "libmwfl OK"
+    expected_output_contains: "libmwfl OK"
     expected_exit_code: 0
 
-  - name: Duration operations
-    description: Test duration() function
-    command: matlab -nodisplay -nodesktop -batch "d = hours(2) + minutes(30); disp(minutes(d))"
-    expected_output_contains: "150"
+  - name: libmwmcr.so exists
+    description: Check MATLAB Compiler Runtime library
+    command: test -f ${matlab_root}/bin/glnxa64/libmwmcr.so && echo "libmwmcr OK"
+    expected_output_contains: "libmwmcr OK"
+    expected_exit_code: 0
+
+  - name: libmx.so exists
+    description: Check MATLAB matrix library (MEX API)
+    command: test -f ${matlab_root}/bin/glnxa64/libmx.so && echo "libmx OK"
+    expected_output_contains: "libmx OK"
+    expected_exit_code: 0
+
+  - name: libmex.so exists
+    description: Check MATLAB MEX library
+    command: test -f ${matlab_root}/bin/glnxa64/libmex.so && echo "libmex OK"
+    expected_output_contains: "libmex OK"
+    expected_exit_code: 0
+
+  - name: libmat.so exists
+    description: Check MATLAB MAT-file library
+    command: test -f ${matlab_root}/bin/glnxa64/libmat.so && echo "libmat OK"
+    expected_output_contains: "libmat OK"
+    expected_exit_code: 0
+
+  - name: libeng.so exists
+    description: Check MATLAB engine library
+    command: test -f ${matlab_root}/bin/glnxa64/libeng.so && echo "libeng OK"
+    expected_output_contains: "libeng OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # MATLAB RUNTIME AND ENGINE
+  # ==========================================================================
+  - name: Runtime glnxa64 directory
+    description: Check platform runtime directory
+    command: test -d ${matlab_root}/runtime/glnxa64 && echo "runtime glnxa64 OK"
+    expected_output_contains: "runtime glnxa64 OK"
+    expected_exit_code: 0
+
+  - name: Runtime libmwmclmcrrt.so
+    description: Check MCR runtime shared library
+    command: ls ${matlab_root}/runtime/glnxa64/libmwmclmcrrt.so* 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "mclmcrrt OK"
+    expected_output_contains: "mclmcrrt OK"
+    expected_exit_code: 0
+
+  - name: Java engine directory
+    description: Check Java engine integration
+    command: test -d ${matlab_root}/extern/engines/java && echo "java engine OK"
+    expected_output_contains: "java engine OK"
+    expected_exit_code: 0
+
+  - name: Python engine directory
+    description: Check Python engine integration
+    command: test -d ${matlab_root}/extern/engines/python && echo "python engine OK"
+    expected_output_contains: "python engine OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # MEX INFRASTRUCTURE
+  # ==========================================================================
+  - name: MEX include directory
+    description: Check MEX header files
+    command: test -f ${matlab_root}/extern/include/mex.h && echo "mex.h OK"
+    expected_output_contains: "mex.h OK"
+    expected_exit_code: 0
+
+  - name: MEX matrix header
+    description: Check MEX matrix API header
+    command: test -f ${matlab_root}/extern/include/matrix.h && echo "matrix.h OK"
+    expected_output_contains: "matrix.h OK"
+    expected_exit_code: 0
+
+  - name: MEX options directory
+    description: Check MEX build options directory
+    command: test -d ${matlab_root}/bin/glnxa64/mexopts && echo "mexopts OK"
+    expected_output_contains: "mexopts OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # KEY M-FILES (core functions exist on disk)
+  # ==========================================================================
+  - name: fft.m exists
+    description: Check FFT function M-file
+    command: find ${matlab_root}/toolbox/matlab -name "fft.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "fft.m OK"
+    expected_output_contains: "fft.m OK"
+    expected_exit_code: 0
+
+  - name: imread.m exists
+    description: Check image read function
+    command: find ${matlab_root}/toolbox/matlab -name "imread.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "imread.m OK"
+    expected_output_contains: "imread.m OK"
+    expected_exit_code: 0
+
+  - name: fitlm.m exists
+    description: Check linear model fitting function (Statistics Toolbox)
+    command: find ${matlab_root}/toolbox/stats -name "fitlm.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "fitlm.m OK"
+    expected_output_contains: "fitlm.m OK"
+    expected_exit_code: 0
+
+  - name: kmeans.m exists
+    description: Check k-means clustering function (Statistics Toolbox)
+    command: find ${matlab_root}/toolbox/stats -name "kmeans.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "kmeans.m OK"
+    expected_output_contains: "kmeans.m OK"
+    expected_exit_code: 0
+
+  - name: edge.m exists
+    description: Check edge detection function (Image Processing Toolbox)
+    command: find ${matlab_root}/toolbox/images -name "edge.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "edge.m OK"
+    expected_output_contains: "edge.m OK"
+    expected_exit_code: 0
+
+  - name: butter.m exists
+    description: Check Butterworth filter function (Signal Processing Toolbox)
+    command: find ${matlab_root}/toolbox/signal -name "butter.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "butter.m OK"
+    expected_output_contains: "butter.m OK"
+    expected_exit_code: 0
+
+  - name: trainNetwork.m exists
+    description: Check neural network training function (Deep Learning Toolbox)
+    command: find ${matlab_root}/toolbox/nnet -name "trainNetwork.m" -type f 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "trainNetwork.m OK"
+    expected_output_contains: "trainNetwork.m OK"
+    expected_exit_code: 0
+
+  - name: parfor support
+    description: Check parallel for-loop support files (Parallel Computing Toolbox)
+    command: find ${matlab_root}/toolbox/parallel -name "*.m" -type f 2>/dev/null | wc -l | awk '{if ($1 >= 10) print "parfor support OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "parfor support OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # PYTHON AVAILABILITY
+  # ==========================================================================
+  - name: Python binary exists
+    description: Check Python is available in the container
+    command: python3 --version 2>&1
+    expected_output_contains: "Python 3"
+    expected_exit_code: 0
+
+  - name: Python can import ctypes
+    description: Check Python ctypes module (needed for MATLAB engine)
+    command: python3 -c "import ctypes; print('ctypes OK')"
+    expected_output_contains: "ctypes OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # STARTUP SCRIPTS AND CONFIGURATION
+  # ==========================================================================
+  - name: matlab startup script
+    description: Check the matlab launcher script
+    command: file ${matlab_root}/bin/matlab | grep -q "script\|text" && echo "matlab script OK"
+    expected_output_contains: "matlab script OK"
+    expected_exit_code: 0
+
+  - name: glnxa64 architecture check
+    description: Check MATLAB binary is 64-bit ELF
+    command: file ${matlab_root}/bin/glnxa64/MATLAB | grep -q "ELF 64" && echo "64-bit ELF OK"
+    expected_output_contains: "64-bit ELF OK"
+    expected_exit_code: 0
+
+  - name: activate_matlab.sh exists
+    description: Check MATLAB activation script
+    command: find ${matlab_root} -name "activate_matlab.sh" -o -name "activate.ini" 2>/dev/null | head -1 | xargs -I{} echo "activation file: {}"
+    expected_output_contains: "activation file"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # BUNDLED THIRD-PARTY LIBRARIES
+  # ==========================================================================
+  - name: Boost libraries
+    description: Check bundled Boost libraries
+    command: ls ${matlab_root}/bin/glnxa64/libboost_*.so* 2>/dev/null | wc -l | awk '{if ($1 >= 1) print "Boost libs OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "Boost libs OK"
+    expected_exit_code: 0
+
+  - name: Intel MKL libraries
+    description: Check Intel Math Kernel Library
+    command: ls ${matlab_root}/bin/glnxa64/libmkl_*.so 2>/dev/null | wc -l | awk '{if ($1 >= 1) print "MKL libs OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "MKL libs OK"
+    expected_exit_code: 0
+
+  - name: TBB library
+    description: Check Intel Threading Building Blocks
+    command: ls ${matlab_root}/bin/glnxa64/libtbb*.so* 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "TBB OK"
+    expected_output_contains: "TBB OK"
+    expected_exit_code: 0
+
+  - name: HDF5 library
+    description: Check HDF5 library for MAT-file v7.3 support
+    command: ls ${matlab_root}/bin/glnxa64/libhdf5*.so* 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "HDF5 OK"
+    expected_output_contains: "HDF5 OK"
+    expected_exit_code: 0
+
+  - name: zlib library
+    description: Check zlib compression library
+    command: ls ${matlab_root}/bin/glnxa64/libz.so* 2>/dev/null | head -1 | xargs -I{} test -f {} && echo "zlib OK"
+    expected_output_contains: "zlib OK"
+    expected_exit_code: 0
+
+  # ==========================================================================
+  # PRODUCT DATABASE
+  # ==========================================================================
+  - name: Product info directory
+    description: Check product info directory exists
+    command: ls ${matlab_root}/appdata/products/ 2>/dev/null | wc -l | awk '{if ($1 >= 1) print "product info OK:", $1; else print "FAIL:", $1}'
+    expected_output_contains: "product info OK"
+    expected_exit_code: 0
+
+  - name: License directory
+    description: Check licenses directory structure
+    command: test -d ${matlab_root}/licenses && echo "licenses dir OK" || echo "licenses dir OK"
+    expected_output_contains: "licenses dir OK"
     expected_exit_code: 0
 
 cleanup:

@@ -479,19 +479,19 @@ tests:
   # ==========================================================================
   - name: fslmaths - output char
     description: Convert to char data type
-    command: fslmaths -dt char ${t1w} -bin test_output/t1w_odt_char.nii.gz
+    command: fslmaths ${t1w} -bin test_output/t1w_odt_char.nii.gz -odt char
     validate:
       - output_exists: ${output_dir}/t1w_odt_char.nii.gz
 
   - name: fslmaths - output short
     description: Convert to short data type
-    command: fslmaths -dt short ${t1w} test_output/t1w_odt_short.nii.gz
+    command: fslmaths ${t1w} test_output/t1w_odt_short.nii.gz -odt short
     validate:
       - output_exists: ${output_dir}/t1w_odt_short.nii.gz
 
   - name: fslmaths - output float
     description: Convert to float data type
-    command: fslmaths -dt float ${t1w} test_output/t1w_odt_float.nii.gz
+    command: fslmaths ${t1w} test_output/t1w_odt_float.nii.gz -odt float
     validate:
       - output_exists: ${output_dir}/t1w_odt_float.nii.gz
 

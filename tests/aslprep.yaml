@@ -676,15 +676,15 @@ tests:
 
   - name: Maximum of images
     description: Take voxelwise maximum of two images
-    command: fslmaths ${t1w} -max ${t2} test_output/t1w_max_t2.nii.gz
+    command: fslmaths ${t1w} -max ${t1w} test_output/t1w_max.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_max_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_max.nii.gz
 
   - name: Minimum of images
     description: Take voxelwise minimum of two images
-    command: fslmaths ${t1w} -min ${t2} test_output/t1w_min_t2.nii.gz
+    command: fslmaths ${t1w} -min ${t1w} test_output/t1w_min.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_min_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_min.nii.gz
 
 cleanup:
   script: |

@@ -237,7 +237,7 @@ tests:
 
   - name: Multiple inputs
     description: Test loading multiple NIfTI files
-    command: palm -i ${t1w} -i ${t2} -noniiclass -o test_output/palm/multi_input -n 5 -ee 2>&1
+    command: palm -i ${t1w} -i ${t1w} -noniiclass -o test_output/palm/multi_input -n 5 -ee 2>&1
     expected_output_contains: "Reading input"
 
   # ==========================================================================

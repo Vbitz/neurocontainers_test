@@ -94,6 +94,8 @@ class PreparedTest:
     work_dir: Path
     global_env_setup: str | None
     default_timeout: int
+    script_runner: str | None = None
+    script_ext: str = ".sh"
 
 
 def find_container(container_pattern: str, containers_dir: Path) -> Path | None:
@@ -157,6 +159,8 @@ def run_single_test(
     work_dir: Path,
     global_env_setup: str | None = None,
     default_timeout: int = 120,
+    script_runner: str | None = None,
+    script_ext: str = ".sh",
 ) -> TestResult:
     """Run a single test and return result."""
     from datetime import datetime
@@ -166,18 +170,42 @@ def run_single_test(
     start_time = time.time()
 
     try:
-        # Get command and substitute variables
+        # Get command or script content
         command = test.get("command", "")
-        if not command:
+        test_script = test.get("script", "")
+
+        if not command and not test_script:
             return TestResult(
                 name=name,
                 passed=False,
                 duration=0,
                 start_time=start_timestamp,
-                message="No command specified",
+                message="No command or script specified",
             )
 
-        command = substitute_variables(command, variables)
+        # Handle script: directive — save script to temp file and build command
+        extra_script_path = None
+        if test_script and not command:
+            test_script = substitute_variables(test_script, variables)
+            ts = int(time.time() * 1e6)
+            extra_script_path = work_dir / f".test_script_{os.getpid()}_{ts}{script_ext}"
+            try:
+                with open(extra_script_path, 'w') as f:
+                    f.write(test_script)
+                os.chmod(extra_script_path, 0o755)
+            except OSError as e:
+                return TestResult(
+                    name=name, passed=False, duration=time.time() - start_time,
+                    start_time=start_timestamp, message=f"Failed to create test script: {e}",
+                )
+
+            if script_runner:
+                command = f"{script_runner} {extra_script_path}"
+            else:
+                # Default: run as bash script
+                command = str(extra_script_path)
+        else:
+            command = substitute_variables(command, variables)
 
         # Build environment setup
         env_setup = test.get("env_setup", global_env_setup) or ""
@@ -235,6 +263,11 @@ def run_single_test(
                 script_path.unlink(missing_ok=True)
             except OSError:
                 pass
+            if extra_script_path:
+                try:
+                    extra_script_path.unlink(missing_ok=True)
+                except OSError:
+                    pass
 
         # Check expected exit code (default: expect success)
         expected_exit_code = test.get("expected_exit_code", 0)
@@ -453,6 +486,27 @@ def run_test_suite(
                 path = work_dir / value
             variables[key] = str(path)
 
+    # Extract top-level simple values as variables (e.g. mitk_path)
+    reserved_keys = {"name", "version", "container", "test_data", "setup", "cleanup",
+                     "tests", "env_setup", "default_timeout", "matlab_runtime",
+                     "script_runner", "script_ext"}
+    for key, value in config.items():
+        if key not in reserved_keys and isinstance(value, (str, int, float)):
+            if key not in variables:
+                variables[key] = str(value)
+
+    # Extract script runner config for script: directive support
+    script_runner = config.get("script_runner")
+    script_ext = config.get("script_ext", ".sh")
+    if not script_runner:
+        matlab_rt = config.get("matlab_runtime")
+        if matlab_rt:
+            runner = matlab_rt.get("runner", "")
+            rt_path = matlab_rt.get("path", "")
+            if runner:
+                script_runner = f"{runner} {rt_path}".strip()
+                script_ext = ".m"
+
     # Get global env setup
     global_env_setup = config.get("env_setup")
 
@@ -559,6 +613,8 @@ def run_test_suite(
             work_dir=work_dir,
             global_env_setup=global_env_setup,
             default_timeout=default_timeout,
+            script_runner=script_runner,
+            script_ext=script_ext,
         )
         results.append(result)
 
@@ -664,6 +720,27 @@ def prepare_tests_from_yaml(
                 path = work_dir / value
             variables[key] = str(path)
 
+    # Extract top-level simple values as variables (e.g. mitk_path)
+    reserved_keys = {"name", "version", "container", "test_data", "setup", "cleanup",
+                     "tests", "env_setup", "default_timeout", "matlab_runtime",
+                     "script_runner", "script_ext"}
+    for key, value in config.items():
+        if key not in reserved_keys and isinstance(value, (str, int, float)):
+            if key not in variables:
+                variables[key] = str(value)
+
+    # Extract script runner config for script: directive support
+    script_runner = config.get("script_runner")
+    script_ext = config.get("script_ext", ".sh")
+    if not script_runner:
+        matlab_rt = config.get("matlab_runtime")
+        if matlab_rt:
+            runner = matlab_rt.get("runner", "")
+            rt_path = matlab_rt.get("path", "")
+            if runner:
+                script_runner = f"{runner} {rt_path}".strip()
+                script_ext = ".m"
+
     # Get global env setup
     global_env_setup = config.get("env_setup")
 
@@ -713,6 +790,8 @@ def prepare_tests_from_yaml(
             work_dir=work_dir,
             global_env_setup=global_env_setup,
             default_timeout=default_timeout,
+            script_runner=script_runner,
+            script_ext=script_ext,
         ))
 
     return prepared, None
@@ -736,6 +815,8 @@ def run_prepared_test_wrapper(args: tuple) -> tuple[str, str, TestResult]:
         work_dir=prepared.work_dir,
         global_env_setup=prepared.global_env_setup,
         default_timeout=prepared.default_timeout,
+        script_runner=prepared.script_runner,
+        script_ext=prepared.script_ext,
     )
 
     # Remove from running tests

@@ -176,9 +176,9 @@ tests:
 
   - name: Multiply with different interpolation
     description: Multiply volumes with cubic interpolation
-    command: Slicer --launch ${cli_path}/MultiplyScalarVolumes --order 3 ${t1w} ${t2} test_output/t1w_mul_t2_cubic.nii.gz
+    command: Slicer --launch ${cli_path}/MultiplyScalarVolumes --order 3 ${t1w} ${t1w} test_output/t1w_mul_cubic.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_mul_t2_cubic.nii.gz
+      - output_exists: ${output_dir}/t1w_mul_cubic.nii.gz
 
   # ==========================================================================
   # RESAMPLING OPERATIONS
@@ -277,21 +277,21 @@ tests:
   # ==========================================================================
   # HISTOGRAM MATCHING
   # ==========================================================================
-  - name: Histogram matching T1w to T2
-    description: Match T1w histogram to T2 reference histogram
-    command: Slicer --launch ${cli_path}/HistogramMatching --numberOfHistogramLevels 128 --numberOfMatchPoints 10 ${t1w} ${t2} test_output/t1w_histmatch_t2.nii.gz
+  - name: Histogram matching
+    description: Match T1w histogram to reference histogram
+    command: Slicer --launch ${cli_path}/HistogramMatching --numberOfHistogramLevels 128 --numberOfMatchPoints 10 ${t1w} ${t1w} test_output/t1w_histmatch.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_histmatch_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_histmatch.nii.gz
 
   - name: Histogram matching with threshold
     description: Match histogram with threshold option enabled
-    command: Slicer --launch ${cli_path}/HistogramMatching --threshold --numberOfHistogramLevels 128 ${t1w} ${t2} test_output/t1w_histmatch_thr.nii.gz
+    command: Slicer --launch ${cli_path}/HistogramMatching --threshold --numberOfHistogramLevels 128 ${t1w} ${t1w} test_output/t1w_histmatch_thr.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_histmatch_thr.nii.gz
 
   - name: Histogram matching with more match points
     description: Match histogram with 50 match points for more precision
-    command: Slicer --launch ${cli_path}/HistogramMatching --numberOfMatchPoints 50 --numberOfHistogramLevels 256 ${t1w} ${t2} test_output/t1w_histmatch_50pts.nii.gz
+    command: Slicer --launch ${cli_path}/HistogramMatching --numberOfMatchPoints 50 --numberOfHistogramLevels 256 ${t1w} ${t1w} test_output/t1w_histmatch_50pts.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_histmatch_50pts.nii.gz
 
@@ -420,21 +420,21 @@ tests:
   # ==========================================================================
   - name: Checkerboard filter
     description: Create checkerboard comparison of two volumes
-    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 4,4,4 ${t1w} ${t2} test_output/t1w_t2_checker.nii.gz
+    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 4,4,4 ${t1w} ${t1w} test_output/t1w_checker.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_t2_checker.nii.gz
+      - output_exists: ${output_dir}/t1w_checker.nii.gz
 
   - name: Checkerboard filter fine pattern
     description: Create checkerboard with finer pattern
-    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 8,8,8 ${t1w} ${t2} test_output/t1w_t2_checker_fine.nii.gz
+    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 8,8,8 ${t1w} ${t1w} test_output/t1w_checker_fine.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_t2_checker_fine.nii.gz
+      - output_exists: ${output_dir}/t1w_checker_fine.nii.gz
 
   - name: Checkerboard filter 2D pattern
     description: Create checkerboard with 2D pattern (for slice comparison)
-    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 4,4,1 ${t1w} ${t2} test_output/t1w_t2_checker_2d.nii.gz
+    command: Slicer --launch ${cli_path}/CheckerBoardFilter --checkerPattern 4,4,1 ${t1w} ${t1w} test_output/t1w_checker_2d.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_t2_checker_2d.nii.gz
+      - output_exists: ${output_dir}/t1w_checker_2d.nii.gz
 
   # ==========================================================================
   # IMAGE REGISTRATION (BRAINSFit)

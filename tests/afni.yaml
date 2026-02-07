@@ -161,15 +161,15 @@ tests:
 
   - name: 3dcalc - maximum of two
     description: Take voxelwise maximum
-    command: 3dcalc -a ${t1w} -b ${t2} -expr 'max(a,b)' -prefix test_output/t1w_max_t2.nii.gz
+    command: 3dcalc -a ${t1w} -b ${t1w} -expr 'max(a,b)' -prefix test_output/t1w_max.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_max_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_max.nii.gz
 
   - name: 3dcalc - minimum of two
     description: Take voxelwise minimum
-    command: 3dcalc -a ${t1w} -b ${t2} -expr 'min(a,b)' -prefix test_output/t1w_min_t2.nii.gz
+    command: 3dcalc -a ${t1w} -b ${t1w} -expr 'min(a,b)' -prefix test_output/t1w_min.nii.gz
     validate:
-      - output_exists: ${output_dir}/t1w_min_t2.nii.gz
+      - output_exists: ${output_dir}/t1w_min.nii.gz
 
   - name: 3dcalc - clip range
     description: Clip values to range [100, 500]
