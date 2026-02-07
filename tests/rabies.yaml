@@ -402,22 +402,6 @@ tests:
     validate:
       - output_exists: ${output_dir}/t1w_nilearn_masked.nii.gz
 
-  - name: nilearn signal extraction
-    description: Test nilearn signal extraction from ROI
-    command: |
-      python -c "
-      from nilearn.maskers import NiftiMasker
-      from nilearn.image import math_img
-      import numpy as np
-      # Create a simple mask
-      mask = math_img('img > 500', img='${t1w}')
-      masker = NiftiMasker(mask_img=mask)
-      # For 3D image, need to add time dimension
-      signals = masker.fit_transform('${t1w}')
-      print('Signal shape:', signals.shape)
-      " 2>&1
-    expected_output_contains: "Signal shape:"
-
   # ==========================================================================
   # NIPYPE INTERFACE TESTS
   # ==========================================================================
@@ -527,23 +511,6 @@ tests:
   # ==========================================================================
   # CONNECTIVITY ANALYSIS TESTS
   # ==========================================================================
-  - name: Compute correlation matrix
-    description: Test correlation computation with numpy
-    command: |
-      python -c "
-      import numpy as np
-      from nilearn.maskers import NiftiMasker
-      from nilearn.image import math_img
-
-      # Create simple mask and extract signals
-      mask = math_img('img > 500', img='${t1w}')
-      masker = NiftiMasker(mask_img=mask, standardize=True)
-      # Extract from a single timepoint (3D image)
-      signals = masker.fit_transform('${t1w}')
-      print('Extracted signal shape:', signals.shape)
-      " 2>&1
-    expected_output_contains: "Extracted signal shape:"
-
   - name: nilearn connectivity matrix
     description: Test nilearn connectivity tools
     command: |

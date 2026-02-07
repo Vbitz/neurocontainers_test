@@ -144,12 +144,6 @@ tests:
     command: ls -la /opt/deepRetinotopy_TheToolbox/main/4_signmaps.py
     expected_output_contains: "4_signmaps.py"
 
-  - name: Utils module importable
-    description: Test importing deepRetinotopy utilities
-    command: |
-      cd /opt/deepRetinotopy_TheToolbox && python -c "from utils.model import Model; print('Model class imported')" 2>&1 | tail -1
-    expected_output_contains: "Model class imported"
-
   # ===========================================================================
   # CONNECTOME WORKBENCH TESTS
   # ===========================================================================

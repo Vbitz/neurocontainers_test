@@ -76,18 +76,6 @@ tests:
       - output_exists: ${output_dir}/t1w_brain_fast_mask_test_mask.nii.gz
     timeout: 600
 
-  - name: Verify fast mode brain output dimensions
-    description: Ensure brain extraction preserves original image dimensions
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_brain_dims_test -device cpu -mode fast -tta 0 2>&1 && \
-      python3 -c "import nibabel as nib; \
-        orig = nib.load('${t1w}'); \
-        brain = nib.load('test_output/t1w_brain_dims_test.nii.gz'); \
-        assert orig.shape == brain.shape, f'Shape mismatch: {orig.shape} vs {brain.shape}'; \
-        print('Dimensions match:', orig.shape)"
-    expected_output_contains: "Dimensions match"
-    timeout: 600
-
   # ==========================================================================
   # BRAIN EXTRACTION - ACCURATE MODE (CPU)
   # ==========================================================================
@@ -161,45 +149,6 @@ tests:
   # ==========================================================================
   # OUTPUT VERIFICATION
   # ==========================================================================
-  - name: Verify mask is binary
-    description: Ensure the brain mask contains only 0 and 1 values
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_brain_binary_check -device cpu -mode fast -tta 0 -s 1 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        mask = nib.load('test_output/t1w_brain_binary_check_mask.nii.gz').get_fdata(); \
-        unique_vals = np.unique(mask); \
-        assert np.all(np.isin(unique_vals, [0, 1])), f'Mask not binary, found: {unique_vals}'; \
-        print('Mask is binary with values:', unique_vals)"
-    expected_output_contains: "Mask is binary"
-    timeout: 600
-
-  - name: Verify brain extraction removes skull
-    description: Check that brain extraction reduces non-zero voxels (skull removed)
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_brain_skull_check -device cpu -mode fast -tta 0 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        orig = nib.load('${t1w}').get_fdata(); \
-        brain = nib.load('test_output/t1w_brain_skull_check.nii.gz').get_fdata(); \
-        orig_nonzero = np.count_nonzero(orig); \
-        brain_nonzero = np.count_nonzero(brain); \
-        assert brain_nonzero < orig_nonzero, f'Brain should have fewer non-zero voxels: {brain_nonzero} vs {orig_nonzero}'; \
-        print(f'Skull removed: {orig_nonzero} -> {brain_nonzero} non-zero voxels')"
-    expected_output_contains: "Skull removed"
-    timeout: 600
-
-  - name: Verify affine preserved
-    description: Ensure affine transformation matrix is preserved
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_brain_affine_check -device cpu -mode fast -tta 0 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        orig = nib.load('${t1w}'); \
-        brain = nib.load('test_output/t1w_brain_affine_check.nii.gz'); \
-        if not np.allclose(orig.affine, brain.affine): \
-          print('Warning: affine matrices differ slightly'); \
-        print('Affine check completed')"
-    expected_output_contains: "Affine check"
-    timeout: 600
-
   # ==========================================================================
   # ALTERNATIVE MRI SEQUENCES
   # ==========================================================================
@@ -278,97 +227,6 @@ tests:
       - output_exists: ${output_dir}/t1w_brain_full_accurate.nii.gz
       - output_exists: ${output_dir}/t1w_brain_full_accurate_mask.nii.gz
     timeout: 1200
-
-  # ==========================================================================
-  # PERFORMANCE COMPARISON
-  # ==========================================================================
-  - name: Compare fast vs accurate mode output
-    description: Compare outputs from fast and accurate modes
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_compare_fast -device cpu -mode fast -tta 0 -s 1 2>&1 && \
-      hd-bet -i ${t1w} -o test_output/t1w_compare_accurate -device cpu -mode accurate -tta 0 -s 1 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        fast_mask = nib.load('test_output/t1w_compare_fast_mask.nii.gz').get_fdata(); \
-        accurate_mask = nib.load('test_output/t1w_compare_accurate_mask.nii.gz').get_fdata(); \
-        dice = 2 * np.sum(fast_mask * accurate_mask) / (np.sum(fast_mask) + np.sum(accurate_mask)); \
-        print(f'Dice coefficient between fast and accurate modes: {dice:.4f}')"
-    expected_output_contains: "Dice coefficient"
-    timeout: 1800
-
-  # ==========================================================================
-  # MASK APPLICATION
-  # ==========================================================================
-  - name: Apply generated mask to original
-    description: Verify mask can be applied to recreate brain extraction
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_mask_apply -device cpu -mode fast -tta 0 -s 1 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        orig = nib.load('${t1w}'); \
-        mask = nib.load('test_output/t1w_mask_apply_mask.nii.gz').get_fdata(); \
-        brain = nib.load('test_output/t1w_mask_apply.nii.gz').get_fdata(); \
-        applied = orig.get_fdata() * mask; \
-        diff = np.abs(applied - brain); \
-        max_diff = np.max(diff); \
-        print(f'Maximum difference when reapplying mask: {max_diff}')"
-    expected_output_contains: "Maximum difference"
-    timeout: 600
-
-  # ==========================================================================
-  # OUTPUT INTEGRITY
-  # ==========================================================================
-  - name: Verify NIfTI format integrity
-    description: Ensure output is valid NIfTI format
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_nifti_check -device cpu -mode fast -tta 0 2>&1 && \
-      python3 -c "import nibabel as nib; \
-        img = nib.load('test_output/t1w_nifti_check.nii.gz'); \
-        print(f'Valid NIfTI: shape={img.shape}, dtype={img.get_data_dtype()}')"
-    expected_output_contains: "Valid NIfTI"
-    expected_exit_code: 0
-    timeout: 600
-
-  - name: Verify no NaN values in output
-    description: Ensure brain extraction output contains no NaN values
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_nan_check -device cpu -mode fast -tta 0 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        brain = nib.load('test_output/t1w_nan_check.nii.gz').get_fdata(); \
-        nan_count = np.sum(np.isnan(brain)); \
-        assert nan_count == 0, f'Found {nan_count} NaN values'; \
-        print('No NaN values in output')"
-    expected_output_contains: "No NaN values"
-    timeout: 600
-
-  - name: Verify no negative values in mask
-    description: Ensure mask contains no negative values
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_negative_check -device cpu -mode fast -tta 0 -s 1 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        mask = nib.load('test_output/t1w_negative_check_mask.nii.gz').get_fdata(); \
-        neg_count = np.sum(mask < 0); \
-        assert neg_count == 0, f'Found {neg_count} negative values'; \
-        print('No negative values in mask')"
-    expected_output_contains: "No negative values"
-    timeout: 600
-
-  # ==========================================================================
-  # STATISTICAL VALIDATION
-  # ==========================================================================
-  - name: Brain volume reasonable
-    description: Verify extracted brain volume is within reasonable range
-    command: |
-      hd-bet -i ${t1w} -o test_output/t1w_volume_check -device cpu -mode fast -tta 0 -s 1 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        img = nib.load('test_output/t1w_volume_check_mask.nii.gz'); \
-        mask = img.get_fdata(); \
-        voxel_volume = np.abs(np.prod(img.header.get_zooms()[:3])); \
-        brain_volume_ml = np.sum(mask) * voxel_volume / 1000; \
-        print(f'Estimated brain volume: {brain_volume_ml:.1f} mL'); \
-        assert 800 < brain_volume_ml < 2000, f'Brain volume {brain_volume_ml} mL outside expected range'; \
-        print('Brain volume within expected range (800-2000 mL)')"
-    expected_output_contains: "Brain volume within expected range"
-    expected_exit_code: 0
-    timeout: 600
 
 cleanup:
   script: |

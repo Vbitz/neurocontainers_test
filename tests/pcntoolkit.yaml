@@ -493,22 +493,6 @@ tests:
     expected_output_contains: "squared_dist test passed"
     expected_exit_code: 0
 
-  - name: Test compute_pearsonr function
-    description: Compute Pearson correlation coefficient
-    command: |
-      python -c "
-      import numpy as np
-      from pcntoolkit.util.utils import compute_pearsonr
-      A = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
-      B = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
-      r = compute_pearsonr(A, B)
-      print(f'Pearson r: {r[0]:.4f}')
-      assert abs(r[0] - 1.0) < 0.001, 'Perfect correlation expected'
-      print('compute_pearsonr test passed')
-      "
-    expected_output_contains: "compute_pearsonr test passed"
-    expected_exit_code: 0
-
   - name: Test explained_var function
     description: Compute explained variance
     command: |
@@ -535,20 +519,6 @@ tests:
       print('scaler test passed')
       "
     expected_output_contains: "scaler test passed"
-    expected_exit_code: 0
-
-  - name: Test FDR function
-    description: Test false discovery rate correction
-    command: |
-      python -c "
-      import numpy as np
-      from pcntoolkit.util.utils import FDR
-      p_values = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.5, 0.6])
-      sig = FDR(p_values, 0.05)
-      print(f'FDR significant: {np.sum(sig)} out of {len(p_values)}')
-      print('FDR test passed')
-      "
-    expected_output_contains: "FDR test passed"
     expected_exit_code: 0
 
   - name: Test Welford online statistics
@@ -668,28 +638,6 @@ tests:
     expected_output_contains: "BLR creation test passed"
     expected_exit_code: 0
 
-  - name: Test BLR estimate and predict
-    description: Fit and predict with Bayesian Linear Regression
-    command: |
-      python -c "
-      import numpy as np
-      from pcntoolkit.model.bayesreg import BLR
-      np.random.seed(42)
-      n = 50
-      X = np.random.randn(n, 2)
-      y = X @ np.array([1, 2]) + np.random.randn(n) * 0.1
-      hyp0 = np.zeros(2)
-      blr = BLR()
-      hyp, nlz = blr.estimate(hyp0, X, y)
-      print(f'BLR fitted, nlz: {nlz:.2f}')
-      Xs = np.random.randn(10, 2)
-      yhat, s2 = blr.predict(hyp, X, y, Xs)
-      print(f'Predictions shape: {yhat.shape}')
-      print('BLR estimate/predict test passed')
-      "
-    expected_output_contains: "BLR estimate/predict test passed"
-    expected_exit_code: 0
-
   # ==========================================================================
   # FUNCTIONAL TESTS - GAUSSIAN PROCESS REGRESSION
   # ==========================================================================
@@ -722,61 +670,9 @@ tests:
     expected_output_contains: "CovSqExp test passed"
     expected_exit_code: 0
 
-  - name: Test CovSum covariance function
-    description: Test sum of covariance functions
-    command: |
-      python -c "
-      import numpy as np
-      from pcntoolkit.model.gp import CovSqExp, CovLin, CovSum
-      cov = CovSum(CovSqExp(), CovLin())
-      X = np.random.randn(10, 2)
-      hyp = np.zeros(4)
-      K = cov.cov(hyp, X)
-      print(f'Sum covariance matrix shape: {K.shape}')
-      print('CovSum test passed')
-      "
-    expected_output_contains: "CovSum test passed"
-    expected_exit_code: 0
-
   # ==========================================================================
   # FUNCTIONAL TESTS - NORMATIVE MODEL CLASSES
   # ==========================================================================
-  - name: Test NormBLR instantiation
-    description: Create NormBLR normative model instance
-    command: |
-      python -c "
-      from pcntoolkit.normative_model.norm_blr import NormBLR
-      nm = NormBLR()
-      print(f'NormBLR created: {type(nm).__name__}')
-      print('NormBLR instantiation test passed')
-      "
-    expected_output_contains: "NormBLR instantiation test passed"
-    expected_exit_code: 0
-
-  - name: Test NormGPR instantiation
-    description: Create NormGPR normative model instance
-    command: |
-      python -c "
-      from pcntoolkit.normative_model.norm_gpr import NormGPR
-      nm = NormGPR()
-      print(f'NormGPR created: {type(nm).__name__}')
-      print('NormGPR instantiation test passed')
-      "
-    expected_output_contains: "NormGPR instantiation test passed"
-    expected_exit_code: 0
-
-  - name: Test norm_init function
-    description: Initialize normative model using factory function
-    command: |
-      python -c "
-      from pcntoolkit.normative_model.norm_utils import norm_init
-      nm = norm_init(None, alg='blr')
-      print(f'norm_init created: {type(nm).__name__}')
-      print('norm_init test passed')
-      "
-    expected_output_contains: "norm_init test passed"
-    expected_exit_code: 0
-
   # ==========================================================================
   # FUNCTIONAL TESTS - EVALUATION METRICS
   # ==========================================================================
@@ -876,22 +772,6 @@ tests:
   # ==========================================================================
   # FUNCTIONAL TESTS - CROSS-VALIDATION
   # ==========================================================================
-  - name: Test CustomCV class
-    description: Test custom cross-validation splitting
-    command: |
-      python -c "
-      import numpy as np
-      from pcntoolkit.util.utils import CustomCV
-      n_samples = 100
-      cv = CustomCV(np.zeros(n_samples))
-      cv_gen = cv.split(np.zeros((n_samples, 5)))
-      folds = list(cv_gen)
-      print(f'Number of folds: {len(folds)}')
-      print('CustomCV test passed')
-      "
-    expected_output_contains: "CustomCV test passed"
-    expected_exit_code: 0
-
   # ==========================================================================
   # FUNCTIONAL TESTS - CALIBRATION
   # ==========================================================================

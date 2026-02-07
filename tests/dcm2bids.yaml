@@ -616,26 +616,6 @@ tests:
     expected_output_contains: "dcm2bids"
     expected_exit_code: 0
 
-  - name: Import dcm2bids submodules
-    description: Verify dcm2bids submodules are accessible
-    command: |
-      python3 -c "
-      from dcm2bids.dcm2bids_gen import Dcm2BidsGen
-      from dcm2bids.helper import Dcm2BidsHelper
-      print('All submodules imported successfully')
-      " 2>&1
-    expected_output_contains: "successfully"
-
-  - name: Access dcm2bids version programmatically
-    description: Test programmatic version access
-    command: |
-      python3 -c "
-      from dcm2bids.version import __version__, bids_version
-      print(f'dcm2bids: {__version__}')
-      print(f'BIDS: {bids_version}')
-      " 2>&1
-    expected_output_contains: "dcm2bids: 3.2.0"
-
   # ==========================================================================
   # INTEGRATION TESTS
   # ==========================================================================

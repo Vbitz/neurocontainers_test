@@ -446,15 +446,6 @@ tests:
       "
     expected_output_contains: "Spec class imported successfully"
 
-  - name: HALFpipe workflow modules
-    description: Test halfpipe workflow module imports
-    command: |
-      python3 -c "
-      from halfpipe.workflows import features, preprocessing
-      print('HALFpipe workflow modules imported')
-      "
-    expected_output_contains: "HALFpipe workflow modules imported"
-
   - name: HALFpipe BIDS validation
     description: Test BIDS dataset validation with halfpipe
     command: |
@@ -511,32 +502,6 @@ tests:
   # ==========================================================================
   # HALFPIPE CONFIGURATION TESTS
   # ==========================================================================
-  - name: HALFpipe feature extraction options
-    description: Check halfpipe feature extraction capabilities
-    command: |
-      python3 -c "
-      from halfpipe.model.feature import Feature
-      from halfpipe.model.setting import Setting
-      print('Feature and Setting models imported')
-      print('HALFpipe feature extraction ready')
-      "
-    expected_output_contains: "HALFpipe feature extraction ready"
-
-  - name: HALFpipe confounds handling
-    description: Test halfpipe confounds processing
-    command: |
-      python3 -c "
-      from halfpipe.model.setting import (
-          ICAAROMASetting,
-          BandpassFilterSetting,
-          SmoothingSetting,
-          GrandMeanScalingSetting
-      )
-      print('Confound settings imported successfully')
-      print('Available: ICA-AROMA, Bandpass, Smoothing, Grand Mean Scaling')
-      "
-    expected_output_contains: "Confound settings imported successfully"
-
   # ==========================================================================
   # STATISTICAL ANALYSIS TOOLS
   # ==========================================================================

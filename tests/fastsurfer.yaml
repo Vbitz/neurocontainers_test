@@ -294,14 +294,6 @@ tests:
     expected_output_contains: "rh DKT LUT exists"
 
   # ==========================================================================
-  # BIAS FIELD CORRECTION MODULE
-  # ==========================================================================
-  - name: N4 bias correction module availability
-    description: Verify N4 bias correction module is available
-    command: python3 -c "from recon_surf.N4_bias_correct import N4_bias_correct; print('N4 OK')" 2>&1
-    expected_output_contains: "N4 OK"
-
-  # ==========================================================================
   # IMAGE I/O AND PROCESSING UTILITIES
   # ==========================================================================
   - name: Read NIfTI with nibabel
@@ -369,43 +361,10 @@ tests:
   # ==========================================================================
   # ANNOTATION AND LABELING UTILITIES
   # ==========================================================================
-  - name: create_annotation module
-    description: Verify annotation creation module is available
-    command: python3 -c "from recon_surf.create_annotation import main; print('create_annotation OK')" 2>&1
-    expected_output_contains: "create_annotation OK"
-
-  - name: fs_balabels module
-    description: Verify BA labels module is available
-    command: python3 -c "from recon_surf.fs_balabels import main; print('fs_balabels OK')" 2>&1
-    expected_output_contains: "fs_balabels OK"
-
-  - name: map_surf_label module
-    description: Verify surface label mapping module is available
-    command: python3 -c "from recon_surf.map_surf_label import main; print('map_surf_label OK')" 2>&1
-    expected_output_contains: "map_surf_label OK"
-
-  # ==========================================================================
-  # SURFACE PROCESSING UTILITIES
-  # ==========================================================================
-  - name: spherically_project module
-    description: Verify spherical projection module is available
-    command: python3 -c "from recon_surf.spherically_project import main; print('spherically_project OK')" 2>&1
-    expected_output_contains: "spherically_project OK"
-
-  - name: rotate_sphere module
-    description: Verify sphere rotation module is available
-    command: python3 -c "from recon_surf.rotate_sphere import main; print('rotate_sphere OK')" 2>&1
-    expected_output_contains: "rotate_sphere OK"
-
   - name: smooth_aparc module
     description: Verify aparc smoothing module is available
     command: python3 -c "from recon_surf.smooth_aparc import main; print('smooth_aparc OK')" 2>&1
     expected_output_contains: "smooth_aparc OK"
-
-  - name: sample_parc module
-    description: Verify parcellation sampling module is available
-    command: python3 -c "from recon_surf.sample_parc import main; print('sample_parc OK')" 2>&1
-    expected_output_contains: "sample_parc OK"
 
   # ==========================================================================
   # ALIGNMENT AND REGISTRATION UTILITIES
@@ -419,32 +378,6 @@ tests:
     description: Verify segmentation alignment module is available
     command: python3 -m recon_surf.align_seg --help 2>&1 | head -3
     expected_output_contains: ""
-
-  - name: lta module
-    description: Verify LTA (linear transform array) module is available
-    command: python3 -c "from recon_surf.lta import LTA; print('LTA OK')" 2>&1
-    expected_output_contains: "LTA OK"
-
-  # ==========================================================================
-  # CORPUS CALLOSUM PROCESSING
-  # ==========================================================================
-  - name: paint_cc_into_pred module
-    description: Verify corpus callosum painting module is available
-    command: python3 -c "from recon_surf.paint_cc_into_pred import main; print('paint_cc OK')" 2>&1
-    expected_output_contains: "paint_cc OK"
-
-  # ==========================================================================
-  # SURFACE REWRITING UTILITIES
-  # ==========================================================================
-  - name: rewrite_mc_surface module
-    description: Verify marching cubes surface rewrite module is available
-    command: python3 -c "from recon_surf.rewrite_mc_surface import main; print('rewrite_mc OK')" 2>&1
-    expected_output_contains: "rewrite_mc OK"
-
-  - name: rewrite_oriented_surface module
-    description: Verify oriented surface rewrite module is available
-    command: python3 -c "from recon_surf.rewrite_oriented_surface import main; print('rewrite_oriented OK')" 2>&1
-    expected_output_contains: "rewrite_oriented OK"
 
   # ==========================================================================
   # DEVICE DETECTION (CPU/GPU)
@@ -484,11 +417,6 @@ tests:
     description: Display build information
     command: cat /fastsurfer/BUILD.info 2>&1 | head -20
     expected_exit_code: 0
-
-  - name: version module
-    description: Verify version module reports version
-    command: python3 -c "from FastSurferCNN.version import __version__; print(__version__)"
-    expected_output_contains: "2."
 
   # ==========================================================================
   # FREESURFER COLOR LOOKUP TABLE

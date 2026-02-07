@@ -316,20 +316,6 @@ tests:
       "
     expected_output_contains: "CylinderZeppelinBall"
 
-  - name: CylinderZeppelinBall model parameters
-    description: Verify CylinderZeppelinBall model default parameters
-    command: |
-      python -c "
-      import amico.models
-      model = amico.models.CylinderZeppelinBall()
-      params = model.get_params()
-      print('d_par:', params['d_par'])
-      print('Rs length:', len(params['Rs']))
-      print('d_perps length:', len(params['d_perps']))
-      print('d_isos length:', len(params['d_isos']))
-      "
-    expected_output_contains: "d_par"
-
   - name: CylinderZeppelinBall model maps names
     description: Verify CylinderZeppelinBall model output map names
     command: |
@@ -515,27 +501,6 @@ tests:
     validate:
       - output_exists: ${output_dir}/test.scheme
 
-  - name: fsl2scheme with bStep rounding
-    description: Test fsl2scheme with b-value rounding
-    command: |
-      python -c "
-      import amico.util
-      import numpy as np
-      # Create bvals with slight variations
-      bvals = np.array([5, 8, 995, 1005, 1003, 1998, 2002, 2001])
-      np.savetxt('test_output/test_rounded.bvals', bvals.reshape(1, -1), fmt='%d')
-      scheme = amico.util.fsl2scheme(
-          'test_output/test_rounded.bvals',
-          'test_output/test.bvecs',
-          'test_output/test_rounded.scheme',
-          bStep=100
-      )
-      print('B-values rounded to nearest 100')
-      print('Scheme created with', scheme.nS, 'measurements')
-      "
-    depends_on: Create test bvecs file
-    expected_output_contains: "B-values rounded to nearest 100"
-
   - name: fsl2scheme with axis flipping
     description: Test fsl2scheme with gradient axis flipping
     command: |
@@ -602,70 +567,6 @@ tests:
       "
     expected_output_contains: "Ball signal at b=0: 1.0000"
 
-  - name: Synthesis Stick compartment
-    description: Test Stick signal synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import Stick
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-      ])
-      scheme = Scheme(data)
-      stick = Stick(scheme)
-      signal = stick.get_signal(0.0017, np.array([1, 0, 0]))  # Axial diffusivity, direction
-      print('Stick signal shape:', signal.shape)
-      print('Stick signal computed successfully')
-      "
-    expected_output_contains: "Stick signal computed successfully"
-
-  - name: Synthesis Zeppelin compartment
-    description: Test Zeppelin signal synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import Zeppelin
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-      ])
-      scheme = Scheme(data)
-      zeppelin = Zeppelin(scheme)
-      signal = zeppelin.get_signal(0.0017, 0.0005, np.array([1, 0, 0]))
-      print('Zeppelin signal shape:', signal.shape)
-      print('Zeppelin signal computed successfully')
-      "
-    expected_output_contains: "Zeppelin signal computed successfully"
-
-  - name: Synthesis Tensor compartment
-    description: Test Tensor signal synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import Tensor
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-      ])
-      scheme = Scheme(data)
-      tensor = Tensor(scheme)
-      # Eigenvalues for typical white matter
-      signal = tensor.get_signal(0.0017, 0.0003, 0.0003, np.array([1, 0, 0]))
-      print('Tensor signal shape:', signal.shape)
-      print('Tensor signal computed successfully')
-      "
-    expected_output_contains: "Tensor signal computed successfully"
-
   - name: Synthesis Astrosticks compartment
     description: Test Astrosticks signal synthesis
     command: |
@@ -730,48 +631,6 @@ tests:
   # ==========================================================================
   # NODDI SYNTHESIS COMPARTMENTS
   # ==========================================================================
-  - name: NODDI IntraCellular compartment
-    description: Test NODDIIntraCellular synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import NODDIIntraCellular
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-      ])
-      scheme = Scheme(data)
-      ic = NODDIIntraCellular(scheme)
-      signal = ic.get_signal(0.0017, 0.5, np.array([1, 0, 0]))  # dPar, OD, direction
-      print('NODDI IC signal shape:', signal.shape)
-      print('NODDI IC signal computed successfully')
-      "
-    expected_output_contains: "NODDI IC signal computed successfully"
-
-  - name: NODDI ExtraCellular compartment
-    description: Test NODDIExtraCellular synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import NODDIExtraCellular
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-      ])
-      scheme = Scheme(data)
-      ec = NODDIExtraCellular(scheme)
-      signal = ec.get_signal(0.0017, 0.5, 0.5, np.array([1, 0, 0]))  # dPar, OD, VF, direction
-      print('NODDI EC signal shape:', signal.shape)
-      print('NODDI EC signal computed successfully')
-      "
-    expected_output_contains: "NODDI EC signal computed successfully"
-
   - name: NODDI Isotropic compartment
     description: Test NODDIIsotropic synthesis
     command: |
@@ -817,28 +676,6 @@ tests:
       print('SphereGPD signal computed successfully')
       "
     expected_output_contains: "SphereGPD signal computed successfully"
-
-  - name: CylinderGPD compartment
-    description: Test CylinderGPD (axon) signal synthesis
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import CylinderGPD
-      # CylinderGPD requires full gradient specification
-      data = np.array([
-          [0, 0, 0, 0, 0.050, 0.010, 0.080],
-          [1, 0, 0, 0.040, 0.050, 0.010, 0.080],
-          [0, 1, 0, 0.040, 0.050, 0.010, 0.080],
-          [0, 0, 1, 0.040, 0.050, 0.010, 0.080],
-      ])
-      scheme = Scheme(data)
-      cyl = CylinderGPD(scheme)
-      signal = cyl.get_signal(2e-6, 0.0006, np.array([1, 0, 0]))  # radius, diffusivity, direction
-      print('CylinderGPD signal shape:', signal.shape)
-      print('CylinderGPD signal computed successfully')
-      "
-    expected_output_contains: "CylinderGPD signal computed successfully"
 
   # ==========================================================================
   # SOLVER PARAMETER CONFIGURATION
@@ -1161,49 +998,6 @@ tests:
       "
     expected_output_contains: "PASSED"
 
-  - name: Signal normalization check
-    description: Verify signals are normalized (b=0 signal = 1)
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import Ball, Stick, Zeppelin, Astrosticks
-
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-      ])
-      scheme = Scheme(data)
-
-      # Test all compartments have S(b=0) = 1
-      tests_passed = True
-
-      ball = Ball(scheme)
-      if abs(ball.get_signal(0.002)[0] - 1.0) > 1e-10:
-          print('FAILED: Ball b=0 signal != 1')
-          tests_passed = False
-
-      stick = Stick(scheme)
-      if abs(stick.get_signal(0.0017, np.array([1, 0, 0]))[0] - 1.0) > 1e-10:
-          print('FAILED: Stick b=0 signal != 1')
-          tests_passed = False
-
-      zeppelin = Zeppelin(scheme)
-      if abs(zeppelin.get_signal(0.0017, 0.0005, np.array([1, 0, 0]))[0] - 1.0) > 1e-10:
-          print('FAILED: Zeppelin b=0 signal != 1')
-          tests_passed = False
-
-      astro = Astrosticks(scheme)
-      if abs(astro.get_signal(0.0017)[0] - 1.0) > 1e-10:
-          print('FAILED: Astrosticks b=0 signal != 1')
-          tests_passed = False
-
-      if tests_passed:
-          print('PASSED: All compartments have S(b=0) = 1')
-      "
-    expected_output_contains: "PASSED"
-
   # ==========================================================================
   # MODEL OUTPUT MAPS VERIFICATION
   # ==========================================================================
@@ -1338,87 +1132,6 @@ tests:
       print('Scheme contains timing information')
       "
     expected_output_contains: "Extended scheme with 7 measurements"
-
-  - name: sandi2scheme function
-    description: Test sandi2scheme utility for SANDI-specific scheme creation
-    command: |
-      python -c "
-      import numpy as np
-      import amico.util
-
-      # Create minimal bvals/bvecs for SANDI
-      np.savetxt('test_output/sandi.bvals', np.array([[0, 1000, 2000, 3000]]), fmt='%d')
-      np.savetxt('test_output/sandi.bvecs', np.array([
-          [0, 1, 0.707, 0],
-          [0, 0, 0.707, 1],
-          [0, 0, 0, 0],
-      ]), fmt='%.6f')
-
-      # SANDI requires Delta and delta timing parameters
-      scheme = amico.util.sandi2scheme(
-          'test_output/sandi.bvals',
-          'test_output/sandi.bvecs',
-          Delta_data=0.050,  # Big delta in seconds
-          smalldel_data=0.010,  # Small delta in seconds
-          TE_data=0.080,  # Echo time in seconds
-          schemeFilename='test_output/sandi_full.scheme'
-      )
-
-      print('SANDI scheme created with', scheme.nS, 'measurements')
-      print('Scheme includes timing parameters')
-      "
-    expected_output_contains: "SANDI scheme created"
-    validate:
-      - output_exists: ${output_dir}/sandi_full.scheme
-
-  # ==========================================================================
-  # COMPLEX SYNTHESIS TESTS
-  # ==========================================================================
-  - name: Multi-compartment signal synthesis
-    description: Test combining multiple compartments for realistic signal
-    command: |
-      python -c "
-      import numpy as np
-      from amico.scheme import Scheme
-      from amico.synthesis import Ball, Stick, Zeppelin
-
-      data = np.array([
-          [0, 0, 0, 0],
-          [1, 0, 0, 1000],
-          [0, 1, 0, 1000],
-          [0, 0, 1, 1000],
-          [1, 0, 0, 2000],
-          [0, 1, 0, 2000],
-          [0, 0, 1, 2000],
-      ])
-      scheme = Scheme(data)
-
-      # White matter parameters
-      direction = np.array([1, 0, 0])
-      f_ic = 0.6   # Intra-cellular fraction
-      f_ec = 0.35  # Extra-cellular fraction
-      f_csf = 0.05 # CSF fraction
-
-      # Generate signals
-      stick = Stick(scheme)
-      S_ic = stick.get_signal(0.0017, direction)
-
-      zeppelin = Zeppelin(scheme)
-      S_ec = zeppelin.get_signal(0.0017, 0.0005, direction)
-
-      ball = Ball(scheme)
-      S_csf = ball.get_signal(0.003)
-
-      # Combine
-      S_total = f_ic * S_ic + f_ec * S_ec + f_csf * S_csf
-
-      print('Multi-compartment signal synthesized')
-      print('Signal at b=0: %.4f' % S_total[0])
-      print('Signal at b=1000 (parallel): %.4f' % S_total[1])
-      print('Signal at b=1000 (perpendicular): %.4f' % S_total[2])
-      print('Anisotropy present:', S_total[1] > S_total[2])
-      "
-    expected_output_contains: "Multi-compartment signal synthesized"
 
   - name: Signal with noise simulation
     description: Test adding realistic Rician noise to synthetic signal

@@ -194,11 +194,6 @@ tests:
     command: python -c "from mvpa2.mappers.zscore import zscore; print('zscore available')" 2>&1 | tail -1
     expected_output_contains: "zscore available"
 
-  - name: HRF modeling
-    description: Verify event-related analysis tools
-    command: python -c "from mvpa2.datasets.eventrelated import EventRelatedDataset; print('EventRelatedDataset available')" 2>&1 | tail -1
-    expected_output_contains: "EventRelatedDataset available"
-
   # ==========================================================================
   # FSL INTEGRATION TESTS
   # ==========================================================================

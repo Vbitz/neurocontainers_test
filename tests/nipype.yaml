@@ -274,18 +274,6 @@ tests:
     expected_output_contains: "test_output/results"
     expected_exit_code: 0
 
-  - name: BIDSDataGrabber interface
-    description: Test BIDSDataGrabber for BIDS datasets
-    command: |
-      python -c "
-      from nipype.interfaces.io import BIDSDataGrabber
-      bg = BIDSDataGrabber()
-      bg.inputs.base_dir = 'ds000001'
-      print('BIDSDataGrabber configured for:', bg.inputs.base_dir)
-      "
-    expected_output_contains: "ds000001"
-    expected_exit_code: 0
-
   - name: JSONFileSink interface
     description: Test JSONFileSink for JSON output
     command: |

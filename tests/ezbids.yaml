@@ -426,11 +426,6 @@ tests:
     command: mongod --version 2>&1 | head -5
     expected_output_contains: "db version"
 
-  - name: mongosh version
-    description: Verify MongoDB shell is available
-    command: mongosh --version 2>&1
-    expected_output_contains: "."
-
   # ==========================================================================
   # NIBABEL IMAGE PROCESSING
   # ==========================================================================

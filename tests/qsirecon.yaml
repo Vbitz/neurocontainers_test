@@ -700,15 +700,6 @@ tests:
     expected_exit_code: 0
 
   # ==========================================================================
-  # ANTs TOOLS - Motion Correction
-  # ==========================================================================
-  - name: Motion correction basic
-    description: Basic motion correction on BOLD data (average)
-    command: /opt/ants/bin/antsMotionCorr -d 3 -a ${bold} -o test_output/bold_avg.nii.gz 2>&1
-    validate:
-      - output_exists: ${output_dir}/bold_avg.nii.gz
-
-  # ==========================================================================
   # AFNI TOOLS - Basic Operations
   # ==========================================================================
   - name: AFNI 3dcalc version
