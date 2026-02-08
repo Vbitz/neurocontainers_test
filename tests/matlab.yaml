@@ -439,7 +439,7 @@ tests:
 
   - name: activate_matlab.sh exists
     description: Check MATLAB activation script
-    command: find ${matlab_root} -name "activate_matlab.sh" -o -name "activate.ini" 2>/dev/null | head -1 | xargs -I{} echo "activation file: {}"
+    command: 'find ${matlab_root} -name "activate_matlab.sh" -o -name "activate.ini" 2>/dev/null | head -1 | xargs -I{} echo "activation file: {}"'
     expected_output_contains: "activation file"
     expected_exit_code: 0
 

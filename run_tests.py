@@ -435,6 +435,54 @@ def _run_container_health_check(
         )
 
 
+def _run_setup_in_container(
+    setup_script: str,
+    container_path: Path,
+    work_dir: Path,
+    variables: dict[str, str],
+) -> str | None:
+    """Run setup script inside the container. Returns error message or None on success."""
+    script_path = work_dir / f".setup_{os.getpid()}_{int(time.time()*1e6)}.sh"
+    try:
+        with open(script_path, 'w') as f:
+            f.write(setup_script)
+        os.chmod(script_path, 0o755)
+
+        binds = set()
+        binds.add(f"{work_dir}:{work_dir}")
+        for key, value in variables.items():
+            if key not in ["output_dir"] and "/" in str(value):
+                parent = Path(value).parent
+                if parent.exists():
+                    binds.add(f"{parent}:{parent}")
+
+        cmd_list = ["apptainer", "exec", "--writable-tmpfs"]
+        for b in binds:
+            cmd_list.extend(["-B", b])
+        cmd_list.extend([str(container_path), "bash", str(script_path)])
+
+        result = subprocess.run(
+            cmd_list,
+            capture_output=True,
+            text=True,
+            timeout=120,
+            cwd=work_dir,
+        )
+        if result.returncode != 0:
+            stderr = result.stderr.strip()
+            return f"Setup failed (exit {result.returncode}): {stderr[:500]}"
+        return None
+    except subprocess.TimeoutExpired:
+        return "Setup failed: timed out after 120s"
+    except Exception as e:
+        return f"Setup failed: {e}"
+    finally:
+        try:
+            script_path.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
 def run_test_suite(
     yaml_path: Path,
     containers_dir: Path,
@@ -517,34 +565,7 @@ def run_test_suite(
             shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Run setup script
-    setup = config.get("setup", {})
-    setup_script = setup.get("script", "")
-    if setup_script:
-        setup_script = substitute_variables(setup_script, variables)
-        try:
-            subprocess.run(
-                setup_script,
-                shell=True,
-                check=True,
-                cwd=work_dir,
-                capture_output=True,
-            )
-        except subprocess.CalledProcessError as e:
-            return TestSuiteResult(
-                name=suite_name,
-                container=container_name,
-                total=0,
-                failed=1,
-                results=[TestResult(
-                    name="Setup",
-                    passed=False,
-                    duration=0,
-                    message=f"Setup failed: {e.stderr.decode() if e.stderr else str(e)}",
-                )],
-            )
-
-    # Container health check
+    # Container health check (before setup, since setup runs inside the container)
     health_result = _run_container_health_check(container_path, work_dir, variables)
     if not health_result.passed:
         # Get and filter tests to know how many to skip
@@ -589,6 +610,28 @@ def run_test_suite(
             failed=len(skip_results),
             results=skip_results,
         )
+
+    # Run setup script inside the container
+    setup = config.get("setup", {})
+    setup_script = setup.get("script", "")
+    if setup_script:
+        setup_script = substitute_variables(setup_script, variables)
+        setup_error = _run_setup_in_container(
+            setup_script, container_path, work_dir, variables
+        )
+        if setup_error:
+            return TestSuiteResult(
+                name=suite_name,
+                container=container_name,
+                total=0,
+                failed=1,
+                results=[TestResult(
+                    name="Setup",
+                    passed=False,
+                    duration=0,
+                    message=setup_error,
+                )],
+            )
 
     # Get and filter tests
     tests = config.get("tests", [])
@@ -751,26 +794,21 @@ def prepare_tests_from_yaml(
             shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Run setup script
+    # Container health check (before setup, since setup runs inside the container)
+    health_result = _run_container_health_check(container_path, work_dir, variables)
+    if not health_result.passed:
+        return [], f"Container health check failed: {health_result.message}"
+
+    # Run setup script inside the container
     setup = config.get("setup", {})
     setup_script = setup.get("script", "")
     if setup_script:
         setup_script = substitute_variables(setup_script, variables)
-        try:
-            subprocess.run(
-                setup_script,
-                shell=True,
-                check=True,
-                cwd=work_dir,
-                capture_output=True,
-            )
-        except subprocess.CalledProcessError as e:
-            return [], f"Setup failed: {e.stderr.decode() if e.stderr else str(e)}"
-
-    # Container health check
-    health_result = _run_container_health_check(container_path, work_dir, variables)
-    if not health_result.passed:
-        return [], f"Container health check failed: {health_result.message}"
+        setup_error = _run_setup_in_container(
+            setup_script, container_path, work_dir, variables
+        )
+        if setup_error:
+            return [], setup_error
 
     # Get and filter tests
     tests = config.get("tests", [])
