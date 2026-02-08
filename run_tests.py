@@ -565,7 +565,34 @@ def run_test_suite(
             shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Container health check (before setup, since setup runs inside the container)
+    # Run host setup script (runs on host before container health check)
+    setup = config.get("setup", {})
+    host_script = setup.get("host_script", "")
+    if host_script:
+        host_script = substitute_variables(host_script, variables)
+        try:
+            subprocess.run(
+                host_script,
+                shell=True,
+                check=True,
+                cwd=work_dir,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as e:
+            return TestSuiteResult(
+                name=suite_name,
+                container=container_name,
+                total=0,
+                failed=1,
+                results=[TestResult(
+                    name="Setup (host)",
+                    passed=False,
+                    duration=0,
+                    message=f"Host setup failed: {e.stderr.decode() if e.stderr else str(e)}",
+                )],
+            )
+
+    # Container health check
     health_result = _run_container_health_check(container_path, work_dir, variables)
     if not health_result.passed:
         # Get and filter tests to know how many to skip
@@ -611,8 +638,7 @@ def run_test_suite(
             results=skip_results,
         )
 
-    # Run setup script inside the container
-    setup = config.get("setup", {})
+    # Run container setup script (runs inside the container)
     setup_script = setup.get("script", "")
     if setup_script:
         setup_script = substitute_variables(setup_script, variables)
@@ -794,13 +820,28 @@ def prepare_tests_from_yaml(
             shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Container health check (before setup, since setup runs inside the container)
+    # Run host setup script (runs on host before container health check)
+    setup = config.get("setup", {})
+    host_script = setup.get("host_script", "")
+    if host_script:
+        host_script = substitute_variables(host_script, variables)
+        try:
+            subprocess.run(
+                host_script,
+                shell=True,
+                check=True,
+                cwd=work_dir,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as e:
+            return [], f"Host setup failed: {e.stderr.decode() if e.stderr else str(e)}"
+
+    # Container health check
     health_result = _run_container_health_check(container_path, work_dir, variables)
     if not health_result.passed:
         return [], f"Container health check failed: {health_result.message}"
 
-    # Run setup script inside the container
-    setup = config.get("setup", {})
+    # Run container setup script (runs inside the container)
     setup_script = setup.get("script", "")
     if setup_script:
         setup_script = substitute_variables(setup_script, variables)

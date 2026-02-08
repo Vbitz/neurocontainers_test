@@ -29,7 +29,7 @@ test_data:
   output_dir: test_output/mfcsc
 
 setup:
-  script: |
+  host_script: |
     #!/usr/bin/env bash
     set -e
 

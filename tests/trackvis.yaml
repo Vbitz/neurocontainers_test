@@ -31,7 +31,7 @@ test_data:
   output_dir: test_output
 
 setup:
-  script: |
+  host_script: |
     #!/usr/bin/env bash
     set -e
     mkdir -p test_output
