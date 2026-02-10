@@ -21,6 +21,12 @@ name: fatsegnet
 version: 1.0.gpu
 container: fatsegnet_1.0.gpu_20201212.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+
 test_data:
   # Using structural data as placeholder - real FatSegNet requires Dixon MRI data
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz

@@ -18,6 +18,12 @@ name: pydeface
 version: 2.0.2
 container: pydeface_2.0.2_20250206.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz

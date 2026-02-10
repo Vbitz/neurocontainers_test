@@ -20,6 +20,11 @@ container: mrsiproc_0.1.0_20231211.simg
 env:
   LD_LIBRARY_PATH: /opt/MATLAB_Runtime_R2021b/v911/runtime/glnxa64:/opt/MATLAB_Runtime_R2021b/v911/bin/glnxa64:/opt/MATLAB_Runtime_R2021b/v911/sys/os/glnxa64:/opt/MATLAB_Runtime_R2021b/v911/sys/opengl/lib/glnxa64
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   output_dir: test_output

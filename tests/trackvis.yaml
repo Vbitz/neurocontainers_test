@@ -25,6 +25,12 @@ binaries:
   track_vis: /opt/trackvis-0.6.1/track_vis
   trackvis_gui: /opt/trackvis-0.6.1/trackvis
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz

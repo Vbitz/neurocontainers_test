@@ -21,6 +21,13 @@ name: bidsapppymvpa
 version: 2.0.2
 container: bidsapppymvpa_2.0.2_20230629.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_events.tsv
+
 test_data:
   bids_dir: ds000001
   bold: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz

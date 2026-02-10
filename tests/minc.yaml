@@ -15,6 +15,13 @@ name: minc
 version: 1.9.18
 container: minc_1.9.18_20230208.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+
 test_data:
   t1w_nii: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   t2_nii: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz

@@ -30,6 +30,12 @@ paths:
   tpm: /opt/standalone-hMRItoolboxv0.6.1/spm12_mcr/spm12/tests/v0.6.1/compilation-work/spm12/tpm
   canonical: /opt/standalone-hMRItoolboxv0.6.1/spm12_mcr/spm12/tests/v0.6.1/compilation-work/spm12/canonical
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+
 test_data:
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz
   bold: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz

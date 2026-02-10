@@ -17,6 +17,15 @@ version: 22a
 container: conn_22a_20231115.simg
 default_timeout: 300
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_events.tsv
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-02_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-03_bold.nii.gz
+
 test_data:
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz
   bold_run1: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz

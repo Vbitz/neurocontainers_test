@@ -15,6 +15,17 @@ name: glmsingle
 version: 1.2
 container: glmsingle_1.2_20240520.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_events.tsv
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-02_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-02_events.tsv
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-03_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-03_events.tsv
+
 test_data:
   bold_run1: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
   bold_run2: ds000001/sub-01/func/sub-01_task-balloonanalogrisktask_run-02_bold.nii.gz

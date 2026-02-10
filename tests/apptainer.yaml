@@ -12,6 +12,12 @@ name: apptainer
 version: 1.4.4
 container: apptainer_1.4.4_20251030.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+
 test_data:
   # Test data paths (for reference, though apptainer tests are mostly self-contained)
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz

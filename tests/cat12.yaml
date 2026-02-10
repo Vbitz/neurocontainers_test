@@ -22,6 +22,12 @@ container_paths:
   mcr_root: /opt/mcr/v93
   standalone_dir: /opt/cat12/standalone
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz

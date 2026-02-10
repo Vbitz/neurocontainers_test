@@ -21,6 +21,13 @@ name: bidsappbrainsuite
 version: 21a
 container: bidsappbrainsuite_21a_20230618.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-02/anat/sub-02_T1w.nii.gz
+      - sub-02/anat/sub-02_inplaneT2.nii.gz
+      - sub-02/func/sub-02_task-balloonanalogrisktask_run-01_bold.nii.gz
+
 test_data:
   t1w: ds000001/sub-02/anat/sub-02_T1w.nii.gz
   t2: ds000001/sub-02/anat/sub-02_inplaneT2.nii.gz

@@ -19,6 +19,11 @@ name: fastcsr
 version: 1.0_20231213
 container: fastcsr_1.0_20231213.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-02/anat/sub-02_T1w.nii.gz
+
 test_data:
   t1w: ds000001/sub-02/anat/sub-02_T1w.nii.gz
   output_dir: test_output

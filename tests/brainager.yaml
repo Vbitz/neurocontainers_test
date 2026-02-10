@@ -13,6 +13,11 @@ name: brainager
 version: 2.1.0
 container: brainager_2.1.0_20251220.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   output_dir: test_output
