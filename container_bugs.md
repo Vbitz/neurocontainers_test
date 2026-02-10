@@ -138,6 +138,71 @@ Segmentation fault (core dumped) QuPath script --cmd "println('hello')"
 
 ---
 
+## 3. Poor Error Handling (Crash on Missing Input)
+
+### bart
+**Severity: Low -- 5/116 tests pass (cascade failures)**
+
+BART aborts with SIGABRT (exit 134) when input files are missing, instead of
+printing an error and exiting cleanly. All 111 failing tests are cascade
+failures from missing test output files (tests depend on earlier test outputs).
+
+**Why this is a container bug:** While the test dependencies cause the missing
+files, the tool should handle missing input gracefully. BART calls `abort()`
+when it cannot load a CFL file, producing a core dump instead of a clean error.
+
+```
+ERROR: Loading data.
+bart: fio.c:74: io_reserve: Assertion `fd >= 0' failed.
+Aborted (core dumped)
+```
+
+### niimath
+**Severity: Low -- 29/114 tests pass (cascade failures)**
+
+niimath aborts with SIGABRT (exit 134) when input NIfTI files are missing.
+All 82 SIGABRT failures are cascade failures from missing test output files.
+
+**Why this is a container bug:** niimath should exit with a non-zero code and
+an error message when input files don't exist, not abort with a signal.
+
+```
+** ERROR (nifti_image_read): failed to find header file for 'test_output/t1w_otsu_mask.nii.gz'
+Aborted (core dumped)
+```
+
+### niftyreg
+**Severity: Low -- 30/88 tests pass (cascade failures)**
+
+NiftyReg segfaults (exit 139) when input NIfTI files are missing. 52 of 58
+failures are SIGSEGV from missing test output files.
+
+**Why this is a container bug:** NiftyReg dereferences null pointers when
+nifti_image_read fails, instead of checking the return value.
+
+```
+** ERROR (nifti_image_read): failed to find header file for 'test_output/t1w_float.nii.gz'
+Segmentation fault (core dumped)
+```
+
+### dsistudio
+**Severity: Low -- 65/83 tests pass**
+
+DSI Studio registration and GPU-dependent tests fail because CUDA drivers are
+not available in the container environment. 8 tests fail with missing output
+files because registration silently fails without GPU.
+
+**Note:** This is an environment limitation rather than a true container bug.
+The 9 help-check test failures are caused by the `env:` dict format not being
+processed by the test runner (now fixed).
+
+```
+cannot obtain GPU driver and device information (CUDA ERROR 35).
+Please make sure you have drivers properly installed.
+```
+
+---
+
 ## Summary
 
 | Container | Bug Type | Severity |
@@ -149,3 +214,7 @@ Segmentation fault (core dumped) QuPath script --cmd "println('hello')"
 | mritools | Primary Julia package not installed | Moderate |
 | vesselapp | Python name-mangling code bug | Moderate |
 | qupath | Segfault in headless script mode | Moderate |
+| bart | SIGABRT on missing input files | Low |
+| niimath | SIGABRT on missing input files | Low |
+| niftyreg | SIGSEGV on missing input files | Low |
+| dsistudio | Missing CUDA drivers for registration | Low |

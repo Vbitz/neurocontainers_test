@@ -412,7 +412,7 @@ tests:
     command: |
       mri_synthstrip -i ${t1w} -m test_output/t1w_nibstats_mask.nii.gz 2>&1 && \
       nib-stats -V test_output/t1w_nibstats_mask.nii.gz
-    expected_output_contains: ""
+    expected_exit_code: 0
     timeout: 600
 
   - name: nib-stats volume in mm3

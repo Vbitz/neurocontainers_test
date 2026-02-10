@@ -664,9 +664,9 @@ tests:
         echo "Dimension mismatch: input=$input_dim output=$output_dim"
         exit 1
       fi
-          expected_output_contains: "Dimensions match"
+    expected_output_contains: "Dimensions match"
 
-        - name: Verify bet2 mask is binary
+  - name: Verify bet2 mask is binary
     description: Check that bet2 mask contains only 0 and 1 values
     depends_on: bet2 with mask output
     command: |
@@ -682,9 +682,9 @@ tests:
           print('Mask is not binary: values = %s' % unique_vals)
           exit(1)
       "
-          expected_output_contains: "Mask is binary"
+    expected_output_contains: "Mask is binary"
 
-        - name: Verify QSM output datatype
+  - name: Verify QSM output datatype
     description: Check that QSM output is floating point
     depends_on: tgv_qsm basic reconstruction
     command: nib-ls test_output/qsm_basic_qsm_recon000.nii.gz

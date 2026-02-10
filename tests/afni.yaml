@@ -15,6 +15,13 @@ name: afni
 version: 26.0.07
 container: afni_26.0.07_20260128.simg
 
+required_files:
+  - dataset: ds000001
+    files:
+      - sub-01/anat/sub-01_T1w.nii.gz
+      - sub-01/anat/sub-01_inplaneT2.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+
 test_data:
   t1w: ds000001/sub-01/anat/sub-01_T1w.nii.gz
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz
@@ -38,8 +45,8 @@ tests:
 
   - name: 3dinfo version check
     description: Verify 3dinfo is available
-    command: 3dinfo -ver 2>&1
-    expected_output_contains: "AFNI"
+    command: 3dinfo -help 2>&1 | head -20
+    expected_output_contains: "3dinfo"
 
   # ==========================================================================
   # DATASET INFORMATION (3dinfo)
@@ -248,7 +255,7 @@ tests:
 
   - name: 3dTstat - percentile
     description: Compute 90th percentile across time
-    command: 3dTstat -percentile 90 1 90 -prefix test_output/bold_p90.nii.gz ${bold}
+    command: 3dTstat -percentile 90 -prefix test_output/bold_p90.nii.gz ${bold}
     validate:
       - output_exists: ${output_dir}/bold_p90.nii.gz
 
@@ -716,7 +723,7 @@ tests:
     command: |
       3dTstat -mean -prefix test_output/pipe_mean.nii.gz ${bold} && \
       3dcalc -a ${bold} -b test_output/pipe_mean.nii.gz -expr 'a-b' -prefix test_output/bold_demeaned.nii.gz && \
-      3dmerge -1blur_fwhm 6 -prefix test_output/bold_demeaned_smooth.nii.gz test_output/bold_demeaned.nii.gz
+      3dmerge -1blur_fwhm 6 -doall -prefix test_output/bold_demeaned_smooth.nii.gz test_output/bold_demeaned.nii.gz
     validate:
       - output_exists: ${output_dir}/bold_demeaned_smooth.nii.gz
 

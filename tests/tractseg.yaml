@@ -692,22 +692,18 @@ tests:
   - name: Python torch import
     description: Verify PyTorch is importable (CPU version)
     command: python -c "import torch; print(torch.__version__)"
-    expected_exit_code: 1
 
   - name: Python dipy import
     description: Verify DIPY is importable
     command: python -c "import dipy; print(dipy.__version__)"
-    expected_exit_code: 1
 
   - name: Python fury import
     description: Verify FURY visualization library is importable
     command: python -c "import fury; print(fury.__version__)"
-    expected_exit_code: 1
 
   - name: Python nilearn import
     description: Verify nilearn is importable
     command: python -c "import nilearn; print(nilearn.__version__)"
-    expected_exit_code: 1
 
   # ==========================================================================
   # TRACTSEG WEIGHTS VERIFICATION

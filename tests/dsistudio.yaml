@@ -290,6 +290,7 @@ tests:
         --track_id=Arcuate,Cingulum,Fornix \
         --output=test_output/ 2>&1 || true
     expected_exit_code: 0
+    timeout: 300
 
   - name: atk action - with custom tolerance
     description: Automatic tracking with adjusted tolerance

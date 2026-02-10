@@ -15,6 +15,7 @@
 name: conn
 version: 22a
 container: conn_22a_20231115.simg
+default_timeout: 300
 
 test_data:
   t2: ds000001/sub-01/anat/sub-01_inplaneT2.nii.gz

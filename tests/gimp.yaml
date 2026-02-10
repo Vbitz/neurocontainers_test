@@ -8,6 +8,7 @@
 name: gimp
 version: 2.10.18
 container: gimp_2.10.18_*.simg
+default_timeout: 60 # currently always timing out so using short timeouts to reduce overall test execution time
 
 test_data:
   output_dir: test_output

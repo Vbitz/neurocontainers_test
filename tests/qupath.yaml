@@ -488,18 +488,18 @@ tests:
 
   - name: Missing input file for convert-ome
     description: Test error when input file is missing
-    command: QuPath convert-ome nonexistent.tiff output.ome.tiff 2>&1 || true
-    expected_exit_code: 0
+    command: QuPath convert-ome nonexistent.tiff output.ome.tiff 2>&1
+    ignore_exit_code: true
 
   - name: Script syntax error handling
     description: Test handling of Groovy syntax errors
-    command: QuPath script --cmd "invalid groovy syntax {{{" 2>&1 || true
-    expected_exit_code: 0
+    command: QuPath script --cmd "invalid groovy syntax {{{" 2>&1
+    ignore_exit_code: true
 
   - name: Script missing file error
     description: Test error when script file is missing
-    command: QuPath script nonexistent_script.groovy 2>&1 || true
-    expected_exit_code: 0
+    command: QuPath script nonexistent_script.groovy 2>&1
+    ignore_exit_code: true
 
   # ==========================================================================
   # LOGGING LEVELS
