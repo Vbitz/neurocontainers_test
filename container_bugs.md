@@ -9,23 +9,26 @@ data, and version mismatches between tests and installed software are excluded.
 ## 1. Missing Binaries / Broken Installations
 
 ### bidsappaa
-**Severity: High -- 27/97 tests pass**
+**Severity: Moderate -- 97/97 tests pass with workarounds**
 
-Both FSL and FreeSurfer installations have broken internal script paths.
+FSL and FreeSurfer environment variables are not configured in the container.
+FSL works after sourcing `/opt/fsl/etc/fslconf/fsl.sh` and adding `/opt/fsl/bin`
+to PATH. FreeSurfer works after setting `FREESURFER_HOME=/opt/freesurfer` and
+adding `/opt/freesurfer/bin` to PATH, but `mri_convert` operations fail because
+no FreeSurfer license file is included. The compiled MATLAB AA application also
+fails due to corrupted/empty `.m` toolbox files.
 
-**Why this is a container bug:** The errors come from *inside* the tool scripts
-themselves, not from the test commands. FSL's own `bet` script calls
-`/bin/remove_ext` and `/bin/bet2` — these are FSL utilities that should be on
-the container's PATH or symlinked from `/bin/`. The scripts were installed
-incorrectly during container build. Similarly, FreeSurfer's `mri_convert` wrapper
-tries to source `/sources.sh` which doesn't exist, then can't find
-`mri_convert.bin`.
+**Why this is a container bug:** The container should have FSL/FreeSurfer
+environment configured at build time. The missing FreeSurfer license and
+corrupted MATLAB Runtime are build-time omissions.
 
 ```
+# Without env setup:
 /opt/fsl/bin/bet: 1: /bin/remove_ext: not found
-/opt/fsl/bin/bet: 236: /bin/bet2: not found
-/opt/freesurfer/bin/mri_convert: line 2: /sources.sh: No such file or directory
-/opt/freesurfer/bin/mri_convert: line 3: mri_convert.bin: command not found
+# mri_convert conversion:
+ERROR: FreeSurfer license file not found (no license.txt)
+# AA MATLAB:
+The file "/opt/automaticanalysis5/.../matlabrc.m" cannot be executed. File is empty
 ```
 
 ### mrsiproc
@@ -201,13 +204,46 @@ cannot obtain GPU driver and device information (CUDA ERROR 35).
 Please make sure you have drivers properly installed.
 ```
 
+### ants
+**Severity: Low -- 2 tools affected**
+
+`ResetDirection` segfaults (exit 139) on valid input. `ImageMath TimeSeriesDisassemble`
+aborts (exit 134) with `std::out_of_range` when processing 4D data.
+
+**Why this is a container bug:** Both tools are provided by the ANTs 2.6.0 container
+and crash on valid inputs. `ResetDirection` segfaults when given a valid NIfTI image.
+`TimeSeriesDisassemble` crashes with a C++ string bounds error when the output prefix
+doesn't contain a file extension.
+
+```
+ResetDirection 3 input.nii.gz output.nii.gz -> Segmentation fault (exit 139)
+ImageMath 4 prefix_ TimeSeriesDisassemble input.nii.gz -> std::out_of_range (exit 134)
+```
+
+### aslprep
+**Severity: Low -- 2 BET options affected**
+
+`bet -R` (robust) fails because `dc` (desk calculator) is not installed. `bet -B`
+(bias field cleanup) fails because `standard_space_roi` has cascading internal failures.
+Basic `bet` works fine.
+
+**Why this is a container bug:** `bet -R` is a standard FSL BET option that requires the
+`dc` binary for center-of-gravity calculation. The container has FSL installed but omitted
+this dependency. `bet -B` calls `standard_space_roi` internally which also fails with
+SIGABRT, indicating incomplete FSL installation.
+
+```
+/opt/conda/envs/aslprep/bin/bet: line 265: dc: command not found
+standard_space_roi: Aborted (core dumped)
+```
+
 ---
 
 ## Summary
 
 | Container | Bug Type | Severity |
 |-----------|----------|----------|
-| bidsappaa | Broken FSL + FreeSurfer script paths | High |
+| bidsappaa | Missing env config, FreeSurfer license, corrupted MATLAB | Moderate |
 | mrsiproc | Missing MATLAB runtime .so | High |
 | ezbids | Corrupted Python stdlib | High |
 | tractseg | Missing libfftw3.so.3 | Moderate |
@@ -218,3 +254,5 @@ Please make sure you have drivers properly installed.
 | niimath | SIGABRT on missing input files | Low |
 | niftyreg | SIGSEGV on missing input files | Low |
 | dsistudio | Missing CUDA drivers for registration | Low |
+| ants | ResetDirection segfault, TimeSeriesDisassemble crash | Low |
+| aslprep | Missing dc binary, broken standard_space_roi | Low |

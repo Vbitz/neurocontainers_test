@@ -37,9 +37,9 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
-    mkdir -p test_output/freesurfer
-    mkdir -p test_output/baracus
+    mkdir -p ${output_dir}
+    mkdir -p ${output_dir}/freesurfer
+    mkdir -p ${output_dir}/baracus
 
 tests:
   # ==========================================================================
@@ -134,26 +134,26 @@ tests:
 
   - name: mri_convert NIfTI to MGZ
     description: Convert NIfTI input to FreeSurfer MGZ format
-    command: mri_convert ${t2} test_output/t2_converted.mgz
+    command: mri_convert ${t2} ${output_dir}/t2_converted.mgz
     validate:
       - output_exists: ${output_dir}/t2_converted.mgz
 
   - name: mri_convert MGZ to NIfTI
     description: Convert MGZ back to NIfTI format
-    command: mri_convert test_output/t2_converted.mgz test_output/t2_roundtrip.nii.gz
+    command: mri_convert ${output_dir}/t2_converted.mgz ${output_dir}/t2_roundtrip.nii.gz
     depends_on: mri_convert NIfTI to MGZ
     validate:
       - output_exists: ${output_dir}/t2_roundtrip.nii.gz
 
   - name: mri_convert with resampling
     description: Resample image to 2mm isotropic
-    command: mri_convert -vs 2 2 2 ${t2} test_output/t2_2mm.nii.gz
+    command: mri_convert -vs 2 2 2 ${t2} ${output_dir}/t2_2mm.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_2mm.nii.gz
 
   - name: mri_convert conform
     description: Conform image to FreeSurfer standard (256x256x256, 1mm)
-    command: mri_convert --conform ${t2} test_output/t2_conformed.mgz
+    command: mri_convert --conform ${t2} ${output_dir}/t2_conformed.mgz
     validate:
       - output_exists: ${output_dir}/t2_conformed.mgz
 
@@ -226,7 +226,7 @@ tests:
 
   - name: mri_vol2surf help
     description: Check volume to surface projection tool
-    command: mri_vol2surf --help 2>&1 | head -30
+    command: mri_vol2surf --help 2>&1 | head -60
     expected_output_contains:
       - "mri_vol2surf"
       - "--src"
@@ -395,7 +395,7 @@ tests:
 
   - name: mri_binarize threshold
     description: Binarize image with threshold
-    command: mri_binarize --i ${t2} --min 50 --o test_output/t2_binarized.nii.gz
+    command: mri_binarize --i ${t2} --min 50 --o ${output_dir}/t2_binarized.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_binarized.nii.gz
 
@@ -418,6 +418,7 @@ tests:
   - name: mris_calc help
     description: Check surface calculator tool
     command: mris_calc --help 2>&1
+    expected_exit_code: 1  # mris_calc --help returns 1
     expected_output_contains:
       - "mris_calc"
       - "add"
@@ -497,22 +498,22 @@ tests:
   - name: Convert and check conformed image
     description: Convert image to conformed MGZ and verify
     command: |
-      mri_convert --conform ${t2} test_output/t2_conform_check.mgz && \
-      mri_info --conformed test_output/t2_conform_check.mgz
+      mri_convert --conform ${t2} ${output_dir}/t2_conform_check.mgz && \
+      mri_info --conformed ${output_dir}/t2_conform_check.mgz
     validate:
       - output_exists: ${output_dir}/t2_conform_check.mgz
 
   - name: Create simple brain mask
     description: Create binary mask using intensity threshold
     command: |
-      mri_binarize --i ${t2} --min 30 --o test_output/t2_mask_simple.nii.gz && \
-      mri_info test_output/t2_mask_simple.nii.gz
+      mri_binarize --i ${t2} --min 30 --o ${output_dir}/t2_mask_simple.nii.gz && \
+      mri_info ${output_dir}/t2_mask_simple.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_mask_simple.nii.gz
 
   - name: Apply mask to image
     description: Apply binary mask to input image
-    command: mri_mask ${t2} test_output/t2_mask_simple.nii.gz test_output/t2_masked.nii.gz
+    command: mri_mask ${t2} ${output_dir}/t2_mask_simple.nii.gz ${output_dir}/t2_masked.nii.gz
     depends_on: Create simple brain mask
     validate:
       - output_exists: ${output_dir}/t2_masked.nii.gz
@@ -577,19 +578,19 @@ tests:
   # ==========================================================================
   - name: mri_convert to NIFTI
     description: Convert to standard NIfTI format
-    command: mri_convert --out_type nii ${t2} test_output/t2_nifti.nii
+    command: mri_convert --out_type nii ${t2} ${output_dir}/t2_nifti.nii
     validate:
       - output_exists: ${output_dir}/t2_nifti.nii
 
   - name: mri_convert to compressed NIFTI
     description: Convert to compressed NIfTI format
-    command: mri_convert ${t2} test_output/t2_nifti_gz.nii.gz
+    command: mri_convert ${t2} ${output_dir}/t2_nifti_gz.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_nifti_gz.nii.gz
 
   - name: mri_convert to analyze
     description: Convert to Analyze format
-    command: mri_convert --out_type analyze ${t2} test_output/t2_analyze.img
+    command: mri_convert --out_type analyze ${t2} ${output_dir}/t2_analyze.img
     validate:
       - output_exists: ${output_dir}/t2_analyze.img
 
@@ -598,13 +599,13 @@ tests:
   # ==========================================================================
   - name: mri_convert trilinear interpolation
     description: Resample with trilinear interpolation
-    command: mri_convert -vs 1.5 1.5 1.5 -rt interpolate ${t2} test_output/t2_trilinear.nii.gz
+    command: mri_convert -vs 1.5 1.5 1.5 -rt interpolate ${t2} ${output_dir}/t2_trilinear.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_trilinear.nii.gz
 
   - name: mri_convert nearest neighbor
     description: Resample with nearest neighbor interpolation
-    command: mri_convert -vs 2 2 2 -rt nearest ${t2} test_output/t2_nearest.nii.gz
+    command: mri_convert -vs 2 2 2 -rt nearest ${t2} ${output_dir}/t2_nearest.nii.gz
     validate:
       - output_exists: ${output_dir}/t2_nearest.nii.gz
 
@@ -614,9 +615,9 @@ tests:
   - name: Preprocessing chain
     description: Multi-step preprocessing (conform, binarize, mask)
     command: |
-      mri_convert --conform ${t2} test_output/chain_conformed.mgz && \
-      mri_binarize --i test_output/chain_conformed.mgz --min 20 --o test_output/chain_mask.mgz && \
-      mri_mask test_output/chain_conformed.mgz test_output/chain_mask.mgz test_output/chain_masked.mgz
+      mri_convert --conform ${t2} ${output_dir}/chain_conformed.mgz && \
+      mri_binarize --i ${output_dir}/chain_conformed.mgz --min 20 --o ${output_dir}/chain_mask.mgz && \
+      mri_mask ${output_dir}/chain_conformed.mgz ${output_dir}/chain_mask.mgz ${output_dir}/chain_masked.mgz
     validate:
       - output_exists: ${output_dir}/chain_conformed.mgz
       - output_exists: ${output_dir}/chain_mask.mgz
@@ -624,7 +625,7 @@ tests:
 
   - name: Image statistics extraction
     description: Extract basic statistics from image
-    command: mri_segstats --seg ${t2} --i ${t2} --sum test_output/t2_stats.txt --avgwf test_output/t2_avgwf.txt
+    command: mri_segstats --seg ${t2} --i ${t2} --sum ${output_dir}/t2_stats.txt --avgwf ${output_dir}/t2_avgwf.txt
     validate:
       - output_exists: ${output_dir}/t2_stats.txt
 
@@ -679,6 +680,6 @@ cleanup:
     #!/usr/bin/env bash
     # Optionally remove test outputs
     # rm -rf test_output
-    echo "Test outputs preserved in test_output/"
+    echo "Test outputs preserved in ${output_dir}/"
     echo "Note: Full BARACUS brain-age prediction requires FreeSurfer recon-all processing"
     echo "which takes several hours per subject and requires a valid license key."
