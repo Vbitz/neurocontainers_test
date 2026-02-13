@@ -24,6 +24,8 @@ container: bidsapppymvpa_2.0.2_20230629.simg
 required_files:
   - dataset: ds000001
     files:
+      - dataset_description.json
+      - participants.tsv
       - sub-01/anat/sub-01_inplaneT2.nii.gz
       - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
       - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_events.tsv
@@ -39,8 +41,8 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output/pymvpa_output
-    mkdir -p test_output/pymvpa_derivatives
+    mkdir -p ${output_dir}/pymvpa_output
+    mkdir -p ${output_dir}/pymvpa_derivatives
 
 tests:
   # ==========================================================================
@@ -71,7 +73,7 @@ tests:
 
   - name: PyMVPA import test
     description: Verify PyMVPA (mvpa2) module is importable
-    command: python -c "import mvpa2; print(\"mvpa2 version:\", mvpa2.__version__)" 2>&1 | grep -v Warning
+    command: python -c "import mvpa2; print 'mvpa2 version:', mvpa2.__version__" 2>&1 | grep -v Warning
     expected_output_contains: "mvpa2 version: 2.6.4"
 
   - name: PyMVPA suite import
@@ -360,12 +362,12 @@ tests:
   # ==========================================================================
   - name: Missing required arguments error
     description: Verify error when required arguments are missing
-    command: /code/run.py 2>&1 | head -3
+    command: /code/run.py 2>&1 | head -20
     expected_output_contains: "usage"
 
   - name: Invalid analysis level error
     description: Verify error for invalid analysis level
-    command: /code/run.py /tmp /tmp invalid_level 2>&1 | head -5
+    command: /code/run.py /tmp /tmp invalid_level 2>&1 | tail -5
     expected_output_contains: "invalid choice"
 
   # ==========================================================================
@@ -697,8 +699,8 @@ tests:
       results = cv(ds)
 
       mean_error = np.mean(results)
-      print('Classification error:', mean_error)
-      print('Classification successful:', mean_error < 0.5)
+      print 'Classification error:', mean_error
+      print 'Classification successful:', mean_error < 0.5
       " 2>&1 | tail -2
     expected_output_contains: "Classification successful: True"
 
@@ -759,12 +761,12 @@ tests:
   # ==========================================================================
   - name: Output directory creation
     description: Verify output directory can be created
-    command: mkdir -p test_output/pymvpa_test && ls -la test_output/pymvpa_test
+    command: mkdir -p ${output_dir}/pymvpa_test && ls -la ${output_dir}/pymvpa_test
     expected_exit_code: 0
 
   - name: Output directory write permission
     description: Verify write permissions to output directory
-    command: touch test_output/pymvpa_test/test_file && rm test_output/pymvpa_test/test_file && echo "Write OK"
+    command: touch ${output_dir}/pymvpa_test/test_file && rm ${output_dir}/pymvpa_test/test_file && echo "Write OK"
     expected_output_contains: "Write OK"
 
   # ==========================================================================
@@ -803,9 +805,9 @@ tests:
       import matplotlib
       matplotlib.use('Agg')
       import matplotlib.pyplot as plt
-      print('Backend:', matplotlib.get_backend())
+      print 'Backend:', matplotlib.get_backend()
       " 2>&1 | tail -1
-    expected_output_contains: "Agg"
+    expected_output_contains: "agg"
 
   - name: Figure creation test
     description: Test matplotlib figure creation
@@ -833,7 +835,7 @@ tests:
       fig, ax = plt.subplots()
       ax.imshow(np.random.randn(10, 10))
       ax.set_title('Test RDM')
-      fig.savefig('test_output/test_rdm.png', dpi=100)
+      fig.savefig('${output_dir}/test_rdm.png', dpi=100)
       plt.close()
       print('Figure saved successfully')
       " 2>&1
@@ -845,6 +847,6 @@ cleanup:
   script: |
     #!/usr/bin/env bash
     # Optionally clean up test outputs
-    rm -f test_output/test_rdm.png
-    rm -rf test_output/pymvpa_test
+    rm -f ${output_dir}/test_rdm.png
+    rm -rf ${output_dir}/pymvpa_test
     echo "Test outputs cleaned"

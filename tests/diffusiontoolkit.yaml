@@ -726,52 +726,52 @@ tests:
   # ==========================================================================
   - name: dti_recon binary exists
     description: Verify dti_recon binary is in PATH
-    command: which dti_recon
+    command: command -v dti_recon
     expected_output_contains: "dti_recon"
 
   - name: dti_tracker binary exists
     description: Verify dti_tracker binary is in PATH
-    command: which dti_tracker
+    command: command -v dti_tracker
     expected_output_contains: "dti_tracker"
 
   - name: odf_recon binary exists
     description: Verify odf_recon binary is in PATH
-    command: which odf_recon
+    command: command -v odf_recon
     expected_output_contains: "odf_recon"
 
   - name: odf_tracker binary exists
     description: Verify odf_tracker binary is in PATH
-    command: which odf_tracker
+    command: command -v odf_tracker
     expected_output_contains: "odf_tracker"
 
   - name: track_info binary exists
     description: Verify track_info binary is in PATH
-    command: which track_info
+    command: command -v track_info
     expected_output_contains: "track_info"
 
   - name: track_merge binary exists
     description: Verify track_merge binary is in PATH
-    command: which track_merge
+    command: command -v track_merge
     expected_output_contains: "track_merge"
 
   - name: track_transform binary exists
     description: Verify track_transform binary is in PATH
-    command: which track_transform
+    command: command -v track_transform
     expected_output_contains: "track_transform"
 
   - name: spline_filter binary exists
     description: Verify spline_filter binary is in PATH
-    command: which spline_filter
+    command: command -v spline_filter
     expected_output_contains: "spline_filter"
 
   - name: diff_unpack binary exists
     description: Verify diff_unpack binary is in PATH
-    command: which diff_unpack
+    command: command -v diff_unpack
     expected_output_contains: "diff_unpack"
 
   - name: dtk binary exists
     description: Verify dtk GUI launcher binary is in PATH
-    command: which dtk
+    command: command -v dtk
     expected_output_contains: "dtk"
 
   # ==========================================================================

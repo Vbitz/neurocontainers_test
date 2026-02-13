@@ -49,8 +49,8 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
-    mkdir -p test_output/brainnetviewer
+    mkdir -p ${output_dir}
+    mkdir -p ${output_dir}/brainnetviewer
 
 tests:
   # ==========================================================================
@@ -364,12 +364,12 @@ tests:
 
   - name: Output directory is writable
     description: Verify test output directory is writable
-    command: touch test_output/brainnetviewer/write_test.txt && rm test_output/brainnetviewer/write_test.txt && echo "Output writable"
+    command: touch ${output_dir}/brainnetviewer/write_test.txt && rm ${output_dir}/brainnetviewer/write_test.txt && echo "Output writable"
     expected_output_contains: "Output writable"
 
   - name: Can create files in output directory
     description: Verify container can create files in output directory
-    command: echo "test" > test_output/brainnetviewer/test_file.txt && cat test_output/brainnetviewer/test_file.txt
+    command: echo "test" > ${output_dir}/brainnetviewer/test_file.txt && cat ${output_dir}/brainnetviewer/test_file.txt
     expected_output_contains: "test"
 
   # ==========================================================================
@@ -396,9 +396,9 @@ tests:
     expected_exit_code: 0
 
   - name: Singularity labels present
-    description: Verify Singularity labels directory exists
-    command: test -d /.singularity.d/labels && echo "Labels directory found"
-    expected_output_contains: "Labels directory found"
+    description: Verify Singularity labels file exists
+    command: test -f /.singularity.d/labels.json && echo "Labels file found"
+    expected_output_contains: "Labels file found"
 
   # ==========================================================================
   # CONTAINER DIRECTORY STRUCTURE
@@ -500,31 +500,31 @@ tests:
   - name: Create sample node file
     description: Create a minimal .node file for testing
     command: |
-      echo "-50 -30 0 1 1 L_Node1" > test_output/brainnetviewer/sample.node
-      echo "50 -30 0 1 1 R_Node1" >> test_output/brainnetviewer/sample.node
-      echo "-50 30 0 2 2 L_Node2" >> test_output/brainnetviewer/sample.node
-      echo "50 30 0 2 2 R_Node2" >> test_output/brainnetviewer/sample.node
-      test -f test_output/brainnetviewer/sample.node && echo "Node file created"
+      echo "-50 -30 0 1 1 L_Node1" > ${output_dir}/brainnetviewer/sample.node
+      echo "50 -30 0 1 1 R_Node1" >> ${output_dir}/brainnetviewer/sample.node
+      echo "-50 30 0 2 2 L_Node2" >> ${output_dir}/brainnetviewer/sample.node
+      echo "50 30 0 2 2 R_Node2" >> ${output_dir}/brainnetviewer/sample.node
+      test -f ${output_dir}/brainnetviewer/sample.node && echo "Node file created"
     expected_output_contains: "Node file created"
 
   - name: Verify node file format
     description: Verify sample node file has correct format (6 columns)
-    command: cat test_output/brainnetviewer/sample.node | head -1
+    command: cat ${output_dir}/brainnetviewer/sample.node | head -1
     expected_output_contains: "-50 -30 0 1 1 L_Node1"
 
   - name: Create sample edge file
     description: Create a minimal .edge file for testing (4x4 connectivity matrix)
     command: |
-      echo "0 0.5 0.3 0" > test_output/brainnetviewer/sample.edge
-      echo "0.5 0 0 0.7" >> test_output/brainnetviewer/sample.edge
-      echo "0.3 0 0 0.2" >> test_output/brainnetviewer/sample.edge
-      echo "0 0.7 0.2 0" >> test_output/brainnetviewer/sample.edge
-      test -f test_output/brainnetviewer/sample.edge && echo "Edge file created"
+      echo "0 0.5 0.3 0" > ${output_dir}/brainnetviewer/sample.edge
+      echo "0.5 0 0 0.7" >> ${output_dir}/brainnetviewer/sample.edge
+      echo "0.3 0 0 0.2" >> ${output_dir}/brainnetviewer/sample.edge
+      echo "0 0.7 0.2 0" >> ${output_dir}/brainnetviewer/sample.edge
+      test -f ${output_dir}/brainnetviewer/sample.edge && echo "Edge file created"
     expected_output_contains: "Edge file created"
 
   - name: Verify edge file format
     description: Verify sample edge file has correct matrix format
-    command: wc -l test_output/brainnetviewer/sample.edge
+    command: wc -l ${output_dir}/brainnetviewer/sample.edge
     expected_output_contains: "4"
 
   # ==========================================================================
@@ -566,22 +566,22 @@ tests:
 
   - name: Can list test output contents
     description: Verify can list contents of test output directory
-    command: ls -la test_output/brainnetviewer/ && echo "Output listing successful"
+    command: ls -la ${output_dir}/brainnetviewer/ && echo "Output listing successful"
     expected_output_contains: "Output listing successful"
 
   - name: Sample files created successfully
     description: Verify sample node and edge files were created
-    command: test -f test_output/brainnetviewer/sample.node && test -f test_output/brainnetviewer/sample.edge && echo "Sample files exist"
+    command: test -f ${output_dir}/brainnetviewer/sample.node && test -f ${output_dir}/brainnetviewer/sample.edge && echo "Sample files exist"
     expected_output_contains: "Sample files exist"
 
 cleanup:
   script: |
     #!/usr/bin/env bash
     # Clean up test artifacts
-    rm -f test_output/brainnetviewer/test_file.txt
+    rm -f ${output_dir}/brainnetviewer/test_file.txt
     # Optionally remove all test outputs
     # rm -rf test_output/brainnetviewer
-    echo "Test outputs preserved in test_output/brainnetviewer/"
+    echo "Test outputs preserved in ${output_dir}/brainnetviewer/"
 
 # ==========================================================================
 # MANUAL TESTING NOTES

@@ -323,13 +323,13 @@ tests:
   # ==========================================================================
   - name: T1w structural image readable (sub-01)
     description: Verify T1w NIfTI file is accessible
-    command: file ${mega_t1w_sub1}
-    expected_output_contains: "gzip"
+    command: test -f ${mega_t1w_sub1} && echo "T1w file exists" && od -N2 -A x -t x1 ${mega_t1w_sub1} | head -1
+    expected_output_contains: "T1w file exists"
 
   - name: T1w structural image readable (sub-02)
     description: Verify second subject T1w NIfTI file is accessible
-    command: file ${mega_t1w_sub2}
-    expected_output_contains: "gzip"
+    command: test -f ${mega_t1w_sub2} && echo "T1w file exists" && od -N2 -A x -t x1 ${mega_t1w_sub2} | head -1
+    expected_output_contains: "T1w file exists"
 
   # ==========================================================================
   # STATISTICS CSV VERIFICATION

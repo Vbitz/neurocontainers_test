@@ -545,7 +545,7 @@ tests:
   - name: Matplotlib Agg backend
     description: Verify Agg backend can be used (for headless operation)
     command: 'python3 -c "import matplotlib; matplotlib.use(''Agg''); print(matplotlib.get_backend())" 2>&1'
-    expected_output_contains: "Agg"
+    expected_output_contains: "agg"
 
   # ==========================================================================
   # FILE I/O OPERATIONS

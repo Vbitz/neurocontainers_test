@@ -196,17 +196,23 @@ def prepare_required_files(
                         f"Failed to fetch {file_path}: {result.stderr[:500]}"
                     )
 
-            # Create hardlink in per-suite directory
+            # Create copy in per-suite directory.
+            # We use copies (not hardlinks) because some tools like SPM
+            # decompress .nii.gz in-place and delete the original. Copies
+            # let tools freely modify/delete files without affecting the cache.
             suite_file = suite_work_dir / dataset / file_path
             suite_file.parent.mkdir(parents=True, exist_ok=True)
+
+            # Ensure parent dir is writable (may be read-only from prior run)
+            if not os.access(suite_file.parent, os.W_OK):
+                os.chmod(suite_file.parent, 0o755)
 
             # Remove existing file/link if present (stale from previous run)
             if suite_file.exists() or suite_file.is_symlink():
                 suite_file.unlink()
 
-            # Hardlink to the resolved real file (annex object)
             real_path = Path(os.path.realpath(cached_file))
-            os.link(real_path, suite_file)
+            shutil.copy2(real_path, suite_file)
 
     return suite_work_dir
 

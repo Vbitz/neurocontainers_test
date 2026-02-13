@@ -204,6 +204,24 @@ cannot obtain GPU driver and device information (CUDA ERROR 35).
 Please make sure you have drivers properly installed.
 ```
 
+### cat12
+**Severity: High -- 34/50 tests pass**
+
+All CAT12 MEX files require GLIBC_2.29 but the container's base OS only provides
+an older glibc. The segmentation pipeline fails at the first MEX call (SANLM
+denoising) and all subsequent steps also fail since they use the same
+incompatible MEX files. 16 tests depend on segmentation output.
+
+**Why this is a container bug:** The MEX files (`cat_sanlm.mexa64`,
+`cat_amap.mexa64`, etc.) were compiled against glibc 2.29+ but packaged into a
+container with an older glibc. The MCR (v93/R2017b) loads but cannot execute
+any CAT12-specific compiled code.
+
+```
+Invalid MEX-file 'cat_sanlm.mexa64': 'cat_sanlm.mexa64' is not a valid shared library.
+ldd: /lib/x86_64-linux-gnu/libm.so.6: version `GLIBC_2.29' not found
+```
+
 ### ants
 **Severity: Low -- 2 tools affected**
 
@@ -254,5 +272,6 @@ standard_space_roi: Aborted (core dumped)
 | niimath | SIGABRT on missing input files | Low |
 | niftyreg | SIGSEGV on missing input files | Low |
 | dsistudio | Missing CUDA drivers for registration | Low |
+| cat12 | GLIBC_2.29 mismatch breaks all MEX files | High |
 | ants | ResetDirection segfault, TimeSeriesDisassemble crash | Low |
 | aslprep | Missing dc binary, broken standard_space_roi | Low |

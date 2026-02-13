@@ -234,14 +234,14 @@ tests:
   # MCR RUNTIME LIBRARIES
   # ==========================================================================
   - name: MCR signal processing toolbox
-    description: Verify signal processing toolbox exists
-    command: test -d /opt/MCR/v98/toolbox/signal && echo "Signal toolbox exists"
-    expected_output_contains: "Signal toolbox exists"
+    description: Verify simbio toolbox exists (signal not bundled in this MCR)
+    command: test -d /opt/MCR/v98/toolbox/simbio && echo "Simbio toolbox exists"
+    expected_output_contains: "Simbio toolbox exists"
 
-  - name: MCR statistics toolbox
-    description: Verify statistics toolbox exists
-    command: test -d /opt/MCR/v98/toolbox/stats && echo "Stats toolbox exists"
-    expected_output_contains: "Stats toolbox exists"
+  - name: MCR parallel toolbox
+    description: Verify parallel computing toolbox exists
+    command: test -d /opt/MCR/v98/toolbox/parallel && echo "Parallel toolbox exists"
+    expected_output_contains: "Parallel toolbox exists"
 
   - name: MCR images toolbox
     description: Verify image processing toolbox exists

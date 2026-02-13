@@ -201,7 +201,7 @@ tests:
     command: |
       export FREESURFER_HOME=/opt/freesurfer-6.0.0
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
-      mri_normalize -conform ${t1w} test_output/t1w_norm.mgz 2>&1
+      mri_normalize ${t1w} test_output/t1w_norm.mgz 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_norm.mgz
 
@@ -544,8 +544,8 @@ tests:
 
   - name: Nighres availability
     description: Verify nighres is available for surface processing
-    command: python3 -c "import nighres; print('nighres version:', nighres.__version__)" 2>&1
-    expected_output_contains: "nighres"
+    command: python3 -c "import nighres; print('nighres available')" 2>&1
+    expected_output_contains: "nighres available"
 
   # ==========================================================================
   # FASTCSR MODEL FILES
@@ -727,18 +727,20 @@ tests:
     expected_output_contains: "mri_segstats"
 
   - name: asegstats2table help
-    description: Verify asegstats2table for stats table generation
+    description: Verify asegstats2table for stats table generation (needs python→python3 symlink)
     command: |
       export FREESURFER_HOME=/opt/freesurfer-6.0.0
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
+      ln -sf /usr/bin/python3 /tmp/python && export PATH=/tmp:$PATH
       asegstats2table --help 2>&1 | head -10
     expected_output_contains: "asegstats2table"
 
   - name: aparcstats2table help
-    description: Verify aparcstats2table for parcellation stats
+    description: Verify aparcstats2table for parcellation stats (needs python→python3 symlink)
     command: |
       export FREESURFER_HOME=/opt/freesurfer-6.0.0
       source $FREESURFER_HOME/SetUpFreeSurfer.sh 2>/dev/null
+      ln -sf /usr/bin/python3 /tmp/python && export PATH=/tmp:$PATH
       aparcstats2table --help 2>&1 | head -10
     expected_output_contains: "aparcstats2table"
 

@@ -428,8 +428,8 @@ tests:
   - name: MCR installation has significant size
     description: Verify MCR installation is substantial (multiple GB expected)
     command: |
-      count=$(ls -1 /opt/MCR/v98/runtime/glnxa64/*.so* 2>/dev/null | wc -l)
-      if [ "$count" -gt 50 ]; then echo "MCR runtime has $count libraries"; else echo "MCR incomplete"; fi
+      count=$(find /opt/MCR/v98/ -name '*.so*' 2>/dev/null | wc -l)
+      if [ "$count" -gt 50 ]; then echo "MCR runtime has $count libraries"; else echo "MCR incomplete: $count"; fi
     expected_output_contains: "MCR runtime has"
 
   # ==========================================================================

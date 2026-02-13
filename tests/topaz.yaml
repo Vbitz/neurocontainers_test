@@ -586,6 +586,7 @@ tests:
     description: Verify error on invalid subcommand
     command: topaz invalid_command 2>&1
     expected_output_contains: "invalid choice"
+    expected_exit_code: 2
 
   - name: Train without required args
     description: Verify train fails without required arguments
@@ -596,6 +597,7 @@ tests:
     description: Verify extract fails when run without args
     command: topaz extract 2>&1
     expected_output_contains: "Must specify targets"
+    expected_exit_code: 1
 
   # ==========================================================================
   # DEVICE AND THREADING OPTIONS (common across commands)

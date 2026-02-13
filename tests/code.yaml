@@ -31,7 +31,7 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
+    mkdir -p ${output_dir}
 
 tests:
   # ==========================================================================
@@ -249,7 +249,7 @@ tests:
       # Create binary mask
       mask = (data > np.percentile(data, 50)).astype(np.float32)
       mask_img = nib.Nifti1Image(mask, img.affine, img.header)
-      nib.save(mask_img, 'test_output/t2_mask_nibabel.nii.gz')
+      nib.save(mask_img, '${output_dir}/t2_mask_nibabel.nii.gz')
       print('Saved mask')
       "
     expected_output_contains: "Saved mask"
@@ -258,7 +258,7 @@ tests:
 
   - name: Verify saved NIfTI
     description: Load and verify the saved mask image
-    command: python -c "import nibabel as nib; img = nib.load('test_output/t2_mask_nibabel.nii.gz'); print('Shape:', img.shape)"
+    command: python -c "import nibabel as nib; img = nib.load('${output_dir}/t2_mask_nibabel.nii.gz'); print('Shape:', img.shape)"
     depends_on: Save NIfTI with nibabel
     expected_output_contains: "Shape: (128, 128, 33)"
 
@@ -286,7 +286,7 @@ tests:
       data = img.get_fdata()
       smoothed = ndimage.gaussian_filter(data, sigma=2)
       smooth_img = nib.Nifti1Image(smoothed.astype(np.float32), img.affine)
-      nib.save(smooth_img, 'test_output/t2_smoothed_scipy.nii.gz')
+      nib.save(smooth_img, '${output_dir}/t2_smoothed_scipy.nii.gz')
       print('Smoothed shape:', smoothed.shape)
       "
     expected_output_contains: "Smoothed shape: (128, 128, 33)"
@@ -300,11 +300,11 @@ tests:
       import nibabel as nib
       import numpy as np
       from scipy import ndimage
-      img = nib.load('test_output/t2_mask_nibabel.nii.gz')
+      img = nib.load('${output_dir}/t2_mask_nibabel.nii.gz')
       mask = img.get_fdata() > 0
       eroded = ndimage.binary_erosion(mask, iterations=2)
       eroded_img = nib.Nifti1Image(eroded.astype(np.float32), img.affine)
-      nib.save(eroded_img, 'test_output/t2_mask_eroded.nii.gz')
+      nib.save(eroded_img, '${output_dir}/t2_mask_eroded.nii.gz')
       print('Eroded mask sum:', eroded.sum())
       "
     depends_on: Save NIfTI with nibabel
@@ -318,7 +318,7 @@ tests:
   - name: Matplotlib backend setup
     description: Set up matplotlib for headless operation
     command: python -c "import matplotlib; matplotlib.use('Agg'); print('Backend:', matplotlib.get_backend())"
-    expected_output_contains: "Agg"
+    expected_output_contains: "agg"
 
   - name: Create T2 slice plot
     description: Generate a PNG plot of T2 middle slice
@@ -334,7 +334,7 @@ tests:
       plt.imshow(data[:, :, data.shape[2]//2].T, cmap='gray', origin='lower')
       plt.title('T2 Middle Slice')
       plt.colorbar()
-      plt.savefig('test_output/t2_slice.png', dpi=100)
+      plt.savefig('${output_dir}/t2_slice.png', dpi=100)
       plt.close()
       print('Saved plot')
       "
@@ -361,7 +361,7 @@ tests:
       plt.xlabel('Time (volumes)')
       plt.ylabel('Signal')
       plt.title('BOLD Timeseries (center voxel)')
-      plt.savefig('test_output/bold_timeseries.png', dpi=100)
+      plt.savefig('${output_dir}/bold_timeseries.png', dpi=100)
       plt.close()
       print('Saved plot')
       "
@@ -404,7 +404,7 @@ tests:
           'value': [np.mean(data), np.std(data), np.min(data), np.max(data), np.median(data)]
       }
       df = pd.DataFrame(stats)
-      df.to_csv('test_output/t2_stats.csv', index=False)
+      df.to_csv('${output_dir}/t2_stats.csv', index=False)
       print('Saved CSV')
       "
     expected_output_contains: "Saved CSV"
@@ -436,17 +436,17 @@ tests:
 
   - name: Julia matrix operations
     description: Test Julia matrix multiplication
-    command: "/opt/julia-1.6.3/bin/julia -e 'A = [1 2; 3 4]; println(\"Det: \", det(A))'"
+    command: "/opt/julia-1.6.3/bin/julia -e 'using LinearAlgebra; A = [1 2; 3 4]; println(\"Det: \", det(A))'"
     expected_output_contains: "Det: -2.0"
 
   - name: Julia file I/O
     description: Test Julia can write and read files
     command: |
       /opt/julia-1.6.3/bin/julia -e '
-      open("test_output/julia_test.txt", "w") do f
+      open("${output_dir}/julia_test.txt", "w") do f
           write(f, "Hello from Julia!")
       end
-      content = read("test_output/julia_test.txt", String)
+      content = read("${output_dir}/julia_test.txt", String)
       println(content)
       '
     expected_output_contains: "Hello from Julia"
@@ -578,7 +578,7 @@ tests:
       tsnr = mean_img / std_img
       tsnr[np.isnan(tsnr)] = 0
       tsnr_img = nib.Nifti1Image(tsnr.astype(np.float32), img.affine)
-      nib.save(tsnr_img, 'test_output/bold_tsnr.nii.gz')
+      nib.save(tsnr_img, '${output_dir}/bold_tsnr.nii.gz')
       print('tSNR range:', np.nanmin(tsnr), '-', np.nanmax(tsnr))
       "
     expected_exit_code: 0
@@ -600,7 +600,7 @@ tests:
       mean_ts = np.mean(roi_data, axis=(0, 1, 2))
       # Save as CSV
       df = pd.DataFrame({'volume': range(len(mean_ts)), 'signal': mean_ts})
-      df.to_csv('test_output/roi_timeseries.csv', index=False)
+      df.to_csv('${output_dir}/roi_timeseries.csv', index=False)
       print('Timeseries length:', len(mean_ts))
       "
     expected_output_contains: "Timeseries length: 300"
@@ -620,7 +620,7 @@ tests:
       diff = np.diff(data, axis=3)
       dvars = np.sqrt(np.mean(diff**2, axis=(0, 1, 2)))
       df = pd.DataFrame({'volume': range(1, len(dvars)+1), 'dvars': dvars})
-      df.to_csv('test_output/dvars.csv', index=False)
+      df.to_csv('${output_dir}/dvars.csv', index=False)
       print('DVARS mean:', np.mean(dvars).round(2))
       "
     expected_exit_code: 0
@@ -639,7 +639,7 @@ tests:
       import nibabel as nib
       img = nib.load('${t2}')
       data = img.get_fdata()
-      with h5py.File('test_output/t2_data.h5', 'w') as f:
+      with h5py.File('${output_dir}/t2_data.h5', 'w') as f:
           f.create_dataset('data', data=data, compression='gzip')
           f.attrs['shape'] = data.shape
           f.attrs['source'] = 'sub-01_inplaneT2.nii.gz'
@@ -654,7 +654,7 @@ tests:
     command: |
       python -c "
       import h5py
-      with h5py.File('test_output/t2_data.h5', 'r') as f:
+      with h5py.File('${output_dir}/t2_data.h5', 'r') as f:
           print('Dataset shape:', f['data'].shape)
           print('Source:', f.attrs['source'])
       "
@@ -676,7 +676,7 @@ tests:
 
   - name: NumPy random state
     description: Test reproducible random generation
-    command: python -c "import numpy as np; np.random.seed(42); print('First random:', np.random.rand().round(4))"
+    command: python -c "import numpy as np; np.random.seed(42); print('First random:', round(np.random.rand(), 4))"
     expected_output_contains: "0.3745"
 
   # ==========================================================================
@@ -783,7 +783,7 @@ tests:
           ax.set_title(f'Slice {slices[idx]}')
           ax.axis('off')
       plt.tight_layout()
-      plt.savefig('test_output/t2_mosaic.png', dpi=100)
+      plt.savefig('${output_dir}/t2_mosaic.png', dpi=100)
       plt.close()
       print('Mosaic saved')
       "
@@ -829,15 +829,15 @@ tests:
 
       # 5. Save results
       nib.save(nib.Nifti1Image(tmean.astype(np.float32), bold.affine),
-               'test_output/pipeline_tmean.nii.gz')
+               '${output_dir}/pipeline_tmean.nii.gz')
       nib.save(nib.Nifti1Image(mask.astype(np.float32), bold.affine),
-               'test_output/pipeline_mask.nii.gz')
+               '${output_dir}/pipeline_mask.nii.gz')
       nib.save(nib.Nifti1Image(tsnr.astype(np.float32), bold.affine),
-               'test_output/pipeline_tsnr.nii.gz')
+               '${output_dir}/pipeline_tsnr.nii.gz')
 
       # 6. Save timeseries
       pd.DataFrame({'volume': range(len(global_signal)), 'signal': global_signal}).to_csv(
-          'test_output/pipeline_global_signal.csv', index=False)
+          '${output_dir}/pipeline_global_signal.csv', index=False)
 
       # 7. Create summary plot
       fig, axes = plt.subplots(2, 2, figsize=(12, 10))
@@ -851,7 +851,7 @@ tests:
       axes[1, 1].set_title('Global Signal')
       axes[1, 1].set_xlabel('Volume')
       plt.tight_layout()
-      plt.savefig('test_output/pipeline_summary.png', dpi=100)
+      plt.savefig('${output_dir}/pipeline_summary.png', dpi=100)
       plt.close()
 
       print('Pipeline complete')

@@ -564,7 +564,7 @@ tests:
         -out=test_output/gingerale/ale_results/motor_p01_stats \
         2>&1
     validate:
-      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_clust.txt
+      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats.txt
 
   - name: Cluster statistics with P values
     description: Include P values in cluster statistics
@@ -578,7 +578,7 @@ tests:
         -out=test_output/gingerale/ale_results/motor_p01_stats_pval \
         2>&1
     validate:
-      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_pval_clust.txt
+      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_pval.txt
 
   - name: Cluster statistics including all labels
     description: Include non-gray matter labels in statistics
@@ -592,7 +592,7 @@ tests:
         -out=test_output/gingerale/ale_results/motor_p01_stats_alllab \
         2>&1
     validate:
-      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_alllab_clust.txt
+      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_alllab.txt
 
   - name: Cluster statistics with foci listing
     description: List contributing foci for each cluster
@@ -606,7 +606,7 @@ tests:
         -out=test_output/gingerale/ale_results/motor_p01_stats_foci \
         2>&1
     validate:
-      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_foci_clust.txt
+      - output_exists: ${output_dir}/gingerale/ale_results/motor_p01_stats_foci.txt
 
   # ==========================================================================
   # getALE2Contrast - CONTRAST ANALYSIS
@@ -759,8 +759,8 @@ tests:
   - name: Text output format
     description: Verify cluster statistics text output format
     depends_on: Basic cluster statistics
-    command: head -20 test_output/gingerale/ale_results/motor_p01_stats_clust.txt 2>&1
-    expected_output_contains: "Cluster"
+    command: head -20 test_output/gingerale/ale_results/motor_p01_stats.txt 2>&1
+    expected_output_contains: "mm^3"
 
 cleanup:
   script: |

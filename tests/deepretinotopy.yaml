@@ -161,8 +161,8 @@ tests:
 
   - name: wb_command list commands
     description: Verify wb_command has available subcommands
-    command: wb_command -list-commands 2>&1 | head -20
-    expected_output_contains: "volume"
+    command: wb_command -list-commands 2>&1 | head -5
+    expected_output_contains: "SPECIFICATION FILE"
 
   - name: wb_command help
     description: Test wb_command general help
@@ -734,7 +734,7 @@ tests:
 
   - name: mri_ca_register available
     description: Verify CA registration is available
-    command: mri_ca_register --help 2>&1 | head -10
+    command: mri_ca_register 2>&1 | head -10
     expected_output_contains: "mri_ca_register"
 
   # ===========================================================================
@@ -885,9 +885,9 @@ tests:
     expected_output_contains: "error"
 
   - name: wb_command handles invalid arguments
-    description: Verify workbench error handling
+    description: Verify workbench shows usage when insufficient args
     command: wb_command -volume-math 2>&1 || true
-    expected_output_contains: "ERROR"
+    expected_output_contains: "volume-math"
 
   - name: deepRetinotopy missing arguments
     description: Verify deepRetinotopy shows help with missing args

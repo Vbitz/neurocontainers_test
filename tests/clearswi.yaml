@@ -27,9 +27,9 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output/clearswi
-    mkdir -p test_output/clearswi/steps
-    mkdir -p test_output/clearswi/options
+    mkdir -p ${output_dir}
+    mkdir -p ${output_dir}/steps
+    mkdir -p ${output_dir}/options
 
 tests:
   # ==========================================================================
@@ -137,11 +137,11 @@ tests:
       phase = readphase(joinpath(nifti_folder, "Phase.nii"))
       data = Data(mag, phase, mag.header, [4,8,12])
       swi = calculateSWI(data)
-      savenii(swi, "test_output/clearswi/swi_default.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/swi_default.nii"; header=mag.header)
       println("SWI saved successfully")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_default.nii
+      - output_exists: ${output_dir}/swi_default.nii
 
   # ==========================================================================
   # MINIMUM INTENSITY PROJECTION (MIP)
@@ -158,13 +158,13 @@ tests:
       swi = calculateSWI(data)
       mip = createMIP(swi)
       println("MIP shape: ", size(mip))
-      savenii(mip, "test_output/clearswi/mip_default.nii"; header=mag.header)
+      savenii(mip, "${output_dir}/mip_default.nii"; header=mag.header)
       println("MIP saved successfully")
       '
     expected_output_contains:
       - "MIP shape: (51, 51, 35)"
     validate:
-      - output_exists: ${output_dir}/clearswi/mip_default.nii
+      - output_exists: ${output_dir}/mip_default.nii
 
   - name: Create MIP custom depth
     description: Test createMIP with custom depth parameter
@@ -197,13 +197,13 @@ tests:
       swi = calculateSWI(data)
       maxip = createIntensityProjection(swi, maximum)
       println("MaxIP shape: ", size(maxip))
-      savenii(maxip, "test_output/clearswi/maxip.nii"; header=mag.header)
+      savenii(maxip, "${output_dir}/maxip.nii"; header=mag.header)
       println("MaxIP saved successfully")
       '
     expected_output_contains:
       - "MaxIP shape: (51, 51, 35)"
     validate:
-      - output_exists: ${output_dir}/clearswi/maxip.nii
+      - output_exists: ${output_dir}/maxip.nii
 
   # ==========================================================================
   # MAGNITUDE COMBINATION OPTIONS
@@ -213,17 +213,19 @@ tests:
     command: |
       julia -e '
       using CLEARSWI
+      mkpath("${output_dir}/options")
       nifti_folder = CLEARSWI.dir("test","testData","small")
       mag = readmag(joinpath(nifti_folder, "Mag.nii"))
       phase = readphase(joinpath(nifti_folder, "Phase.nii"))
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_combine=:SNR)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_mag_snr.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_mag_snr.nii"; header=mag.header)
       println("mag_combine=:SNR completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_mag_snr.nii
+      - output_exists: ${output_dir}/options/swi_mag_snr.nii
 
   - name: Magnitude combine average
     description: Test mag_combine=:average (simple averaging across echoes)
@@ -236,11 +238,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_combine=:average)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_mag_average.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_mag_average.nii"; header=mag.header)
       println("mag_combine=:average completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_mag_average.nii
+      - output_exists: ${output_dir}/options/swi_mag_average.nii
 
   - name: Magnitude combine last echo
     description: Test mag_combine=:last (use last echo only)
@@ -253,11 +256,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_combine=:last)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_mag_last.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_mag_last.nii"; header=mag.header)
       println("mag_combine=:last completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_mag_last.nii
+      - output_exists: ${output_dir}/options/swi_mag_last.nii
 
   - name: Magnitude combine specific echo
     description: Test mag_combine=(:echo => 2) (select specific echo)
@@ -270,11 +274,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_combine=(:echo => 2))
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_mag_echo2.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_mag_echo2.nii"; header=mag.header)
       println("mag_combine=(:echo => 2) completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_mag_echo2.nii
+      - output_exists: ${output_dir}/options/swi_mag_echo2.nii
 
   - name: Magnitude combine closest TE
     description: Test mag_combine=(:closest => 8) (select echo closest to TE)
@@ -287,11 +292,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_combine=(:closest => 8))
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_mag_closest8.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_mag_closest8.nii"; header=mag.header)
       println("mag_combine=(:closest => 8) completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_mag_closest8.nii
+      - output_exists: ${output_dir}/options/swi_mag_closest8.nii
 
   # ==========================================================================
   # MAGNITUDE PROCESSING OPTIONS
@@ -307,11 +313,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_softplus=false)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_no_softplus.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_no_softplus.nii"; header=mag.header)
       println("mag_softplus=false completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_no_softplus.nii
+      - output_exists: ${output_dir}/options/swi_no_softplus.nii
 
   - name: Custom sensitivity (no correction)
     description: Test mag_sens=[1] (constant sensitivity, no correction)
@@ -324,11 +331,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(mag_sens=[1])
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_no_sens_corr.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_no_sens_corr.nii"; header=mag.header)
       println("mag_sens=[1] completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_no_sens_corr.nii
+      - output_exists: ${output_dir}/options/swi_no_sens_corr.nii
 
   # ==========================================================================
   # PHASE UNWRAPPING OPTIONS
@@ -344,11 +352,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_unwrap=:laplacian)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_unwrap_laplacian.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_unwrap_laplacian.nii"; header=mag.header)
       println("phase_unwrap=:laplacian completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_laplacian.nii
+      - output_exists: ${output_dir}/options/swi_unwrap_laplacian.nii
 
   - name: Phase unwrap ROMEO
     description: Test phase_unwrap=:romeo (ROMEO algorithm unwrapping)
@@ -361,11 +370,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_unwrap=:romeo)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_unwrap_romeo.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_unwrap_romeo.nii"; header=mag.header)
       println("phase_unwrap=:romeo completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_romeo.nii
+      - output_exists: ${output_dir}/options/swi_unwrap_romeo.nii
 
   - name: Phase unwrap Laplacian slice
     description: Test phase_unwrap=:laplacianslice (slicewise Laplacian)
@@ -378,11 +388,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_unwrap=:laplacianslice)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_unwrap_laplacianslice.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_unwrap_laplacianslice.nii"; header=mag.header)
       println("phase_unwrap=:laplacianslice completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_unwrap_laplacianslice.nii
+      - output_exists: ${output_dir}/options/swi_unwrap_laplacianslice.nii
 
   # ==========================================================================
   # PHASE HIGH-PASS FILTER OPTIONS
@@ -398,11 +409,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_hp_σ=[4,4,0])
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_hp_2d_default.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_hp_2d_default.nii"; header=mag.header)
       println("phase_hp_sigma=[4,4,0] completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_hp_2d_default.nii
+      - output_exists: ${output_dir}/options/swi_hp_2d_default.nii
 
   - name: Phase high-pass 3D
     description: Test phase_hp_sigma=[10,10,5] (3D high-pass filter)
@@ -415,11 +427,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_hp_σ=[10,10,5])
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_hp_3d.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_hp_3d.nii"; header=mag.header)
       println("phase_hp_sigma=[10,10,5] completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_hp_3d.nii
+      - output_exists: ${output_dir}/options/swi_hp_3d.nii
 
   - name: Phase high-pass large kernel
     description: Test phase_hp_sigma=[20,20,10] (large kernel 3D filter)
@@ -432,11 +445,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_hp_σ=[20,20,10])
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_hp_large.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_hp_large.nii"; header=mag.header)
       println("phase_hp_sigma=[20,20,10] completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_hp_large.nii
+      - output_exists: ${output_dir}/options/swi_hp_large.nii
 
   # ==========================================================================
   # PHASE SCALING OPTIONS
@@ -452,11 +466,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_type=:tanh)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_scale_tanh.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_scale_tanh.nii"; header=mag.header)
       println("phase_scaling_type=:tanh completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_scale_tanh.nii
+      - output_exists: ${output_dir}/options/swi_scale_tanh.nii
 
   - name: Phase scaling positive
     description: Test phase_scaling_type=:positive (traditional SWI positive)
@@ -469,11 +484,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_type=:positive)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_scale_positive.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_scale_positive.nii"; header=mag.header)
       println("phase_scaling_type=:positive completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_scale_positive.nii
+      - output_exists: ${output_dir}/options/swi_scale_positive.nii
 
   - name: Phase scaling negative
     description: Test phase_scaling_type=:negative (traditional SWI negative)
@@ -486,11 +502,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_type=:negative)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_scale_negative.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_scale_negative.nii"; header=mag.header)
       println("phase_scaling_type=:negative completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_scale_negative.nii
+      - output_exists: ${output_dir}/options/swi_scale_negative.nii
 
   - name: Phase scaling triangular
     description: Test phase_scaling_type=:triangular (traditional SWI triangular)
@@ -503,11 +520,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_type=:triangular)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_scale_triangular.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_scale_triangular.nii"; header=mag.header)
       println("phase_scaling_type=:triangular completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_scale_triangular.nii
+      - output_exists: ${output_dir}/options/swi_scale_triangular.nii
 
   # ==========================================================================
   # PHASE SCALING STRENGTH OPTIONS
@@ -523,11 +541,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_strength=2)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_strength_2.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_strength_2.nii"; header=mag.header)
       println("phase_scaling_strength=2 completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_strength_2.nii
+      - output_exists: ${output_dir}/options/swi_strength_2.nii
 
   - name: Phase scaling strength 4
     description: Test phase_scaling_strength=4 (default phase mask strength)
@@ -540,11 +559,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_strength=4)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_strength_4.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_strength_4.nii"; header=mag.header)
       println("phase_scaling_strength=4 completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_strength_4.nii
+      - output_exists: ${output_dir}/options/swi_strength_4.nii
 
   - name: Phase scaling strength 8
     description: Test phase_scaling_strength=8 (strong phase mask)
@@ -557,11 +577,12 @@ tests:
       data = Data(mag, phase, mag.header, [4,8,12])
       options = Options(phase_scaling_strength=8)
       swi = calculateSWI(data, options)
-      savenii(swi, "test_output/clearswi/options/swi_strength_8.nii"; header=mag.header)
+      mkpath("${output_dir}/options")
+      savenii(swi, "${output_dir}/options/swi_strength_8.nii"; header=mag.header)
       println("phase_scaling_strength=8 completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/options/swi_strength_8.nii
+      - output_exists: ${output_dir}/options/swi_strength_8.nii
 
   # ==========================================================================
   # INTERMEDIATE STEPS OUTPUT
@@ -575,21 +596,21 @@ tests:
       mag = readmag(joinpath(nifti_folder, "Mag.nii"))
       phase = readphase(joinpath(nifti_folder, "Phase.nii"))
       data = Data(mag, phase, mag.header, [4,8,12])
-      mkpath("test_output/clearswi/steps/intermediate")
-      options = Options(writesteps="test_output/clearswi/steps/intermediate")
+      mkpath("${output_dir}/steps/intermediate")
+      options = Options(writesteps="${output_dir}/steps/intermediate")
       swi = calculateSWI(data, options)
       println("Intermediate steps saved")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/combined_mag.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/combinedphase.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/filteredphase.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/unwrappedphase.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/sensitivity.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/sensitivity_corrected_mag.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/swimag.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/swiphase.nii
-      - output_exists: ${output_dir}/clearswi/steps/intermediate/maskforphase.nii
+      - output_exists: ${output_dir}/steps/intermediate/combined_mag.nii
+      - output_exists: ${output_dir}/steps/intermediate/combinedphase.nii
+      - output_exists: ${output_dir}/steps/intermediate/filteredphase.nii
+      - output_exists: ${output_dir}/steps/intermediate/unwrappedphase.nii
+      - output_exists: ${output_dir}/steps/intermediate/sensitivity.nii
+      - output_exists: ${output_dir}/steps/intermediate/sensitivity_corrected_mag.nii
+      - output_exists: ${output_dir}/steps/intermediate/swimag.nii
+      - output_exists: ${output_dir}/steps/intermediate/swiphase.nii
+      - output_exists: ${output_dir}/steps/intermediate/maskforphase.nii
 
   # ==========================================================================
   # SINGLE-ECHO SWI
@@ -612,13 +633,13 @@ tests:
       swi = calculateSWI(data)
 
       println("Single-echo SWI shape: ", size(swi))
-      savenii(swi, "test_output/clearswi/swi_single_echo.nii"; header=mag_full.header)
+      savenii(swi, "${output_dir}/swi_single_echo.nii"; header=mag_full.header)
       println("Single-echo SWI completed")
       '
     expected_output_contains:
       - "Single-echo SWI shape: (51, 51, 41)"
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_single_echo.nii
+      - output_exists: ${output_dir}/swi_single_echo.nii
 
   # ==========================================================================
   # DUAL-ECHO SWI
@@ -641,13 +662,13 @@ tests:
       swi = calculateSWI(data)
 
       println("Dual-echo SWI shape: ", size(swi))
-      savenii(swi, "test_output/clearswi/swi_dual_echo.nii"; header=mag_full.header)
+      savenii(swi, "${output_dir}/swi_dual_echo.nii"; header=mag_full.header)
       println("Dual-echo SWI completed")
       '
     expected_output_contains:
       - "Dual-echo SWI shape: (51, 51, 41)"
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_dual_echo.nii
+      - output_exists: ${output_dir}/swi_dual_echo.nii
 
   # ==========================================================================
   # INVERTED PHASE
@@ -667,11 +688,11 @@ tests:
       data = Data(mag, phase_inverted, mag.header, [4,8,12])
       swi = calculateSWI(data)
 
-      savenii(swi, "test_output/clearswi/swi_inverted_phase.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/swi_inverted_phase.nii"; header=mag.header)
       println("Inverted phase SWI completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_inverted_phase.nii
+      - output_exists: ${output_dir}/swi_inverted_phase.nii
 
   # ==========================================================================
   # COMBINED OPTIONS
@@ -696,11 +717,11 @@ tests:
       )
       swi = calculateSWI(data, options)
 
-      savenii(swi, "test_output/clearswi/swi_high_quality.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/swi_high_quality.nii"; header=mag.header)
       println("High quality SWI completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_high_quality.nii
+      - output_exists: ${output_dir}/swi_high_quality.nii
 
   - name: Combined options - traditional SWI
     description: Test options for traditional SWI appearance
@@ -721,11 +742,11 @@ tests:
       )
       swi = calculateSWI(data, options)
 
-      savenii(swi, "test_output/clearswi/swi_traditional.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/swi_traditional.nii"; header=mag.header)
       println("Traditional SWI completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_traditional.nii
+      - output_exists: ${output_dir}/swi_traditional.nii
 
   - name: Combined options - 7T optimized
     description: Test options optimized for 7T ultra-high field
@@ -747,11 +768,11 @@ tests:
       )
       swi = calculateSWI(data, options)
 
-      savenii(swi, "test_output/clearswi/swi_7t_optimized.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/swi_7t_optimized.nii"; header=mag.header)
       println("7T optimized SWI completed")
       '
     validate:
-      - output_exists: ${output_dir}/clearswi/swi_7t_optimized.nii
+      - output_exists: ${output_dir}/swi_7t_optimized.nii
 
   # ==========================================================================
   # FULL PIPELINE TEST
@@ -770,11 +791,11 @@ tests:
       data = Data(mag, phase, mag.header, TEs)
 
       # Calculate SWI with optimized settings
-      mkpath("test_output/clearswi/full_pipeline")
+      mkpath("${output_dir}/full_pipeline")
       options = Options(
         phase_unwrap=:romeo,
         phase_hp_σ=[10,10,5],
-        writesteps="test_output/clearswi/full_pipeline"
+        writesteps="${output_dir}/full_pipeline"
       )
       swi = calculateSWI(data, options)
 
@@ -783,9 +804,9 @@ tests:
       maxip = createIntensityProjection(swi, maximum)
 
       # Save outputs
-      savenii(swi, "test_output/clearswi/full_pipeline/swi.nii"; header=mag.header)
-      savenii(mip, "test_output/clearswi/full_pipeline/mip.nii"; header=mag.header)
-      savenii(maxip, "test_output/clearswi/full_pipeline/maxip.nii"; header=mag.header)
+      savenii(swi, "${output_dir}/full_pipeline/swi.nii"; header=mag.header)
+      savenii(mip, "${output_dir}/full_pipeline/mip.nii"; header=mag.header)
+      savenii(maxip, "${output_dir}/full_pipeline/maxip.nii"; header=mag.header)
 
       println("Full pipeline completed successfully")
       println("SWI shape: ", size(swi))
@@ -795,9 +816,9 @@ tests:
     expected_output_contains:
       - "Full pipeline completed successfully"
     validate:
-      - output_exists: ${output_dir}/clearswi/full_pipeline/swi.nii
-      - output_exists: ${output_dir}/clearswi/full_pipeline/mip.nii
-      - output_exists: ${output_dir}/clearswi/full_pipeline/maxip.nii
+      - output_exists: ${output_dir}/full_pipeline/swi.nii
+      - output_exists: ${output_dir}/full_pipeline/mip.nii
+      - output_exists: ${output_dir}/full_pipeline/maxip.nii
 
   # ==========================================================================
   # OPTIONS DEFAULTS VERIFICATION
