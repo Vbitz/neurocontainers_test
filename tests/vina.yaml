@@ -701,51 +701,61 @@ tests:
     description: Display reduce help information
     command: reduce -h 2>&1
     expected_output_contains: "reduce"
+    ignore_exit_code: true
 
   - name: Reduce version info
     description: Verify reduce version information
     command: reduce -h 2>&1
     expected_output_contains: "version"
+    ignore_exit_code: true
 
   - name: Reduce FLIP option
     description: Verify FLIP option for NQH flips
     command: reduce -h 2>&1
     expected_output_contains: "-FLIP"
+    ignore_exit_code: true
 
   - name: Reduce NOFLIP option
     description: Verify NOFLIP option
     command: reduce -h 2>&1
     expected_output_contains: "-NOFLIP"
+    ignore_exit_code: true
 
   - name: Reduce Trim option
     description: Verify Trim option for hydrogen removal
     command: reduce -h 2>&1
     expected_output_contains: "-Trim"
+    ignore_exit_code: true
 
   - name: Reduce nuclear option
     description: Verify nuclear distances option
     command: reduce -h 2>&1
     expected_output_contains: "-NUClear"
+    ignore_exit_code: true
 
   - name: Reduce HIS option
     description: Verify HIS protonation option
     command: reduce -h 2>&1
     expected_output_contains: "-HIS"
+    ignore_exit_code: true
 
   - name: Reduce BUILD option
     description: Verify BUILD mode option
     command: reduce -h 2>&1
     expected_output_contains: "-BUILD"
+    ignore_exit_code: true
 
   - name: Reduce density option
     description: Verify dot density option
     command: reduce -h 2>&1
     expected_output_contains: "-DENSity"
+    ignore_exit_code: true
 
   - name: Reduce model option
     description: Verify model selection option
     command: reduce -h 2>&1
     expected_output_contains: "-Model"
+    ignore_exit_code: true
 
   # ==========================================================================
   # MSMS - MOLECULAR SURFACE CALCULATION

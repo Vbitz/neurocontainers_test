@@ -139,8 +139,9 @@ tests:
   # SPM12 FUNCTIONALITY TESTS
   # ==========================================================================
   - name: SPM12 batch command
-    description: Verify SPM12 batch command is available
-    command: timeout 15 spm12 batch /dev/null 2>&1 | head -10
+    description: Verify SPM12 batch command is available (slow MCR startup)
+    command: timeout 30 spm12 batch /dev/null 2>&1 | head -10
+    timeout: 180
     ignore_exit_code: true
     expected_output_contains: "SPM12"
 

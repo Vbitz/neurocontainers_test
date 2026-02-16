@@ -32,20 +32,25 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
-    mkdir -p test_output/stats
-    mkdir -p test_output/preproc
-    mkdir -p test_output/smooth
-    mkdir -p test_output/realign
-    mkdir -p test_output/coreg
-    mkdir -p test_output/segment
-    mkdir -p test_output/normalize
-    mkdir -p test_output/slicetime
-    mkdir -p test_output/imcalc
-    mkdir -p test_output/util
-    mkdir -p test_output/dartel
-    mkdir -p test_output/shoot
-    mkdir -p test_output/longit
+    mkdir -p ${output_dir}
+    mkdir -p ${output_dir}/stats
+    mkdir -p ${output_dir}/preproc
+    mkdir -p ${output_dir}/smooth
+    mkdir -p ${output_dir}/realign
+    mkdir -p ${output_dir}/coreg
+    mkdir -p ${output_dir}/segment
+    mkdir -p ${output_dir}/normalize
+    mkdir -p ${output_dir}/slicetime
+    mkdir -p ${output_dir}/imcalc
+    mkdir -p ${output_dir}/util
+    mkdir -p ${output_dir}/dartel
+    mkdir -p ${output_dir}/shoot
+    mkdir -p ${output_dir}/longit
+    # Decompress .nii.gz to .nii for SPM standalone (cannot read gzipped NIfTI)
+    gunzip -c ${t1w} > ${output_dir}/sub-02_T1w.nii
+    gunzip -c ${t2} > ${output_dir}/sub-01_inplaneT2.nii
+    gunzip -c ${bold} > ${output_dir}/bold_run01.nii
+    gunzip -c ${bold_run2} > ${output_dir}/bold_run02.nii
 
 tests:
   # ==========================================================================
@@ -86,111 +91,111 @@ tests:
 
   - name: ImCalc identity operation
     description: Copy image using image calculator (i1)
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_copy.nii --expression "i1" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_copy.nii --expression "i1" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_copy.nii
 
   - name: ImCalc scalar multiplication
     description: Multiply image by scalar value
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_mul2.nii --expression "i1*2" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_mul2.nii --expression "i1*2" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_mul2.nii
 
   - name: ImCalc scalar addition
     description: Add scalar to image
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_add100.nii --expression "i1+100" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_add100.nii --expression "i1+100" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_add100.nii
 
   - name: ImCalc division
     description: Divide image by scalar
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_div2.nii --expression "i1/2" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_div2.nii --expression "i1/2" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_div2.nii
 
   - name: ImCalc square root
     description: Calculate square root of image
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_sqrt.nii --expression "sqrt(i1)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_sqrt.nii --expression "sqrt(i1)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_sqrt.nii
 
   - name: ImCalc log transform
     description: Calculate natural log (with threshold)
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_log.nii --expression "log(i1+1)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_log.nii --expression "log(i1+1)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_log.nii
 
   - name: ImCalc exponential
     description: Calculate exponential (scaled)
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_exp.nii --expression "exp(i1/1000)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_exp.nii --expression "exp(i1/1000)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_exp.nii
 
   - name: ImCalc absolute value
     description: Calculate absolute value
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_abs.nii --expression "abs(i1)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_abs.nii --expression "abs(i1)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_abs.nii
 
   - name: ImCalc thresholding
     description: Apply threshold to image
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_thr.nii --expression "i1.*(i1>100)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_thr.nii --expression "i1.*(i1>100)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_thr.nii
 
   - name: ImCalc binarize
     description: Binarize image at threshold
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_bin.nii --expression "i1>100" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_bin.nii --expression "i1>100" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_bin.nii
 
   - name: ImCalc power function
     description: Raise image to power
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_pow2.nii --expression "i1.^2" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_pow2.nii --expression "i1.^2" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_pow2.nii
 
   - name: ImCalc trigonometric sin
     description: Calculate sine of image
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_sin.nii --expression "sin(i1)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_sin.nii --expression "sin(i1)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_sin.nii
 
   - name: ImCalc trigonometric cos
     description: Calculate cosine of image
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_cos.nii --expression "cos(i1)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_cos.nii --expression "cos(i1)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_cos.nii
 
   - name: ImCalc min clamp
     description: Clamp minimum values
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_minclamp.nii --expression "max(i1,50)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_minclamp.nii --expression "max(i1,50)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_minclamp.nii
 
   - name: ImCalc max clamp
     description: Clamp maximum values
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_maxclamp.nii --expression "min(i1,500)" 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output test_output/imcalc/t1w_maxclamp.nii --expression "min(i1,500)" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_maxclamp.nii
 
   - name: ImCalc NaN replacement
     description: Replace NaN values with zero
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_nantozero.nii --expression "i1" --options --mask 0 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output ${output_dir}/imcalc/t1w_nantozero.nii --expression "i1" --options --mask "NaNs should be zeroed" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_nantozero.nii
 
   - name: ImCalc output dtype float
     description: Output as single precision float
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_float.nii --expression "i1" --dtype FLOAT32 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output ${output_dir}/imcalc/t1w_float.nii --expression "i1" --dtype "FLOAT32 - single prec. float" 2>&1
     validate:
       - output_exists: ${output_dir}/imcalc/t1w_float.nii
 
-  - name: ImCalc output dtype int16
-    description: Output as int16
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${t1w} --output test_output/imcalc/t1w_int16.nii --expression "i1" --dtype INT16 2>&1
+  - name: ImCalc output dtype float64
+    description: Output as double precision float (INT16 broken - MATLAB collapses whitespace in option strings)
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.imcalc --input ${output_dir}/sub-02_T1w.nii --output ${output_dir}/imcalc/t1w_float64.nii --expression "i1" --dtype "FLOAT64 - double prec. float" 2>&1
     validate:
-      - output_exists: ${output_dir}/imcalc/t1w_int16.nii
+      - output_exists: ${output_dir}/imcalc/t1w_float64.nii
 
   # ==========================================================================
   # UTILITY FUNCTIONS - GENERAL
@@ -202,7 +207,7 @@ tests:
 
   - name: Bounding box calculation
     description: Calculate image bounding box
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.bbox --image ${t1w} 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.bbox --image ${output_dir}/sub-02_T1w.nii 2>&1
     expected_exit_code: 0
 
   - name: Reorient help
@@ -222,7 +227,7 @@ tests:
 
   - name: Split 4D to 3D volumes
     description: Split 4D BOLD into 3D volumes
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.split --vol ${bold} --outdir test_output/util 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.util.split --vol ${output_dir}/bold_run01.nii --outdir test_output/util 2>&1
     expected_exit_code: 0
     validate:
       - output_dir_not_empty: test_output/util
@@ -247,39 +252,39 @@ tests:
 
   - name: Smooth 4mm FWHM
     description: Apply 4mm isotropic Gaussian smoothing
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[4 4 4]" --prefix s4_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[4 4 4]" --prefix s4_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/s4_sub-02_T1w.nii
+      - output_exists: ${output_dir}/s4_sub-02_T1w.nii
 
   - name: Smooth 6mm FWHM
     description: Apply 6mm isotropic Gaussian smoothing
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[6 6 6]" --prefix s6_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[6 6 6]" --prefix s6_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/s6_sub-02_T1w.nii
+      - output_exists: ${output_dir}/s6_sub-02_T1w.nii
 
   - name: Smooth 8mm FWHM
     description: Apply 8mm isotropic Gaussian smoothing (common for fMRI)
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[8 8 8]" --prefix s8_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[8 8 8]" --prefix s8_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/s8_sub-02_T1w.nii
+      - output_exists: ${output_dir}/s8_sub-02_T1w.nii
 
   - name: Smooth 12mm FWHM
     description: Apply 12mm isotropic Gaussian smoothing
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[12 12 12]" --prefix s12_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[12 12 12]" --prefix s12_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/s12_sub-02_T1w.nii
+      - output_exists: ${output_dir}/s12_sub-02_T1w.nii
 
   - name: Smooth anisotropic
     description: Apply anisotropic Gaussian smoothing
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[4 6 8]" --prefix saniso_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[4 6 8]" --prefix saniso_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/saniso_sub-02_T1w.nii
+      - output_exists: ${output_dir}/saniso_sub-02_T1w.nii
 
   - name: Smooth with implicit mask
     description: Apply smoothing with implicit masking
-    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${t1w} --fwhm "[6 6 6]" --im Yes --prefix sim_ 2>&1
+    command: /opt/spm/run_spm25.sh /usr/local/MATLAB/MATLAB_Runtime/R2024b spm.spatial.smooth --data ${output_dir}/sub-02_T1w.nii --fwhm "[6 6 6]" --im Yes --prefix sim_ 2>&1
     validate:
-      - output_exists: ds000001/sub-02/anat/sim_sub-02_T1w.nii
+      - output_exists: ${output_dir}/sim_sub-02_T1w.nii
 
   # ==========================================================================
   # SPATIAL PROCESSING - REALIGNMENT (MOTION CORRECTION)
@@ -713,13 +718,13 @@ tests:
 cleanup:
   script: |
     #!/usr/bin/env bash
-    # Remove smoothed images from source directories
-    rm -f ds000001/sub-02/anat/s4_*.nii
-    rm -f ds000001/sub-02/anat/s6_*.nii
-    rm -f ds000001/sub-02/anat/s8_*.nii
-    rm -f ds000001/sub-02/anat/s12_*.nii
-    rm -f ds000001/sub-02/anat/saniso_*.nii
-    rm -f ds000001/sub-02/anat/sim_*.nii
+    # Remove smoothed images from test_output directory
+    rm -f test_output/s4_*.nii
+    rm -f test_output/s6_*.nii
+    rm -f test_output/s8_*.nii
+    rm -f test_output/s12_*.nii
+    rm -f test_output/saniso_*.nii
+    rm -f test_output/sim_*.nii
     # Optionally remove test outputs
     # rm -rf test_output
     echo "Test outputs preserved in test_output/"

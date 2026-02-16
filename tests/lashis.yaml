@@ -47,36 +47,43 @@ tests:
   - name: LASHiS usage information
     description: Check LASHiS displays required arguments
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Required arguments"
 
   - name: LASHiS optional arguments
     description: Check LASHiS displays optional arguments
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Optional arguments"
 
   - name: LASHiS atlas option
     description: Verify atlas selection option is documented
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "-a: Atlas selection"
 
   - name: LASHiS output prefix option
     description: Verify output prefix option is documented
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "-o:  Output prefix"
 
   - name: LASHiS parallel computation option
     description: Verify parallel computation control option
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "control type"
 
   - name: LASHiS N4 bias correction option
     description: Verify N4 bias correction option exists
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "N4 Bias Correction"
 
   - name: LASHiS denoising option
     description: Verify denoising option exists
     command: /LASHiS/LASHiS.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "denoise"
 
   # ==========================================================================
@@ -232,11 +239,13 @@ tests:
   - name: Template construction dimensionality option
     description: Verify template construction dimensionality option
     command: /opt/ants-2.3.0/antsMultivariateTemplateConstruction2.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "ImageDimension"
 
   - name: Template construction parallel option
     description: Verify template construction parallel option
     command: /opt/ants-2.3.0/antsMultivariateTemplateConstruction2.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "parallel"
 
   # ==========================================================================
@@ -316,11 +325,13 @@ tests:
   - name: Brain extraction anatomical image option
     description: Verify brain extraction anatomical image option
     command: /opt/ants-2.3.0/antsBrainExtraction.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "-a:  Anatomical image"
 
   - name: Brain extraction template option
     description: Verify brain extraction template option
     command: /opt/ants-2.3.0/antsBrainExtraction.sh -h 2>&1
+    ignore_exit_code: true
     expected_output_contains: "-e:  Brain extraction template"
 
   # ==========================================================================
@@ -365,11 +376,13 @@ tests:
   - name: ImageMath mathematical operations
     description: Verify ImageMath documents math operations
     command: /opt/ants-2.3.0/ImageMath 3 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Mathematical Operations"
 
   - name: ImageMath spatial filtering
     description: Verify ImageMath documents spatial filtering
     command: /opt/ants-2.3.0/ImageMath 3 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Spatial Filtering"
 
   - name: ImageMath multiply operation
@@ -387,6 +400,7 @@ tests:
   - name: PrintHeader usage
     description: Verify PrintHeader displays usage
     command: /opt/ants-2.3.0/PrintHeader 2>&1
+    ignore_exit_code: true
     expected_output_contains: "PrintHeader"
 
   - name: PrintHeader origin
@@ -415,11 +429,13 @@ tests:
   - name: ThresholdImage usage
     description: Verify ThresholdImage displays usage
     command: /opt/ants-2.3.0/ThresholdImage 2>&1
+    ignore_exit_code: true
     expected_output_contains: "ThresholdImage"
 
   - name: ThresholdImage Otsu option
     description: Verify ThresholdImage Otsu option
     command: /opt/ants-2.3.0/ThresholdImage 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Otsu"
 
   - name: ThresholdImage basic threshold
@@ -440,11 +456,13 @@ tests:
   - name: ConvertImagePixelType usage
     description: Verify ConvertImagePixelType displays usage
     command: /opt/ants-2.3.0/ConvertImagePixelType 2>&1
+    ignore_exit_code: true
     expected_output_contains: "ConvertImagePixelType"
 
   - name: ConvertImagePixelType types
     description: Verify pixel type options are documented
     command: /opt/ants-2.3.0/ConvertImagePixelType 2>&1
+    ignore_exit_code: true
     expected_output_contains: "unsigned char"
 
   - name: ConvertImage exists
@@ -477,11 +495,13 @@ tests:
   - name: AverageImages usage
     description: Verify AverageImages displays usage
     command: /opt/ants-2.3.0/AverageImages 2>&1
+    ignore_exit_code: true
     expected_output_contains: "AverageImages"
 
   - name: AverageImages normalize option
     description: Verify AverageImages normalize option
     command: /opt/ants-2.3.0/AverageImages 2>&1
+    ignore_exit_code: true
     expected_output_contains: "Normalize"
 
   # ==========================================================================
@@ -490,6 +510,7 @@ tests:
   - name: LabelGeometryMeasures usage
     description: Verify LabelGeometryMeasures displays usage
     command: /opt/ants-2.3.0/LabelGeometryMeasures 2>&1
+    ignore_exit_code: true
     expected_output_contains: "LabelGeometryMeasures"
 
   - name: LabelGeometryMeasures test
@@ -548,6 +569,7 @@ tests:
   - name: CreateImage usage
     description: Verify CreateImage displays usage
     command: /opt/ants-2.3.0/CreateImage 2>&1
+    ignore_exit_code: true
     expected_output_contains: "CreateImage"
 
   - name: CopyImageHeaderInformation exists

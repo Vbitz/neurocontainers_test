@@ -283,8 +283,8 @@ tests:
     ignore_exit_code: true
 
   - name: TH2F 2D histogram
-    description: Test 2D histogram creation
-    command: "root -b -l -q -e 'TH2F h(\"h2\",\"2D\",50,-5,5,50,-5,5); h.FillRandom(\"gaus\",5000); cout << h.GetEntries() << endl;' 2>&1"
+    description: Test 2D histogram creation (FillRandom needs TF2, so fill manually)
+    command: "root -b -l -q -e 'TH2F h(\"h2\",\"2D\",50,-5,5,50,-5,5); for(int i=0;i<5000;i++) h.Fill(gRandom->Gaus(),gRandom->Gaus()); cout << h.GetEntries() << endl;' 2>&1"
     expected_output_contains: "5000"
     ignore_exit_code: true
 

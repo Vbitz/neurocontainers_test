@@ -504,7 +504,7 @@ tests:
     description: Test image reflection (used in asymmetry analysis)
     command: |
       R --quiet -e "
-        library(ANTsRCore)
+        library(ANTsR)
         img <- antsImageRead('${t1w}')
         img_reflect <- reflectImage(img, axis=0)
         antsImageWrite(img_reflect, 'test_output/linda/t1w_reflected.nii.gz')

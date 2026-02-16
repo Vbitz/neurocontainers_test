@@ -225,7 +225,7 @@ tests:
     description: Test automatic bounding box cropping
     command: |
       3dAutobox -prefix test_output/t1w_autobox.nii.gz \
-        -npad 5 ${t1w} 2>&1
+        -npad 5 -input ${t1w} 2>&1
     validate:
       - output_exists: ${output_dir}/t1w_autobox.nii.gz
 

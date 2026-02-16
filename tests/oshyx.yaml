@@ -258,8 +258,8 @@ tests:
     expected_output_contains: "1.0"
 
   - name: ANTsPy denoise function
-    description: Test ANTsPy denoising
-    command: 'python -c "import ants; img=ants.image_read(''/OSHy/sub-test.nii.gz''); result=ants.denoise_image(img); print(''Denoising works'')"'
+    description: Test ANTsPy denoising on downsampled image to avoid timeout
+    command: 'python -c "import ants; img=ants.image_read(''/OSHy/sub-test.nii.gz''); small=ants.resample_image(img, (2,2,2), False, 1); result=ants.denoise_image(small); print(''Denoising works'')"'
     expected_output_contains: "Denoising works"
 
   - name: ANTsPy registration function exists
@@ -392,13 +392,13 @@ tests:
 
   - name: ANTsPy Otsu thresholding
     description: Test Otsu automatic thresholding
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); ants.image_write(mask, 'test_output/otsu_mask.nii.gz'); print('Otsu successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); ants.image_write(mask, 'test_output/otsu_mask.nii.gz'); print('Otsu successful')"
     validate:
       - output_exists: ${output_dir}/otsu_mask.nii.gz
 
   - name: ANTsPy mask application
     description: Test masking an image
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); masked=ants.mask_image(img, mask); ants.image_write(masked, 'test_output/masked.nii.gz'); print('Masking successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); masked=ants.mask_image(img, mask); ants.image_write(masked, 'test_output/masked.nii.gz'); print('Masking successful')"
     depends_on: ANTsPy Otsu thresholding
     validate:
       - output_exists: ${output_dir}/masked.nii.gz
@@ -434,28 +434,28 @@ tests:
 
   - name: ANTsPy morphological dilation
     description: Test morphological dilation
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); dilated=ants.iMath_MD(mask, 2); ants.image_write(dilated, 'test_output/dilated.nii.gz'); print('Dilation successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); dilated=ants.iMath_MD(mask, 2); ants.image_write(dilated, 'test_output/dilated.nii.gz'); print('Dilation successful')"
     depends_on: ANTsPy Otsu thresholding
     validate:
       - output_exists: ${output_dir}/dilated.nii.gz
 
   - name: ANTsPy morphological erosion
     description: Test morphological erosion
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); eroded=ants.iMath_ME(mask, 2); ants.image_write(eroded, 'test_output/eroded.nii.gz'); print('Erosion successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); eroded=ants.iMath_ME(mask, 2); ants.image_write(eroded, 'test_output/eroded.nii.gz'); print('Erosion successful')"
     depends_on: ANTsPy Otsu thresholding
     validate:
       - output_exists: ${output_dir}/eroded.nii.gz
 
   - name: ANTsPy fill holes
     description: Test hole filling in mask
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); filled=ants.iMath_fill_holes(mask); ants.image_write(filled, 'test_output/filled.nii.gz'); print('Fill holes successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); filled=ants.iMath_fill_holes(mask); ants.image_write(filled, 'test_output/filled.nii.gz'); print('Fill holes successful')"
     depends_on: ANTsPy Otsu thresholding
     validate:
       - output_exists: ${output_dir}/filled.nii.gz
 
   - name: ANTsPy get largest component
     description: Test extracting largest connected component
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); largest=ants.iMath_get_largest_component(mask); ants.image_write(largest, 'test_output/largest_component.nii.gz'); print('Largest component successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); largest=ants.iMath_get_largest_component(mask); ants.image_write(largest, 'test_output/largest_component.nii.gz'); print('Largest component successful')"
     depends_on: ANTsPy Otsu thresholding
     validate:
       - output_exists: ${output_dir}/largest_component.nii.gz
@@ -511,13 +511,13 @@ tests:
   # ==========================================================================
   - name: ANTsPy label geometry measures
     description: Test computing label geometry measures
-    command: 'python -c "import ants; img=ants.image_read(''/OSHy/sub-test.nii.gz''); mask=ants.otsu(img); stats=ants.label_geometry_measures(mask, img); print(''Measures computed: '' + str(len(stats)) + '' rows'')"'
+    command: 'python -c "import ants; img=ants.image_read(''/OSHy/sub-test.nii.gz''); mask=ants.otsu_segmentation(img, 2); stats=ants.label_geometry_measures(mask, img); print(''Measures computed: '' + str(len(stats)) + '' rows'')"'
     expected_output_contains: "Measures computed:"
 
   - name: ImageMath label stats
     description: Test ImageMath LabelStats operation
     command: |
-      python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); ants.image_write(mask, 'test_output/temp_mask.nii.gz')" && \
+      python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); ants.image_write(mask, 'test_output/temp_mask.nii.gz')" && \
       ImageMath 3 test_output/label_stats.csv LabelStats test_output/temp_mask.nii.gz /OSHy/sub-test.nii.gz 2>&1 | head -5
     validate:
       - output_exists: ${output_dir}/label_stats.csv
@@ -642,13 +642,13 @@ tests:
   # ==========================================================================
   - name: ANTsPy crop image
     description: Test image cropping with ANTsPy
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu(img); cropped=ants.crop_image(img, mask); ants.image_write(cropped, 'test_output/cropped.nii.gz'); print('Cropping successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); mask=ants.otsu_segmentation(img, 2); cropped=ants.crop_image(img, mask); ants.image_write(cropped, 'test_output/cropped.nii.gz'); print('Cropping successful')"
     validate:
       - output_exists: ${output_dir}/cropped.nii.gz
 
   - name: ANTsPy pad image
     description: Test image padding
-    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); padded=ants.pad_image(img, pad_width=10); ants.image_write(padded, 'test_output/padded.nii.gz'); print('Padding successful')"
+    command: python -c "import ants; img=ants.image_read('/OSHy/sub-test.nii.gz'); padded=ants.pad_image(img, pad_width=(10,10,10)); ants.image_write(padded, 'test_output/padded.nii.gz'); print('Padding successful')"
     validate:
       - output_exists: ${output_dir}/padded.nii.gz
 

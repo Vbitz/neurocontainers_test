@@ -8,11 +8,14 @@ name: rstudio
 version: 2023.12.1
 container: rstudio_2023.12.1_20260127.simg
 
+test_data:
+  output_dir: test_output
+
 setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
+    mkdir -p ${output_dir}
 
 tests:
   # ==========================================================================
@@ -180,7 +183,7 @@ tests:
   # ==========================================================================
   - name: stats package - t-test
     description: Test basic t-test functionality
-    command: Rscript -e "result <- t.test(1:10, mu=5); print(result$p.value)"
+    command: Rscript -e 'result <- t.test(1:10, mu=5); print(result$p.value)'
     expected_exit_code: 0
 
   - name: stats package - linear model
@@ -205,7 +208,7 @@ tests:
 
   - name: mgcv package - GAM
     description: Verify mgcv GAM functionality
-    command: Rscript -e "library(mgcv); m <- gam(mpg ~ s(wt), data=mtcars); print(summary(m)$r.sq)"
+    command: Rscript -e 'library(mgcv); m <- gam(mpg ~ s(wt), data=mtcars); print(summary(m)$r.sq)'
     expected_exit_code: 0
 
   - name: survival package
@@ -725,41 +728,41 @@ tests:
   # ==========================================================================
   - name: CSV write and read
     description: Test writing and reading CSV files
-    command: Rscript -e "write.csv(mtcars, 'test_output/mtcars.csv'); d <- read.csv('test_output/mtcars.csv'); print(nrow(d))"
+    command: Rscript -e "write.csv(mtcars, '${output_dir}/mtcars.csv'); d <- read.csv('${output_dir}/mtcars.csv'); print(nrow(d))"
     expected_output_contains: "32"
     validate:
       - output_exists: ${output_dir}/mtcars.csv
 
   - name: RDS save and load
     description: Test saving and loading RDS files
-    command: Rscript -e "saveRDS(iris, 'test_output/iris.rds'); d <- readRDS('test_output/iris.rds'); print(nrow(d))"
+    command: Rscript -e "saveRDS(iris, '${output_dir}/iris.rds'); d <- readRDS('${output_dir}/iris.rds'); print(nrow(d))"
     expected_output_contains: "150"
     validate:
       - output_exists: ${output_dir}/iris.rds
 
   - name: PNG graphics output
     description: Test PNG graphics device
-    command: Rscript -e "png('test_output/plot.png'); plot(1:10); dev.off(); print('done')"
+    command: Rscript -e "png('${output_dir}/plot.png'); plot(1:10); dev.off(); print('done')"
     expected_output_contains: "done"
     validate:
       - output_exists: ${output_dir}/plot.png
 
   - name: PDF graphics output
     description: Test PDF graphics device
-    command: Rscript -e "pdf('test_output/plot.pdf'); plot(1:10); dev.off(); print('done')"
+    command: Rscript -e "pdf('${output_dir}/plot.pdf'); plot(1:10); dev.off(); print('done')"
     expected_output_contains: "done"
     validate:
       - output_exists: ${output_dir}/plot.pdf
 
   - name: ggplot2 save
     description: Test ggplot2 ggsave functionality
-    command: Rscript -e "library(ggplot2); p <- ggplot(mtcars, aes(wt, mpg)) + geom_point(); ggsave('test_output/ggplot.png', p, width=6, height=4)"
+    command: Rscript -e "library(ggplot2); p <- ggplot(mtcars, aes(wt, mpg)) + geom_point(); ggsave('${output_dir}/ggplot.png', p, width=6, height=4)"
     validate:
       - output_exists: ${output_dir}/ggplot.png
 
   - name: JSON write
     description: Test JSON file output
-    command: Rscript -e "library(jsonlite); write_json(list(a=1, b=2), 'test_output/data.json'); print('done')"
+    command: Rscript -e "library(jsonlite); write_json(list(a=1, b=2), '${output_dir}/data.json'); print('done')"
     expected_output_contains: "done"
     validate:
       - output_exists: ${output_dir}/data.json
@@ -774,7 +777,7 @@ tests:
 
   - name: Statistical summary
     description: Test summary statistics calculation
-    command: Rscript -e "summary_stats <- function(x) c(mean=mean(x), sd=sd(x), median=median(x)); print(summary_stats(mtcars$mpg))"
+    command: Rscript -e 'summary_stats <- function(x) c(mean=mean(x), sd=sd(x), median=median(x)); print(summary_stats(mtcars$mpg))'
     expected_output_contains: "mean"
 
   - name: Correlation matrix
@@ -784,7 +787,7 @@ tests:
 
   - name: PCA analysis
     description: Test principal component analysis
-    command: Rscript -e "pca <- prcomp(mtcars[,1:7], scale=TRUE); print(summary(pca)$importance[,1:2])"
+    command: Rscript -e 'pca <- prcomp(mtcars[,1:7], scale=TRUE); print(summary(pca)$importance[,1:2])'
     expected_output_contains: "Proportion of Variance"
 
   - name: k-means clustering

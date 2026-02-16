@@ -286,6 +286,7 @@ tests:
 
   - name: Gaussian kernel smoothing
     description: Test -kernel gauss with -fmean
+    timeout: 300
     command: niimath ${t1w} -kernel gauss 2 -fmean test_output/t1w_gauss2_fmean.nii.gz
     validate:
       - output_exists: ${output_dir}/t1w_gauss2_fmean.nii.gz
@@ -771,9 +772,9 @@ tests:
   # IMAGE COMPARISON (niimath-specific)
   # ==========================================================================
   - name: Compare identical images
-    description: Test --compare with identical images
-    command: niimath ${t1w} --compare ${t1w} 2>&1
-    expected_output_contains: "identical"
+    description: Test --compare with identical images (exit 0 = identical)
+    command: niimath ${t1w} --compare ${t1w}
+    expected_exit_code: 0
 
   - name: Compare with threshold
     description: Test --compare with threshold tolerance

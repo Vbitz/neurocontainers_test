@@ -123,20 +123,19 @@ Affected: `SimpleThresholding`, `NCWHDTensorInterpolation`, `WHDTensor2NCWHD`,
 `N1WHDTensor2NCWHDOnehot`, `NumpyArray2TorchTensor`, `RemoveSmallObjectsFromBinaryArray`.
 
 ### qupath
-**Severity: Moderate -- 75/120 tests pass**
+**Severity: Critical -- 3/120 tests pass (only error-handling tests)**
 
-QuPath segfaults (exit 139) on all `script --cmd` invocations, including
-trivial Groovy expressions.
+QuPath segfaults (exit 139) on ALL invocations, including `--version`,
+`--help`, `script`, and `convert-ome`. The binary is completely non-functional.
 
-**Why this is a container bug:** `QuPath script` is a documented QuPath
-subcommand for headless scripting. The container should support headless
-operation since it has no display. The segfault likely occurs because JavaFX
-tries to initialize a display and crashes instead of falling back gracefully.
-Non-script commands like `convert-ome` work fine, confirming the container
-runs but this specific mode is broken.
+**Why this is a container bug:** The QuPath ELF launcher binary segfaults
+immediately before any Java code executes. This appears to be a shared library
+or runtime incompatibility. The container cannot perform any of its functions.
 
 ```
-Segmentation fault (core dumped) QuPath script --cmd "println('hello')"
+QuPath --version -> Segmentation fault (core dumped) (exit 139)
+QuPath --help -> Segmentation fault (core dumped) (exit 139)
+QuPath script --cmd "println('hello')" -> Segmentation fault (core dumped) (exit 139)
 ```
 
 ---
@@ -255,6 +254,21 @@ SIGABRT, indicating incomplete FSL installation.
 standard_space_roi: Aborted (core dumped)
 ```
 
+### spinalcordtoolbox
+**Severity: Critical -- 0/98 tests pass (container image unreadable)**
+
+The container image file is corrupted. Apptainer cannot mount the squashfs
+image. No tests can run.
+
+**Why this is a container bug:** The `.simg` file is physically corrupted —
+apptainer's squashfuse driver cannot read the squashfs filesystem.
+
+```
+FATAL: container creation failed: image driver mount failure:
+  image driver squashfuse_ll instance exited with error:
+  squashfuse_ll exited: Something went wrong trying to read the squashfs image.
+```
+
 ---
 
 ## Summary
@@ -267,7 +281,7 @@ standard_space_roi: Aborted (core dumped)
 | tractseg | Missing libfftw3.so.3 | Moderate |
 | mritools | Primary Julia package not installed | Moderate |
 | vesselapp | Python name-mangling code bug | Moderate |
-| qupath | Segfault in headless script mode | Moderate |
+| qupath | ALL invocations segfault (binary non-functional) | Critical |
 | bart | SIGABRT on missing input files | Low |
 | niimath | SIGABRT on missing input files | Low |
 | niftyreg | SIGSEGV on missing input files | Low |
@@ -275,3 +289,4 @@ standard_space_roi: Aborted (core dumped)
 | cat12 | GLIBC_2.29 mismatch breaks all MEX files | High |
 | ants | ResetDirection segfault, TimeSeriesDisassemble crash | Low |
 | aslprep | Missing dc binary, broken standard_space_roi | Low |
+| spinalcordtoolbox | Corrupted container image (squashfs unreadable) | Critical |

@@ -209,8 +209,9 @@ tests:
   # ==========================================================================
   - name: dcm2niix version
     description: Verify dcm2niix is installed and check version
-    command: dcm2niix --version
+    command: dcm2niix --version 2>&1
     expected_output_contains: "v1.0"
+    ignore_exit_code: true
 
   - name: dcm2niix help
     description: Verify dcm2niix help is accessible
@@ -269,6 +270,7 @@ tests:
     description: Verify fslinfo is available
     command: fslinfo 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: fslinfo on test data
     description: Run fslinfo on test NIfTI
@@ -279,6 +281,7 @@ tests:
     description: Verify fslhd (header display) is available
     command: fslhd 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: fslhd on test data
     description: Display NIfTI header
@@ -318,21 +321,25 @@ tests:
     description: Verify mincinfo is available
     command: /opt/minc/1.9.15/bin/mincinfo 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: mincconvert help
     description: Verify mincconvert is available
     command: /opt/minc/1.9.15/bin/mincconvert 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: mincmath help
     description: Verify mincmath is available
     command: /opt/minc/1.9.15/bin/mincmath 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: mincresample help
     description: Verify mincresample is available
     command: /opt/minc/1.9.15/bin/mincresample 2>&1
     expected_output_contains: "Usage"
+    ignore_exit_code: true
 
   - name: mincstats exists
     description: Verify mincstats is available
@@ -546,6 +553,7 @@ tests:
     description: Run FAST segmentation on brain extracted data
     command: fast -o test_output/t1w_seg test_output/t1w_brain.nii.gz
     depends_on: BET run brain extraction
+    timeout: 300
     validate:
       - output_exists: ${output_dir}/t1w_seg_seg.nii.gz
 

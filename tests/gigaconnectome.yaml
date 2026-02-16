@@ -23,6 +23,8 @@ required_files:
       - sub-01/anat/sub-01_T1w.nii.gz
       - sub-01/anat/sub-01_inplaneT2.nii.gz
       - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-02_bold.nii.gz
+      - sub-01/func/sub-01_task-balloonanalogrisktask_run-03_bold.nii.gz
       - sub-01/func/sub-01_task-balloonanalogrisktask_run-01_events.tsv
 
 test_data:
@@ -154,7 +156,7 @@ tests:
 
   - name: pybids layout creation
     description: Create BIDS layout database index
-    command: pybids layout ${bids_dir} test_output/bids_layout --no-validate 2>&1
+    command: mkdir -p test_output/bids_layout && pybids layout ${bids_dir} test_output/bids_layout --no-validate 2>&1
     expected_exit_code: 0
     validate:
       - output_exists: ${output_dir}/bids_layout
@@ -513,16 +515,18 @@ tests:
     expected_output_contains: "Partial correlation matrix shape: (50, 50)"
 
   - name: nilearn tangent connectivity
-    description: Compute tangent connectivity matrix
+    description: Compute tangent connectivity matrix (requires multiple subjects)
     command: |
       python3 -c "
       from nilearn import connectome, masking
       import numpy as np
       masked_data = masking.apply_mask('${bold}', 'test_output/bold_mask_nilearn.nii.gz')
       subset = masked_data[:, :50]
+      # Tangent needs multiple subjects - simulate with noise-added copies
+      subjects = [subset, subset + np.random.randn(*subset.shape) * 0.01]
       conn = connectome.ConnectivityMeasure(kind='tangent')
-      tangent_matrix = conn.fit_transform([subset])[0]
-      print('Tangent connectivity matrix shape:', tangent_matrix.shape)
+      tangent_matrices = conn.fit_transform(subjects)
+      print('Tangent connectivity matrix shape:', tangent_matrices[0].shape)
       "
     depends_on: nilearn compute EPI mask
     expected_output_contains: "Tangent connectivity matrix shape: (50, 50)"

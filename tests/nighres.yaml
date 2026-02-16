@@ -479,7 +479,7 @@ tests:
   - name: ANTs image information
     description: Get image information using PrintHeader
     command: PrintHeader ${t1w} 2>&1 | head -20
-    expected_output_contains: "dim"
+    expected_output_contains: "Dimensions"
 
   - name: ANTs create mask
     description: Create a simple mask using ThresholdImage

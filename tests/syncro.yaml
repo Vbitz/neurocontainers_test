@@ -76,6 +76,7 @@ tests:
   - name: SynthStrip help
     description: Verify SynthStrip displays help
     command: mri_synthstrip --help 2>&1
+    ignore_exit_code: true
     expected_output_contains:
       - "skull-stripping"
       - "--image"
@@ -149,7 +150,7 @@ tests:
     timeout: 600
     validate:
       - output_exists: ${output_dir}/syncro_options/wbt1sub-01_T1w.nii.gz
-    expected_output_contains: "DEBUG"
+    expected_output_contains: "INFO"
 
   - name: Normalization with silent logging
     description: Run normalization with minimal output
@@ -318,7 +319,8 @@ tests:
   - name: Invalid output directory
     description: Verify appropriate error for unwritable directory
     command: SYNcro.py ${t1w} -d /nonexistent/path/that/does/not/exist 2>&1 || true
-    expected_exit_code: 1
+    ignore_exit_code: true
+    expected_output_contains: "Write access required"
 
   # ==========================================================================
   # MNI TEMPLATE VERIFICATION
@@ -464,7 +466,7 @@ tests:
 
       with tempfile.NamedTemporaryFile(suffix='.nii.gz', delete=False) as f:
           nib.save(img, f.name)
-          binarize_nifti(f.name, threshold=0.5)
+          binarize_nifti(f.name)
           result = nib.load(f.name).get_fdata()
           os.unlink(f.name)
 

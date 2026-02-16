@@ -545,6 +545,7 @@ tests:
 
   - name: Greedy metric computation
     description: Test greedy -metric for computing registration metric
+    timeout: 300
     command: greedy -d 3 -i ${t1w} ${t2} -it test_output/greedy_affine.mat -m NCC 4 -o test_output/greedy_metric.nii.gz
     depends_on: Greedy affine registration
     validate:
@@ -653,7 +654,7 @@ tests:
   # ==========================================================================
   - name: C3D tile images
     description: Test -tile operation (combine images into grid)
-    command: c3d ${t1w} -slice z 40% -as S1 ${t1w} -slice z 50% -as S2 -push S1 -push S2 -tile 2x1 -o test_output/c3d_tiled.nii.gz
+    command: c3d ${t1w} -dup -tile 1x1x2 -o test_output/c3d_tiled.nii.gz
     validate:
       - output_exists: ${output_dir}/c3d_tiled.nii.gz
 

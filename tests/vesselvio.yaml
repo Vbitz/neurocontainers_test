@@ -483,37 +483,37 @@ tests:
   # ==========================================================================
   - name: NiBabel NIfTI creation
     description: Test creating NIfTI files for vessel data
-    command: python -c "import nibabel as nib; import numpy as np; data = np.random.randint(0, 2, (10,10,10), dtype=np.uint8); img = nib.Nifti1Image(data, np.eye(4)); nib.save(img, 'test_output/test_vessel.nii.gz'); print('NIfTI file created successfully')"
+    command: python -c "import nibabel as nib; import numpy as np; data = np.random.randint(0, 2, (10,10,10), dtype=np.uint8); img = nib.Nifti1Image(data, np.eye(4)); nib.save(img, '${output_dir}/test_vessel.nii.gz'); print('NIfTI file created successfully')"
     validate:
       - output_exists: ${output_dir}/test_vessel.nii.gz
 
   - name: NiBabel NIfTI reading
     description: Test reading NIfTI files
-    command: python -c "import nibabel as nib; img = nib.load('test_output/test_vessel.nii.gz'); data = img.get_fdata(); print('NIfTI data shape:', data.shape)"
+    command: python -c "import nibabel as nib; img = nib.load('${output_dir}/test_vessel.nii.gz'); data = img.get_fdata(); print('NIfTI data shape:', data.shape)"
     depends_on: NiBabel NIfTI creation
     expected_output_contains: "NIfTI data shape: (10, 10, 10)"
 
   - name: TIFF file creation
     description: Test creating TIFF files for vessel images
-    command: python -c "import tifffile; import numpy as np; data = np.random.randint(0, 255, (50,50,50), dtype=np.uint8); tifffile.imwrite('test_output/test_vessel.tif', data); print('TIFF file created successfully')"
+    command: python -c "import tifffile; import numpy as np; data = np.random.randint(0, 255, (50,50,50), dtype=np.uint8); tifffile.imwrite('${output_dir}/test_vessel.tif', data); print('TIFF file created successfully')"
     validate:
       - output_exists: ${output_dir}/test_vessel.tif
 
   - name: TIFF file reading
     description: Test reading TIFF files
-    command: python -c "import tifffile; data = tifffile.imread('test_output/test_vessel.tif'); print('TIFF data shape:', data.shape)"
+    command: python -c "import tifffile; data = tifffile.imread('${output_dir}/test_vessel.tif'); print('TIFF data shape:', data.shape)"
     depends_on: TIFF file creation
     expected_output_contains: "TIFF data shape: (50, 50, 50)"
 
   - name: CSV export with Pandas
     description: Test exporting vessel metrics to CSV
-    command: "python -c \"import pandas as pd; df = pd.DataFrame({'segment_id': [1,2,3], 'length': [10.5, 15.2, 8.7], 'radius': [1.2, 1.5, 0.9]}); df.to_csv('test_output/vessel_metrics.csv', index=False); print('CSV exported successfully')\""
+    command: "python -c \"import pandas as pd; df = pd.DataFrame({'segment_id': [1,2,3], 'length': [10.5, 15.2, 8.7], 'radius': [1.2, 1.5, 0.9]}); df.to_csv('${output_dir}/vessel_metrics.csv', index=False); print('CSV exported successfully')\""
     validate:
       - output_exists: ${output_dir}/vessel_metrics.csv
 
   - name: Excel export with openpyxl
     description: Test exporting vessel data to Excel
-    command: "python -c \"import pandas as pd; df = pd.DataFrame({'vessel': [1,2], 'volume': [100, 200]}); df.to_excel('test_output/vessel_data.xlsx', index=False); print('Excel file created successfully')\""
+    command: "python -c \"import pandas as pd; df = pd.DataFrame({'vessel': [1,2], 'volume': [100, 200]}); df.to_excel('${output_dir}/vessel_data.xlsx', index=False); print('Excel file created successfully')\""
     validate:
       - output_exists: ${output_dir}/vessel_data.xlsx
 
@@ -539,7 +539,7 @@ tests:
               for x in range(30, 34):
                   vol[z,y,x] = 1
       img = nib.Nifti1Image(vol, np.eye(4))
-      nib.save(img, 'test_output/synthetic_vessel.nii.gz')
+      nib.save(img, '${output_dir}/synthetic_vessel.nii.gz')
       print('Synthetic vessel volume created')
       print('Volume sum:', vol.sum())
       "
@@ -552,7 +552,7 @@ tests:
       python -c "
       import nibabel as nib
       from skimage.morphology import skeletonize_3d
-      img = nib.load('test_output/synthetic_vessel.nii.gz')
+      img = nib.load('${output_dir}/synthetic_vessel.nii.gz')
       vol = img.get_fdata().astype('uint8')
       skel = skeletonize_3d(vol)
       print('Original volume sum:', vol.sum())
@@ -568,7 +568,7 @@ tests:
       import nibabel as nib
       import numpy as np
       from scipy.ndimage import distance_transform_edt
-      img = nib.load('test_output/synthetic_vessel.nii.gz')
+      img = nib.load('${output_dir}/synthetic_vessel.nii.gz')
       vol = img.get_fdata().astype('uint8')
       dt = distance_transform_edt(vol)
       print('Max radius (distance):', dt.max())

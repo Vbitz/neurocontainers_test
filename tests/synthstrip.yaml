@@ -38,8 +38,8 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
-    mkdir -p test_output/synthstrip_batch
+    mkdir -p ${output_dir}
+    mkdir -p ${output_dir}/synthstrip_batch
 
 tests:
   # ==========================================================================
@@ -473,24 +473,28 @@ tests:
     command: nib-conform ${t1w} test_output/t1w_conformed.nii.gz -f
     validate:
       - output_exists: ${output_dir}/t1w_conformed.nii.gz
+    timeout: 300
 
   - name: nib-conform custom shape
     description: Test conforming image to custom shape
     command: nib-conform ${t1w} test_output/t1w_conformed_shape.nii.gz --out-shape 128 128 128 -f
     validate:
       - output_exists: ${output_dir}/t1w_conformed_shape.nii.gz
+    timeout: 300
 
   - name: nib-conform custom voxel size
     description: Test conforming image to custom voxel size
     command: nib-conform ${t1w} test_output/t1w_conformed_voxel.nii.gz --voxel-size 2 2 2 -f
     validate:
       - output_exists: ${output_dir}/t1w_conformed_voxel.nii.gz
+    timeout: 300
 
   - name: nib-conform custom orientation
     description: Test conforming image to LAS orientation
     command: nib-conform ${t1w} test_output/t1w_conformed_las.nii.gz --orientation LAS -f
     validate:
       - output_exists: ${output_dir}/t1w_conformed_las.nii.gz
+    timeout: 300
 
   - name: Verify conformed shape
     description: Verify nib-conform produces expected output shape
@@ -515,12 +519,14 @@ tests:
     command: nib-convert ${t1w} test_output/t1w_converted_float32.nii.gz --out-dtype float32 -f
     validate:
       - output_exists: ${output_dir}/t1w_converted_float32.nii.gz
+    timeout: 300
 
   - name: nib-convert to int16
     description: Test converting image to int16 data type
     command: nib-convert ${t1w} test_output/t1w_converted_int16.nii.gz --out-dtype int16 -f
     validate:
       - output_exists: ${output_dir}/t1w_converted_int16.nii.gz
+    timeout: 300
 
   - name: Verify converted dtype
     description: Verify nib-convert produces expected data type
@@ -545,12 +551,14 @@ tests:
     command: nib-roi ${t1w} test_output/t1w_cropped.nii.gz -i 20:140 -j 30:160 -k 30:160
     validate:
       - output_exists: ${output_dir}/t1w_cropped.nii.gz
+    timeout: 300
 
   - name: nib-roi crop first axis only
     description: Test cropping along first axis
     command: nib-roi ${t1w} test_output/t1w_cropped_i.nii.gz -i 40:120
     validate:
       - output_exists: ${output_dir}/t1w_cropped_i.nii.gz
+    timeout: 300
 
   - name: Verify cropped dimensions
     description: Verify nib-roi produces expected cropped dimensions
@@ -638,14 +646,12 @@ tests:
     command: |
       mri_synthstrip -i ${t1w} -m test_output/t1w_repro_run1.nii.gz 2>&1 && \
       mri_synthstrip -i ${t1w} -m test_output/t1w_repro_run2.nii.gz 2>&1 && \
-      python3 -c "import nibabel as nib; import numpy as np; \
-        run1 = nib.load('test_output/t1w_repro_run1.nii.gz').get_fdata(); \
-        run2 = nib.load('test_output/t1w_repro_run2.nii.gz').get_fdata(); \
-        if np.allclose(run1, run2): \
-          print('Results are reproducible: runs are identical'); \
-        else: \
-          diff = np.sum(run1 != run2); \
-          print(f'Results differ by {diff} voxels')"
+      python3 -c "
+      import nibabel as nib, numpy as np
+      run1 = nib.load('test_output/t1w_repro_run1.nii.gz').get_fdata()
+      run2 = nib.load('test_output/t1w_repro_run2.nii.gz').get_fdata()
+      print('Results are reproducible: runs are identical') if np.allclose(run1, run2) else print(f'Results differ by {np.sum(run1 != run2)} voxels')
+      "
     expected_output_contains: "reproducible"
     timeout: 1200
 

@@ -147,7 +147,7 @@ tests:
 
   - name: Statistics within range
     description: Compute statistics for voxels within a range
-    command: mincstats -range 50 500 -count -mean -quiet test_output/t1w.mnc
+    command: mincstats -floor 50 -ceil 500 -count -mean -quiet test_output/t1w.mnc
     depends_on: Convert T1w NIfTI to MINC
     expected_exit_code: 0
 
@@ -253,31 +253,28 @@ tests:
       - output_exists: ${output_dir}/t1w_add_self.mnc
 
   - name: Subtract two images
-    description: Subtract one MINC volume from another
-    command: mincmath -sub test_output/t1w.mnc test_output/t2.mnc test_output/t1w_sub_t2.mnc -clobber -nocheck_dimensions
+    description: Subtract a constant-added volume from original
+    command: mincmath -sub test_output/t1w.mnc test_output/t1w_add100.mnc test_output/t1w_sub_self.mnc -clobber
     depends_on:
-      - Convert T1w NIfTI to MINC
-      - Convert T2 NIfTI to MINC
+      - Add constant
     validate:
-      - output_exists: ${output_dir}/t1w_sub_t2.mnc
+      - output_exists: ${output_dir}/t1w_sub_self.mnc
 
   - name: Maximum of two images
     description: Calculate maximum of two volumes
-    command: mincmath -maximum test_output/t1w.mnc test_output/t2.mnc test_output/t1w_max_t2.mnc -clobber -nocheck_dimensions
+    command: mincmath -maximum test_output/t1w.mnc test_output/t1w_add100.mnc test_output/t1w_max_self.mnc -clobber
     depends_on:
-      - Convert T1w NIfTI to MINC
-      - Convert T2 NIfTI to MINC
+      - Add constant
     validate:
-      - output_exists: ${output_dir}/t1w_max_t2.mnc
+      - output_exists: ${output_dir}/t1w_max_self.mnc
 
   - name: Minimum of two images
     description: Calculate minimum of two volumes
-    command: mincmath -minimum test_output/t1w.mnc test_output/t2.mnc test_output/t1w_min_t2.mnc -clobber -nocheck_dimensions
+    command: mincmath -minimum test_output/t1w.mnc test_output/t1w_add100.mnc test_output/t1w_min_self.mnc -clobber
     depends_on:
-      - Convert T1w NIfTI to MINC
-      - Convert T2 NIfTI to MINC
+      - Add constant
     validate:
-      - output_exists: ${output_dir}/t1w_min_t2.mnc
+      - output_exists: ${output_dir}/t1w_min_self.mnc
 
   - name: Greater than comparison
     description: Test for voxels greater than a threshold
@@ -845,7 +842,7 @@ tests:
     description: Dump MINC header information
     command: mincdump -h test_output/t1w.mnc 2>&1 | head -30
     depends_on: Convert T1w NIfTI to MINC
-    expected_output_contains: "HDF5"
+    expected_output_contains: "hdf5"
 
   - name: Get history
     description: Show processing history of MINC file

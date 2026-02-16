@@ -23,7 +23,16 @@ setup:
   script: |
     #!/usr/bin/env bash
     set -e
-    mkdir -p test_output
+    mkdir -p test_output dicom_folder nifti_output
+    # Create dummy files for interface setup tests (Nipype validates file existence at assignment)
+    touch input.nii.gz reference.nii.gz bold.nii.gz source.nii.gz target.nii.gz mask.nii.gz
+    touch brain.nii.gz brain.mgz aparc+aseg.mgz dwi.nii.gz file.nii file.nii.gz
+    touch image.nii.gz image1.nii.gz image2.nii.gz seg1.nii.gz seg2.nii.gz
+    touch prob_map1.nii.gz prob_map2.nii.gz img1.nii.gz img2.nii.gz
+    touch bold.nii t1.nii bold_mean.nii run1.nii run2.nii template.nii.gz
+    touch moving.nii.gz affine.mat t1.nii.gz motion_params.txt motion.par
+    touch csf_mask.nii.gz wm_mask.nii.gz brain_mask.nii.gz dwi.mif
+    touch test_output/original.nii.gz
 
 tests:
   # ==========================================================================
@@ -89,10 +98,9 @@ tests:
       python -c "
       from nipype.pipeline import MapNode
       from nipype.interfaces.utility import Function
-      def square(x):
-          return x ** 2
+      func_str = 'def square(x):\n    return x ** 2\n'
       mapnode = MapNode(
-          Function(input_names=['x'], output_names=['result'], function=square),
+          Function(input_names=['x'], output_names=['result'], function_str=func_str),
           name='square_node',
           iterfield=['x']
       )
@@ -169,9 +177,8 @@ tests:
     command: |
       python -c "
       from nipype.interfaces.utility import Function
-      def add_numbers(a, b):
-          return a + b
-      func = Function(input_names=['a', 'b'], output_names=['sum'], function=add_numbers)
+      func_str = 'def add_numbers(a, b):\n    return a + b\n'
+      func = Function(input_names=['a', 'b'], output_names=['sum'], function_str=func_str)
       func.inputs.a = 5
       func.inputs.b = 3
       result = func.run()
@@ -578,7 +585,7 @@ tests:
       print('SPM Smooth interface configured')
       print('FWHM:', sm.inputs.fwhm)
       "
-    expected_output_contains: "[6, 6, 6]"
+    expected_output_contains: "[6.0, 6.0, 6.0]"
     expected_exit_code: 0
 
   - name: SPM Realign interface setup
@@ -621,7 +628,7 @@ tests:
       print('SPM Normalize12 interface configured')
       print('Voxel sizes:', norm.inputs.write_voxel_sizes)
       "
-    expected_output_contains: "[2, 2, 2]"
+    expected_output_contains: "[2.0, 2.0, 2.0]"
     expected_exit_code: 0
 
   - name: SPM SliceTiming interface setup
@@ -1055,11 +1062,11 @@ tests:
       from nipype.interfaces.image import Rescale
       rescale = Rescale()
       rescale.inputs.in_file = 'image.nii.gz'
-      rescale.inputs.percentile = 99.9
+      rescale.inputs.percentile = 0.999
       print('Rescale interface configured')
       print('Percentile:', rescale.inputs.percentile)
       "
-    expected_output_contains: "99.9"
+    expected_output_contains: "0.999"
     expected_exit_code: 0
 
   # ==========================================================================
@@ -1123,11 +1130,10 @@ tests:
       from nipype.pipeline import Workflow, Node
       from nipype.interfaces.utility import Function
 
-      def double(x):
-          return x * 2
+      func_str = 'def double(x):\n    return x * 2\n'
 
       wf = Workflow(name='function_test', base_dir='.')
-      node = Node(Function(input_names=['x'], output_names=['result'], function=double),
+      node = Node(Function(input_names=['x'], output_names=['result'], function_str=func_str),
                   name='double_node')
       node.inputs.x = 5
       wf.add_nodes([node])
@@ -1150,16 +1156,13 @@ tests:
       from nipype.pipeline import Workflow, Node
       from nipype.interfaces.utility import Function
 
-      def add_ten(x):
-          return x + 10
-
-      def multiply_two(x):
-          return x * 2
+      add_str = 'def add_ten(x):\n    return x + 10\n'
+      mul_str = 'def multiply_two(x):\n    return x * 2\n'
 
       wf = Workflow(name='multinode_test', base_dir='.')
-      node1 = Node(Function(input_names=['x'], output_names=['result'], function=add_ten),
+      node1 = Node(Function(input_names=['x'], output_names=['result'], function_str=add_str),
                    name='add_node')
-      node2 = Node(Function(input_names=['x'], output_names=['result'], function=multiply_two),
+      node2 = Node(Function(input_names=['x'], output_names=['result'], function_str=mul_str),
                    name='multiply_node')
 
       node1.inputs.x = 5

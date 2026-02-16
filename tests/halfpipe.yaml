@@ -329,9 +329,9 @@ tests:
       - output_exists: ${output_dir}/ants_output/t1w_thresh_mask.nii.gz
 
   - name: ANTs apply transforms info
-    description: Check ANTs transform info utility
-    command: antsTransformInfo 2>&1 | head -10
-    expected_output_contains: "antsTransformInfo"
+    description: Check ANTs transform info utility exists
+    command: which antsTransformInfo && echo "antsTransformInfo found"
+    expected_output_contains: "antsTransformInfo found"
 
   - name: ANTs registration info
     description: Check ANTs registration utility

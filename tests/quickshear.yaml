@@ -52,9 +52,10 @@ tests:
   # MRI_SYNTHSTRIP SKULL STRIPPING (prerequisite for quickshear)
   # ==========================================================================
   - name: mri_synthstrip help
-    description: Verify mri_synthstrip binary shows help
-    command: /freesurfer/mri_synthstrip --help
+    description: Verify mri_synthstrip binary shows help (exits 1 with --help)
+    command: /freesurfer/mri_synthstrip --help 2>&1
     expected_output_contains: "Robust, universal skull-stripping"
+    ignore_exit_code: true
 
   - name: Skull strip T1w - generate mask only
     description: Generate brain mask using SynthStrip for T1w image
@@ -348,7 +349,7 @@ tests:
     expected_output_contains: "Validation passed"
 
   - name: Validate distance transform
-    description: Check distance transform has expected properties
+    description: Check signed distance transform has values inside and outside brain
     command: |
       python3 -c "
       import nibabel as nib
@@ -359,8 +360,8 @@ tests:
       outside_values = sdt[~mask]
       print(f'Inside brain: min={inside_values.min():.2f}, max={inside_values.max():.2f}')
       print(f'Outside brain: min={outside_values.min():.2f}, max={outside_values.max():.2f}')
-      assert inside_values.max() > 0, 'Inside brain should have positive distances'
-      assert outside_values.min() < 0, 'Outside brain should have negative distances'
+      assert inside_values.min() < 0, 'Inside brain should have negative distances'
+      assert outside_values.max() > 0, 'Outside brain should have positive distances'
       print('Validation passed: distance transform has correct properties')
       "
     depends_on: Skull strip T1w - with distance transform
@@ -380,9 +381,9 @@ tests:
     expected_exit_code: 0
 
   - name: Error - mri_synthstrip missing input
-    description: Test error handling for mri_synthstrip without input
+    description: Test error handling for mri_synthstrip without input (shows usage)
     command: /freesurfer/mri_synthstrip 2>&1 || true
-    expected_output_contains: "error"
+    expected_output_contains: "usage"
 
   # ==========================================================================
   # EDGE CASES

@@ -111,7 +111,7 @@ tests:
   - name: Create and save BMP image
     description: Create an image and export to BMP format
     command: |
-      gimp -i -b '(let* ((image (car (gimp-image-new 150 150 RGB))) (layer (car (gimp-layer-new image 150 150 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 0 0 255)) (gimp-drawable-fill layer FILL-FOREGROUND) (file-bmp-save RUN-NONINTERACTIVE image layer "test_output/blue_square.bmp" "blue_square.bmp" 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
+      gimp -i -b '(let* ((image (car (gimp-image-new 150 150 RGB))) (layer (car (gimp-layer-new image 150 150 RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL)))) (gimp-image-insert-layer image layer 0 0) (gimp-context-set-foreground (list 0 0 255)) (gimp-drawable-fill layer FILL-FOREGROUND) (gimp-image-flatten image) (file-bmp-save RUN-NONINTERACTIVE image (car (gimp-image-get-active-drawable image)) "test_output/blue_square.bmp" "blue_square.bmp") (gimp-image-delete image) (gimp-quit 0))' 2>&1
     validate:
       - output_exists: ${output_dir}/blue_square.bmp
 
@@ -280,7 +280,7 @@ tests:
   - name: Convert PNG to WebP
     description: Load PNG and save as WebP
     command: |
-      gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (file-webp-save RUN-NONINTERACTIVE image layer "test_output/converted.webp" "converted.webp" 0 90 0 0 0 0 0 0 0 0 0 0 1 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
+      gimp -i -b '(let* ((image (car (gimp-file-load RUN-NONINTERACTIVE "test_output/test_image.png" "test_image.png"))) (layer (car (gimp-image-flatten image)))) (file-webp-save RUN-NONINTERACTIVE image layer "test_output/converted.webp" "converted.webp" 0 0 90 100 1 0 0 0 0 1 0 0 0) (gimp-image-delete image) (gimp-quit 0))' 2>&1
     depends_on: setup
     validate:
       - output_exists: ${output_dir}/converted.webp
